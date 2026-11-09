@@ -1,0 +1,245 @@
+{
+  "schema": "boost-losses/1",
+  "revision": "r1",
+  "model": {
+    "L_uH": 68.0,
+    "DCR_mohm": 140.0,
+    "Rds_hot_mohm": 41.60000000000001,
+    "rds_hot_factor": 1.3,
+    "VF0_V": 0.4675,
+    "Rd_mohm": 16.5,
+    "diode_model": "单点 0.55V@5.0A，按 85%/15% 拆分（假设）",
+    "caps": [
+      "陶瓷 2×10µF×保持率0.3 = 6.0µF，ESR 2.5mΩ(假设)",
+      "电解 1×100µF，ESR 24mΩ"
+    ]
+  },
+  "assumptions": {
+    "ambient_c": 40,
+    "gate_resistor_ohm": 10,
+    "miller_plateau_v": 2.5,
+    "core_loss_frac_of_copper": 0.25,
+    "defaults_used_for_missing_data": []
+  },
+  "cases": {
+    "min": {
+      "vin_v": 4.75,
+      "D": 0.6381,
+      "IL_avg_A": 1.382,
+      "IL_pk_A": 1.605,
+      "dIL_A": 0.4458,
+      "IL_rms_A": 1.388,
+      "t_rise_ns": 18.13,
+      "t_fall_ns": 13.35,
+      "losses_W": {
+        "MOSFET 导通": 0.05112,
+        "MOSFET 开关": 0.02651,
+        "MOSFET Coss": 0.0005854,
+        "二极管导通": 0.2452,
+        "二极管结电容": 0.003902,
+        "电感铜损": 0.2696,
+        "电感磁损(估)": 0.0674,
+        "输出电容 ESR": 0.001102,
+        "采样电阻": 0.0125,
+        "分压电阻": 0.003845,
+        "防反接 PMOS": 0.1502,
+        "保险丝": 0.03627,
+        "栅极驱动": 0.007363,
+        "3.3V 辅助电源": 0.1867
+      },
+      "p_total_W": 1.062,
+      "eta_total": 0.8496,
+      "eta_power_stage": 0.8736,
+      "iin_avg_A": 1.487,
+      "tj_C": {
+        "MOSFET": 47.8,
+        "二极管": 54.9,
+        "防反接 PMOS": 55.0
+      }
+    },
+    "nom": {
+      "vin_v": 5.0,
+      "D": 0.617,
+      "IL_avg_A": 1.305,
+      "IL_pk_A": 1.532,
+      "dIL_A": 0.4537,
+      "IL_rms_A": 1.312,
+      "t_rise_ns": 16.51,
+      "t_fall_ns": 13.38,
+      "losses_W": {
+        "MOSFET 导通": 0.04417,
+        "MOSFET 开关": 0.02393,
+        "MOSFET Coss": 0.0005853,
+        "二极管导通": 0.2446,
+        "二极管结电容": 0.003902,
+        "电感铜损": 0.241,
+        "电感磁损(估)": 0.06024,
+        "输出电容 ESR": 0.001007,
+        "采样电阻": 0.0125,
+        "分压电阻": 0.003967,
+        "防反接 PMOS": 0.1342,
+        "保险丝": 0.03238,
+        "栅极驱动": 0.00775,
+        "3.3V 辅助电源": 0.1965
+      },
+      "p_total_W": 1.007,
+      "eta_total": 0.8563,
+      "eta_power_stage": 0.882,
+      "iin_avg_A": 1.401,
+      "tj_C": {
+        "MOSFET": 46.9,
+        "二极管": 54.9,
+        "防反接 PMOS": 53.4
+      }
+    },
+    "max": {
+      "vin_v": 5.25,
+      "D": 0.5959,
+      "IL_avg_A": 1.237,
+      "IL_pk_A": 1.467,
+      "dIL_A": 0.4601,
+      "IL_rms_A": 1.244,
+      "t_rise_ns": 15.18,
+      "t_fall_ns": 13.42,
+      "losses_W": {
+        "MOSFET 导通": 0.03839,
+        "MOSFET 开关": 0.02185,
+        "MOSFET Coss": 0.0005852,
+        "二极管导通": 0.2441,
+        "二极管结电容": 0.003901,
+        "电感铜损": 0.2168,
+        "电感磁损(估)": 0.05421,
+        "输出电容 ESR": 0.0009217,
+        "采样电阻": 0.0125,
+        "分压电阻": 0.004095,
+        "防反接 PMOS": 0.1208,
+        "保险丝": 0.02909,
+        "栅极驱动": 0.008138,
+        "3.3V 辅助电源": 0.2063
+      },
+      "p_total_W": 0.9617,
+      "eta_total": 0.8619,
+      "eta_power_stage": 0.8893,
+      "iin_avg_A": 1.326,
+      "tj_C": {
+        "MOSFET": 46.1,
+        "二极管": 54.9,
+        "防反接 PMOS": 52.1
+      }
+    }
+  },
+  "ripple": {
+    "vpp_simple_mv": 30.11,
+    "vpp_harmonic_mv": 55.82,
+    "ripple_pct": 0.4652
+  },
+  "gain_peak": {
+    "d_peak": 0.914,
+    "vo_peak_v": 27.23
+  },
+  "inrush": {
+    "z0_ohm": 0.8009,
+    "zeta": 0.1583,
+    "i_peak_a": 4.642,
+    "i2t_a2s": 0.002874,
+    "fuse_melting_i2t_a2s": 0.576
+  },
+  "eta_consistency": {
+    "eta_assumed": 0.85,
+    "eta_model_nom": 0.8563,
+    "needs_iteration": false,
+    "advice": "假设与复核一致（偏差 ≤ 3%）"
+  },
+  "steps": [
+    {
+      "id": "E1",
+      "name": "额定点总损耗 (Vin_nom)",
+      "formula": "ΣP",
+      "substitution": "MOSFET 导通 + MOSFET 开关 + MOSFET Coss + 二极管导通 + 二极管结电容 + 电感铜损 + 电感磁损(估) + 输出电容 ESR + 采样电阻 + 分压电阻 + 防反接 PMOS + 保险丝 + 栅极驱动 + 3.3V 辅助电源",
+      "value": 1.007,
+      "unit": "W",
+      "note": ""
+    },
+    {
+      "id": "E2",
+      "name": "额定点整机效率 (含控制电路)",
+      "formula": "η = Po/(Po+ΣP)",
+      "substitution": "6.0/(6.0+1.007)",
+      "value": 85.63,
+      "unit": "%",
+      "note": ""
+    },
+    {
+      "id": "E3",
+      "name": "功率级效率 (不含控制电路)",
+      "formula": "η = Po/(Po+ΣP−Paux)",
+      "substitution": "",
+      "value": 88.2,
+      "unit": "%",
+      "note": ""
+    },
+    {
+      "id": "E4",
+      "name": "最差效率 (Vin_min)",
+      "formula": "同上",
+      "substitution": "Vin=4.75 V",
+      "value": 84.96,
+      "unit": "%",
+      "note": ""
+    },
+    {
+      "id": "R1",
+      "name": "输出纹波：仅电容放电（简化公式对照）",
+      "formula": "ΔVc = Io·D/(fsw·Ctot)",
+      "substitution": "0.5×0.6381/(100000×106.0µ)",
+      "value": 30.11,
+      "unit": "mV",
+      "note": "把电解电容当理想电容，偏乐观"
+    },
+    {
+      "id": "R2",
+      "name": "输出纹波：谐波叠加（计 ESR 与支路分流）",
+      "formula": "v(t)=Σ In·Zout(n·fsw)",
+      "substitution": "二极管电流梯形波 1.60→1.16 A，D=0.6381",
+      "value": 55.82,
+      "unit": "mV",
+      "note": "Zout = 各电容支路 (ESR + 1/jωC) 与负载并联；60 次谐波"
+    },
+    {
+      "id": "R3",
+      "name": "输出纹波估算（峰峰值/直流）",
+      "formula": "Vpp/Vo",
+      "substitution": "55.8m/12.0",
+      "value": 0.4652,
+      "unit": "%",
+      "note": "未计 ESL 与开关尖峰（取决于 PCB 布局与测量方法，建议 20 MHz 带宽限制、弹簧地针测量）"
+    },
+    {
+      "id": "G1",
+      "name": "升压比峰值点（Vin_min, 满载）",
+      "formula": "max Vo(D)",
+      "substitution": "D=0.914",
+      "value": 27.23,
+      "unit": "V",
+      "note": "Dmax 必须低于此 D，否则过载时增大占空比反而降低输出，环路失去单调性"
+    },
+    {
+      "id": "U1",
+      "name": "热插拔上电浪涌峰值（估）",
+      "formula": "I ≈ (Vin−VF)/√(L/C)·e^(−ζπ/2/√(1−ζ²))",
+      "substitution": "Z0=0.80 Ω, ζ=0.158",
+      "value": 4.642,
+      "unit": "A",
+      "note": "PWM 未启动时输出电容经 L、D 被动充电；建议 PMOS 栅极 RC 缓启动或实验电源限流"
+    },
+    {
+      "id": "U2",
+      "name": "上电浪涌 I²t",
+      "formula": "I²t ≈ Ipk²·π√(LC)/2",
+      "substitution": "4.64²×π√(68µ×106µ)/2",
+      "value": 0.002874,
+      "unit": "A²s",
+      "note": "保险丝熔断 I²t = 0.576 A²s"
+    }
+  ]
+}

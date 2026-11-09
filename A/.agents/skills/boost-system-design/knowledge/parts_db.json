@@ -1,0 +1,5540 @@
+{
+ "schema": "boost-parts-db/1",
+ "updated": "2026-11-09",
+ "provenance": "每个器件的参数来自其 datasheet_url 指向的原厂数据手册（页码/表号见 params.*.page），立创编号来自网络搜索结果片段（lcsc_evidence）。价格为搜索快照，下单前须在立创商城复核。规范字段（如 id_a、qg_nc、vos_uv）为原始字段的别名，alias_of 指向原字段。",
+ "fields": "params.<name> = {typ,max,min,condition,page}；缺失为 null；不得凭记忆补填",
+ "unrolled_roles": [],
+ "parts": [
+  {
+   "id": "ao3400a",
+   "category": "nmos_lowside_switch",
+   "mpn": "AO3400A",
+   "manufacturer": "Alpha & Omega Semiconductor (AOS)",
+   "package": "SOT-23",
+   "lcsc": "C20917",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/MOSFET_AOS_AO3400A_AO3400A_C20917.html 'Manufacturer AOS, MPN AO3400A, LCSC Part # C20917, SOT-23'; jlcpcb.com/partdetail/Alpha_OmegaSemicon-AO3400A/C20917 (Basic part)",
+   "datasheet_url": "https://www.aosmd.com/res/datasheets/AO3400A.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vds_max_v": {
+     "typ": null,
+     "max": 30,
+     "min": null,
+     "condition": "abs max, TA=25C",
+     "page": "p1"
+    },
+    "vgs_max_v": {
+     "typ": null,
+     "max": 12,
+     "min": null,
+     "condition": "abs max, +/-12 V",
+     "page": "p1"
+    },
+    "id_cont_a_ta25": {
+     "typ": null,
+     "max": 5.7,
+     "min": null,
+     "condition": "TA=25C (PD/ID based on t<=10s RthJA)",
+     "page": "p1"
+    },
+    "id_cont_a_ta70": {
+     "typ": null,
+     "max": 4.7,
+     "min": null,
+     "condition": "TA=70C",
+     "page": "p1"
+    },
+    "idm_a": {
+     "typ": null,
+     "max": 30,
+     "min": null,
+     "condition": "pulsed",
+     "page": "p1"
+    },
+    "pd_w_ta25": {
+     "typ": null,
+     "max": 1.4,
+     "min": null,
+     "condition": "TA=25C (t<=10s RthJA basis)",
+     "page": "p1"
+    },
+    "rds_on_mohm_vgs10v": {
+     "typ": 18,
+     "max": 26.5,
+     "min": null,
+     "condition": "VGS=10V, ID=5.7A, TJ=25C",
+     "page": "p2"
+    },
+    "rds_on_mohm_vgs4v5": {
+     "typ": 19,
+     "max": 32,
+     "min": null,
+     "condition": "VGS=4.5V, ID=5A, TJ=25C",
+     "page": "p2"
+    },
+    "rds_on_mohm_vgs2v5": {
+     "typ": 24,
+     "max": 48,
+     "min": null,
+     "condition": "VGS=2.5V, ID=3A, TJ=25C",
+     "page": "p2"
+    },
+    "vgs_th_v": {
+     "typ": 1.05,
+     "max": 1.45,
+     "min": 0.65,
+     "condition": "VDS=VGS, ID=250uA",
+     "page": "p2"
+    },
+    "qg_nc_vgs4v5": {
+     "typ": 6,
+     "max": 7,
+     "min": null,
+     "condition": "VGS=4.5V, VDS=15V, ID=5.7A",
+     "page": "p2"
+    },
+    "qgs_nc": {
+     "typ": 1.3,
+     "max": null,
+     "min": null,
+     "condition": "VGS=4.5V, VDS=15V, ID=5.7A",
+     "page": "p2"
+    },
+    "qgd_nc": {
+     "typ": 1.8,
+     "max": null,
+     "min": null,
+     "condition": "VGS=4.5V, VDS=15V, ID=5.7A",
+     "page": "p2"
+    },
+    "ciss_pf": {
+     "typ": 630,
+     "max": null,
+     "min": null,
+     "condition": "VGS=0V, VDS=15V, f=1MHz",
+     "page": "p2"
+    },
+    "coss_pf": {
+     "typ": 75,
+     "max": null,
+     "min": null,
+     "condition": "VGS=0V, VDS=15V, f=1MHz",
+     "page": "p2"
+    },
+    "crss_pf": {
+     "typ": 50,
+     "max": null,
+     "min": null,
+     "condition": "VGS=0V, VDS=15V, f=1MHz",
+     "page": "p2"
+    },
+    "rg_ohm": {
+     "typ": 3,
+     "max": 4.5,
+     "min": 1.5,
+     "condition": "VGS=0V, VDS=0V, f=1MHz",
+     "page": "p2"
+    },
+    "rth_ja_c_per_w_steady": {
+     "typ": 100,
+     "max": 125,
+     "min": null,
+     "condition": "steady state, 1 in^2 FR-4, 2 oz Cu, still air",
+     "page": "p1"
+    },
+    "rth_ja_c_per_w_t10s": {
+     "typ": 70,
+     "max": 90,
+     "min": null,
+     "condition": "t<=10s, 1 in^2 FR-4, 2 oz Cu",
+     "page": "p1"
+    },
+    "rth_jl_c_per_w": {
+     "typ": 63,
+     "max": 80,
+     "min": null,
+     "condition": "steady state",
+     "page": "p1"
+    },
+    "vsd_v": {
+     "typ": 0.7,
+     "max": 1.0,
+     "min": null,
+     "condition": "IS=1A, VGS=0V",
+     "page": "p2"
+    },
+    "id_a": {
+     "typ": null,
+     "max": 5.7,
+     "min": null,
+     "condition": "TA=25C (PD/ID based on t<=10s RthJA)",
+     "page": "p1",
+     "alias_of": "id_cont_a_ta25"
+    },
+    "qg_nc": {
+     "typ": 6.0,
+     "max": 7.0,
+     "min": null,
+     "condition": "VGS=4.5V, VDS=15V, ID=5.7A",
+     "page": "p2",
+     "alias_of": "qg_nc_vgs4v5"
+    },
+    "rth_ja_cw": {
+     "typ": 100.0,
+     "max": 125.0,
+     "min": null,
+     "condition": "steady state, 1 in^2 FR-4, 2 oz Cu, still air",
+     "page": "p1",
+     "alias_of": "rth_ja_c_per_w_steady"
+    }
+   },
+   "price_cny_approx": 0.37,
+   "price_evidence": "LCSC C20917 'From $0.0518' (volume tier, search snapshot); converted at an assumed 7.1 CNY/USD",
+   "notes": "Datasheet Rev 3.1 July 2023. LCSC also lists same-name clones (UMW C347475, ElecSuper C5224194, FUXINSEMI C5380685) with different specs. Use C20917 for genuine AOS. Rds(on)@4.5V is specified at ID=5A.",
+   "confidence": "high",
+   "role": "mosfet"
+  },
+  {
+   "id": "irlml6344",
+   "category": "nmos_lowside_switch",
+   "mpn": "IRLML6344TRPBF",
+   "manufacturer": "Infineon (International Rectifier)",
+   "package": "SOT-23 (Micro3)",
+   "lcsc": "C53550",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/MOSFETs_Infineon-Technologies-IRLML6344TRPBF_C53550.html 'manufacturer Infineon, MPN IRLML6344TRPBF, LCSC Part # C53550, SOT-23, MOSFET N-CH 30V 5A'. (C5364313 is a Hottech clone)",
+   "datasheet_url": "https://www.infineon.com/dgdl/irlml6344pbf.pdf?fileId=5546d462533600a4015356686fed261f",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vds_max_v": {
+     "typ": null,
+     "max": 30,
+     "min": null,
+     "condition": "abs max",
+     "page": "p1"
+    },
+    "vgs_max_v": {
+     "typ": null,
+     "max": 12,
+     "min": null,
+     "condition": "+/-12 V",
+     "page": "p1"
+    },
+    "id_cont_a_ta25": {
+     "typ": null,
+     "max": 5.0,
+     "min": null,
+     "condition": "TA=25C, VGS=10V",
+     "page": "p1"
+    },
+    "id_cont_a_ta70": {
+     "typ": null,
+     "max": 4.0,
+     "min": null,
+     "condition": "TA=70C, VGS=10V",
+     "page": "p1"
+    },
+    "idm_a": {
+     "typ": null,
+     "max": 25,
+     "min": null,
+     "condition": "pulsed",
+     "page": "p1"
+    },
+    "pd_w_ta25": {
+     "typ": null,
+     "max": 1.3,
+     "min": null,
+     "condition": "TA=25C",
+     "page": "p1"
+    },
+    "rds_on_mohm_vgs4v5": {
+     "typ": 22,
+     "max": 29,
+     "min": null,
+     "condition": "VGS=4.5V, ID=5.0A",
+     "page": "p2"
+    },
+    "rds_on_mohm_vgs2v5": {
+     "typ": 27,
+     "max": 37,
+     "min": null,
+     "condition": "VGS=2.5V, ID=4.0A",
+     "page": "p2"
+    },
+    "vgs_th_v": {
+     "typ": 0.8,
+     "max": 1.1,
+     "min": 0.5,
+     "condition": "VDS=VGS, ID=10uA",
+     "page": "p2"
+    },
+    "qg_nc_vgs4v5": {
+     "typ": 6.8,
+     "max": null,
+     "min": null,
+     "condition": "VGS=4.5V, VDS=15V, ID=5.0A",
+     "page": "p2"
+    },
+    "qgs_nc": {
+     "typ": 0.3,
+     "max": null,
+     "min": null,
+     "condition": "VGS=4.5V, VDS=15V, ID=5.0A (value as printed)",
+     "page": "p2"
+    },
+    "qgd_nc": {
+     "typ": 2.4,
+     "max": null,
+     "min": null,
+     "condition": "VGS=4.5V, VDS=15V, ID=5.0A",
+     "page": "p2"
+    },
+    "ciss_pf": {
+     "typ": 650,
+     "max": null,
+     "min": null,
+     "condition": "VGS=0V, VDS=25V, f=1MHz",
+     "page": "p2"
+    },
+    "coss_pf": {
+     "typ": 65,
+     "max": null,
+     "min": null,
+     "condition": "VGS=0V, VDS=25V, f=1MHz",
+     "page": "p2"
+    },
+    "crss_pf": {
+     "typ": 46,
+     "max": null,
+     "min": null,
+     "condition": "VGS=0V, VDS=25V, f=1MHz",
+     "page": "p2"
+    },
+    "rg_ohm": {
+     "typ": 1.7,
+     "max": null,
+     "min": null,
+     "condition": "internal gate resistance",
+     "page": "p2"
+    },
+    "rth_ja_c_per_w_steady": {
+     "typ": null,
+     "max": 100,
+     "min": null,
+     "condition": "surface mounted on 1 in^2 Cu board",
+     "page": "p1, notes p10"
+    },
+    "rth_ja_c_per_w_t10s": {
+     "typ": null,
+     "max": 99,
+     "min": null,
+     "condition": "t<10s",
+     "page": "p1"
+    },
+    "id_a": {
+     "typ": null,
+     "max": 5.0,
+     "min": null,
+     "condition": "TA=25C, VGS=10V",
+     "page": "p1",
+     "alias_of": "id_cont_a_ta25"
+    },
+    "qg_nc": {
+     "typ": 6.8,
+     "max": null,
+     "min": null,
+     "condition": "VGS=4.5V, VDS=15V, ID=5.0A",
+     "page": "p2",
+     "alias_of": "qg_nc_vgs4v5"
+    },
+    "rth_ja_cw": {
+     "typ": null,
+     "max": 100.0,
+     "min": null,
+     "condition": "surface mounted on 1 in^2 Cu board",
+     "page": "p1, notes p10",
+     "alias_of": "rth_ja_c_per_w_steady"
+    }
+   },
+   "price_cny_approx": null,
+   "price_evidence": "No price in the LCSC search snippet I read",
+   "notes": "Datasheet dated Dec 19, 2014. No 10V Rds(on) row. Coss is specified at VDS=25V (not 15V as for AOS).",
+   "confidence": "high",
+   "role": "mosfet"
+  },
+  {
+   "id": "si2302cds",
+   "category": "nmos_lowside_switch",
+   "mpn": "Si2302CDS-T1-GE3",
+   "manufacturer": "Vishay Siliconix",
+   "package": "SOT-23 (TO-236)",
+   "lcsc": "C10488",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/MOSFET_Vishay-Intertech-Si2302CDS-T1-GE3_C10488.html 'LCSC Part # C10488, SOT-23, MOSFET N-CH 20V 2.9A'",
+   "datasheet_url": "https://www.vishay.com/docs/68645/si2302cds.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vds_max_v": {
+     "typ": null,
+     "max": 20,
+     "min": null,
+     "condition": "abs max",
+     "page": "p1"
+    },
+    "vgs_max_v": {
+     "typ": null,
+     "max": 8,
+     "min": null,
+     "condition": "+/-8 V",
+     "page": "p1"
+    },
+    "id_cont_a_ta25": {
+     "typ": null,
+     "max": 2.6,
+     "min": null,
+     "condition": "TA=25C steady state (2.9 A for t<=5s), 1in x 1in FR4",
+     "page": "p1"
+    },
+    "id_cont_a_ta70": {
+     "typ": null,
+     "max": 2.1,
+     "min": null,
+     "condition": "TA=70C steady state (2.3 A for t<=5s)",
+     "page": "p1"
+    },
+    "idm_a": {
+     "typ": null,
+     "max": 10,
+     "min": null,
+     "condition": "pulsed",
+     "page": "p1"
+    },
+    "pd_w_ta25": {
+     "typ": null,
+     "max": 0.71,
+     "min": null,
+     "condition": "steady state (0.86 W for t<=5s)",
+     "page": "p1"
+    },
+    "rds_on_mohm_vgs4v5": {
+     "typ": 45,
+     "max": 57,
+     "min": null,
+     "condition": "VGS=4.5V, ID=3.6A",
+     "page": "p2"
+    },
+    "rds_on_mohm_vgs2v5": {
+     "typ": 56,
+     "max": 75,
+     "min": null,
+     "condition": "VGS=2.5V, ID=3.1A",
+     "page": "p2"
+    },
+    "vgs_th_v": {
+     "typ": null,
+     "max": 0.85,
+     "min": 0.4,
+     "condition": "VDS=VGS, ID=250uA",
+     "page": "p2"
+    },
+    "qg_nc_vgs4v5": {
+     "typ": 3.5,
+     "max": 5.5,
+     "min": null,
+     "condition": "VDS=10V, VGS=4.5V, ID=3.6A",
+     "page": "p2"
+    },
+    "qgs_nc": {
+     "typ": 0.6,
+     "max": null,
+     "min": null,
+     "condition": "VDS=10V, VGS=4.5V, ID=3.6A",
+     "page": "p2"
+    },
+    "qgd_nc": {
+     "typ": 0.45,
+     "max": null,
+     "min": null,
+     "condition": "VDS=10V, VGS=4.5V, ID=3.6A",
+     "page": "p2"
+    },
+    "ciss_pf": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "not in spec table (typical curve only, not read)",
+     "page": ""
+    },
+    "coss_pf": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "not in spec table",
+     "page": ""
+    },
+    "rg_ohm": {
+     "typ": 4,
+     "max": 8,
+     "min": 2,
+     "condition": "f=1MHz",
+     "page": "p2"
+    },
+    "rth_ja_c_per_w_steady": {
+     "typ": 140,
+     "max": 175,
+     "min": null,
+     "condition": "steady state, 1in x 1in FR4",
+     "page": "p1"
+    },
+    "rth_ja_c_per_w_t5s": {
+     "typ": 120,
+     "max": 145,
+     "min": null,
+     "condition": "t<=5s, 1in x 1in FR4",
+     "page": "p1"
+    },
+    "rth_jf_c_per_w": {
+     "typ": 62,
+     "max": 78,
+     "min": null,
+     "condition": "junction-to-foot, steady state",
+     "page": "p1"
+    },
+    "id_a": {
+     "typ": null,
+     "max": 2.6,
+     "min": null,
+     "condition": "TA=25C steady state (2.9 A for t<=5s), 1in x 1in FR4",
+     "page": "p1",
+     "alias_of": "id_cont_a_ta25"
+    },
+    "qg_nc": {
+     "typ": 3.5,
+     "max": 5.5,
+     "min": null,
+     "condition": "VDS=10V, VGS=4.5V, ID=3.6A",
+     "page": "p2",
+     "alias_of": "qg_nc_vgs4v5"
+    },
+    "rth_ja_cw": {
+     "typ": 140.0,
+     "max": 175.0,
+     "min": null,
+     "condition": "steady state, 1in x 1in FR4",
+     "page": "p1",
+     "alias_of": "rth_ja_c_per_w_steady"
+    }
+   },
+   "price_cny_approx": 0.35,
+   "price_evidence": "LCSC C10488 'From $0.0487' (one snapshot; another showed out of stock); assumed 7.1 CNY/USD",
+   "notes": "Datasheet S12-2336-Rev. D, 01-Oct-12. VDS 20 V and VGS +/-8 V max, so it should be rejected for a 12 V output with switching ringing. Many SI2302 clones on LCSC (MCC C77977, BORN C344009, YONGYUTAI C2891732, ...) have different specs.",
+   "confidence": "high",
+   "role": "mosfet",
+   "stock_risk": true
+  },
+  {
+   "id": "irlml0030",
+   "category": "nmos_lowside_switch",
+   "mpn": "IRLML0030TRPBF",
+   "manufacturer": "Infineon (International Rectifier)",
+   "package": "SOT-23 (Micro3)",
+   "lcsc": "C67272",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/MOSFETs_Infineon-Technologies-IRLML0030TRPBF_C67272.html 'MOSFET N-CH 30V 5.3A SOT-23'",
+   "datasheet_url": "https://www.infineon.com/dgdl/irlml0030pbf.pdf?fileId=5546d462533600a401535664773825df",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vds_max_v": {
+     "typ": null,
+     "max": 30,
+     "min": null,
+     "condition": "abs max",
+     "page": "p1"
+    },
+    "vgs_max_v": {
+     "typ": null,
+     "max": 20,
+     "min": null,
+     "condition": "+/-20 V",
+     "page": "p1"
+    },
+    "id_cont_a_ta25": {
+     "typ": null,
+     "max": 5.3,
+     "min": null,
+     "condition": "TA=25C, VGS=10V",
+     "page": "p1"
+    },
+    "id_cont_a_ta70": {
+     "typ": null,
+     "max": 4.3,
+     "min": null,
+     "condition": "TA=70C, VGS=10V",
+     "page": "p1"
+    },
+    "idm_a": {
+     "typ": null,
+     "max": 21,
+     "min": null,
+     "condition": "pulsed",
+     "page": "p1"
+    },
+    "pd_w_ta25": {
+     "typ": null,
+     "max": 1.3,
+     "min": null,
+     "condition": "TA=25C",
+     "page": "p1"
+    },
+    "rds_on_mohm_vgs10v": {
+     "typ": 22,
+     "max": 27,
+     "min": null,
+     "condition": "VGS=10V, ID=5.2A",
+     "page": "p2"
+    },
+    "rds_on_mohm_vgs4v5": {
+     "typ": 33,
+     "max": 40,
+     "min": null,
+     "condition": "VGS=4.5V, ID=4.2A",
+     "page": "p2"
+    },
+    "rds_on_mohm_vgs2v5": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "not specified (not a 2.5V-rated part)",
+     "page": "p2"
+    },
+    "vgs_th_v": {
+     "typ": 1.7,
+     "max": 2.3,
+     "min": 1.3,
+     "condition": "VDS=VGS, ID=25uA",
+     "page": "p2"
+    },
+    "qg_nc_vgs4v5": {
+     "typ": 2.6,
+     "max": null,
+     "min": null,
+     "condition": "VGS=4.5V, VDS=15V, ID=5.2A",
+     "page": "p2"
+    },
+    "qgs_nc": {
+     "typ": 0.8,
+     "max": null,
+     "min": null,
+     "condition": "VGS=4.5V, VDS=15V, ID=5.2A",
+     "page": "p2"
+    },
+    "qgd_nc": {
+     "typ": 1.1,
+     "max": null,
+     "min": null,
+     "condition": "VGS=4.5V, VDS=15V, ID=5.2A",
+     "page": "p2"
+    },
+    "ciss_pf": {
+     "typ": 382,
+     "max": null,
+     "min": null,
+     "condition": "VGS=0V, VDS=15V, f=1MHz",
+     "page": "p2"
+    },
+    "coss_pf": {
+     "typ": 84,
+     "max": null,
+     "min": null,
+     "condition": "VGS=0V, VDS=15V, f=1MHz",
+     "page": "p2"
+    },
+    "crss_pf": {
+     "typ": 39,
+     "max": null,
+     "min": null,
+     "condition": "VGS=0V, VDS=15V, f=1MHz",
+     "page": "p2"
+    },
+    "rg_ohm": {
+     "typ": 2.3,
+     "max": null,
+     "min": null,
+     "condition": "internal gate resistance",
+     "page": "p2"
+    },
+    "rth_ja_c_per_w_steady": {
+     "typ": null,
+     "max": 100,
+     "min": null,
+     "condition": "surface mounted on 1 in^2 Cu board",
+     "page": "p1, notes p10"
+    },
+    "rth_ja_c_per_w_t10s": {
+     "typ": null,
+     "max": 99,
+     "min": null,
+     "condition": "t<10s",
+     "page": "p1"
+    },
+    "id_a": {
+     "typ": null,
+     "max": 5.3,
+     "min": null,
+     "condition": "TA=25C, VGS=10V",
+     "page": "p1",
+     "alias_of": "id_cont_a_ta25"
+    },
+    "qg_nc": {
+     "typ": 2.6,
+     "max": null,
+     "min": null,
+     "condition": "VGS=4.5V, VDS=15V, ID=5.2A",
+     "page": "p2",
+     "alias_of": "qg_nc_vgs4v5"
+    },
+    "rth_ja_cw": {
+     "typ": null,
+     "max": 100.0,
+     "min": null,
+     "condition": "surface mounted on 1 in^2 Cu board",
+     "page": "p1, notes p10",
+     "alias_of": "rth_ja_c_per_w_steady"
+    }
+   },
+   "price_cny_approx": 0.49,
+   "price_evidence": "LCSC C67272 'from $0.069' (snapshot); assumed 7.1 CNY/USD",
+   "notes": "This is the extra 30-40 V candidate. Qg is low (2.6 nC), but Vgs(th) max is 2.3 V and Rds(on) is only rated at 4.5 V and 10 V, so it has less margin at 4.75 V drive than AO3400A or IRLML6344. Datasheet PD-96278B (02/29/12).",
+   "confidence": "high",
+   "role": "mosfet"
+  },
+  {
+   "id": "ao3401a",
+   "category": "pmos_reverse_polarity",
+   "mpn": "AO3401A",
+   "manufacturer": "Alpha & Omega Semiconductor (AOS)",
+   "package": "SOT-23",
+   "lcsc": "C15127",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/MOSFET_Alpha-Omega-Semicon-AO3401A_C15127.html; jlcpcb.com/partdetail/Alpha_OmegaSemicon-AO3401A/C15127 (Basic)",
+   "datasheet_url": "https://www.aosmd.com/res/datasheets/AO3401A.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vds_max_v": {
+     "typ": null,
+     "max": -30,
+     "min": null,
+     "condition": "abs max",
+     "page": "p1"
+    },
+    "vgs_max_v": {
+     "typ": null,
+     "max": 12,
+     "min": null,
+     "condition": "+/-12 V",
+     "page": "p1"
+    },
+    "id_cont_a_ta25": {
+     "typ": null,
+     "max": -4.0,
+     "min": null,
+     "condition": "TA=25C",
+     "page": "p1"
+    },
+    "id_cont_a_ta70": {
+     "typ": null,
+     "max": -3.2,
+     "min": null,
+     "condition": "TA=70C",
+     "page": "p1"
+    },
+    "idm_a": {
+     "typ": null,
+     "max": -27,
+     "min": null,
+     "condition": "pulsed",
+     "page": "p1"
+    },
+    "pd_w_ta25": {
+     "typ": null,
+     "max": 1.4,
+     "min": null,
+     "condition": "TA=25C",
+     "page": "p1"
+    },
+    "rds_on_mohm_vgs10v": {
+     "typ": 41,
+     "max": 50,
+     "min": null,
+     "condition": "VGS=-10V, ID=-4.0A",
+     "page": "p2"
+    },
+    "rds_on_mohm_vgs4v5": {
+     "typ": 47,
+     "max": 60,
+     "min": null,
+     "condition": "VGS=-4.5V, ID=-3.5A",
+     "page": "p2"
+    },
+    "rds_on_mohm_vgs2v5": {
+     "typ": 60,
+     "max": 85,
+     "min": null,
+     "condition": "VGS=-2.5V, ID=-2.5A",
+     "page": "p2"
+    },
+    "vgs_th_v": {
+     "typ": -0.9,
+     "max": -1.3,
+     "min": -0.5,
+     "condition": "VDS=VGS, ID=-250uA (datasheet min/typ/max columns)",
+     "page": "p2"
+    },
+    "qg_nc_vgs4v5": {
+     "typ": 7,
+     "max": null,
+     "min": null,
+     "condition": "Qg(4.5V); test VGS=-10V, VDS=-15V, ID=-4A",
+     "page": "p2"
+    },
+    "ciss_pf": {
+     "typ": 645,
+     "max": null,
+     "min": null,
+     "condition": "VGS=0V, VDS=-15V, f=1MHz",
+     "page": "p2"
+    },
+    "coss_pf": {
+     "typ": 80,
+     "max": null,
+     "min": null,
+     "condition": "VGS=0V, VDS=-15V, f=1MHz",
+     "page": "p2"
+    },
+    "rg_ohm": {
+     "typ": 7.8,
+     "max": 12,
+     "min": 4,
+     "condition": "f=1MHz",
+     "page": "p2"
+    },
+    "rth_ja_c_per_w_steady": {
+     "typ": 100,
+     "max": 125,
+     "min": null,
+     "condition": "steady state, 1 in^2 FR-4, 2 oz Cu",
+     "page": "p1"
+    },
+    "rth_ja_c_per_w_t10s": {
+     "typ": 70,
+     "max": 90,
+     "min": null,
+     "condition": "t<=10s",
+     "page": "p1"
+    },
+    "id_a": {
+     "typ": null,
+     "max": -4.0,
+     "min": null,
+     "condition": "TA=25C",
+     "page": "p1",
+     "alias_of": "id_cont_a_ta25"
+    },
+    "qg_nc": {
+     "typ": 7.0,
+     "max": null,
+     "min": null,
+     "condition": "Qg(4.5V); test VGS=-10V, VDS=-15V, ID=-4A",
+     "page": "p2",
+     "alias_of": "qg_nc_vgs4v5"
+    },
+    "rth_ja_cw": {
+     "typ": 100.0,
+     "max": 125.0,
+     "min": null,
+     "condition": "steady state, 1 in^2 FR-4, 2 oz Cu",
+     "page": "p1",
+     "alias_of": "rth_ja_c_per_w_steady"
+    }
+   },
+   "price_cny_approx": 0.42,
+   "price_evidence": "LCSC C15127 10+ $0.0589 (9000+ $0.0338) per search snippet; assumed 7.1 CNY/USD",
+   "notes": "Datasheet Rev 3.1 Dec 2023. Clones with different specs: UMW C347476, HUASHUO C700954, BORN C306862.",
+   "confidence": "high",
+   "role": "pmos"
+  },
+  {
+   "id": "ss34_vishay",
+   "category": "schottky",
+   "mpn": "SS34-E3/57T",
+   "manufacturer": "Vishay General Semiconductor",
+   "package": "SMC (DO-214AB)",
+   "lcsc": "C13354",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/Schottky-Barrier-Diodes-SBD_Vishay-Intertech-SS34-E3-57T_C13354.html 'VISHAY, SS34-E3/57T, C13354, SMC(DO-214AB)'",
+   "datasheet_url": "https://www.vishay.com/docs/88751/ss32.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vrrm_v": {
+     "typ": null,
+     "max": 40,
+     "min": null,
+     "condition": "",
+     "page": "p1"
+    },
+    "if_av_a": {
+     "typ": null,
+     "max": 3.0,
+     "min": null,
+     "condition": "at TL (fig.1)",
+     "page": "p1"
+    },
+    "ifsm_a": {
+     "typ": null,
+     "max": 100,
+     "min": null,
+     "condition": "8.3 ms half sine",
+     "page": "p1"
+    },
+    "vf_v_at_3a": {
+     "typ": null,
+     "max": 0.5,
+     "min": null,
+     "condition": "IF=3.0A, TA=25C, pulse (SS32-SS34)",
+     "page": "p2"
+    },
+    "vf_v_at_1a": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "not tabulated (curve only)",
+     "page": "p3"
+    },
+    "vf_v_at_0a5": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "not tabulated (curve only)",
+     "page": "p3"
+    },
+    "ir_ma_at_vr_rated": {
+     "typ": null,
+     "max": 0.5,
+     "min": null,
+     "condition": "TA=25C (20 mA max at TA=100C)",
+     "page": "p2"
+    },
+    "cj_pf": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "curve only, not tabulated",
+     "page": "p3"
+    },
+    "rth_ja_c_per_w": {
+     "typ": 55,
+     "max": null,
+     "min": null,
+     "condition": "PCB, 14x14 mm copper pads",
+     "page": "p2"
+    },
+    "rth_jl_c_per_w": {
+     "typ": 17,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "p2"
+    },
+    "tj_max_c": {
+     "typ": null,
+     "max": 150,
+     "min": null,
+     "condition": "",
+     "page": "p1"
+    },
+    "if_avg_a": {
+     "typ": null,
+     "max": 3.0,
+     "min": null,
+     "condition": "at TL (fig.1)",
+     "page": "p1",
+     "alias_of": "if_av_a"
+    },
+    "rth_ja_cw": {
+     "typ": 55.0,
+     "max": null,
+     "min": null,
+     "condition": "PCB, 14x14 mm copper pads",
+     "page": "p2",
+     "alias_of": "rth_ja_c_per_w"
+    }
+   },
+   "price_cny_approx": 0.97,
+   "price_evidence": "LCSC C13354 'from $0.1369' (5100+ tier; 5+ $0.281); assumed 7.1 CNY/USD",
+   "notes": "Vishay SS34 comes in SMC, not SMA. The LCSC listing says TJ -55..+125C, but the datasheet (Rev 23-Apr-2020) says -55..+150C.",
+   "confidence": "high",
+   "role": "diode"
+  },
+  {
+   "id": "ss34_mdd",
+   "category": "schottky",
+   "mpn": "SS34",
+   "manufacturer": "MDD (Microdiode Semiconductor)",
+   "package": "SMA (DO-214AC)",
+   "lcsc": "C8678",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/Schottky-Barrier-Diodes-SBD_MDD-Microdiode-Electronics-SS34_C8678.html; jlcpcb C8678 '-55~+125C 3A 40V 500uA@40V 550mV@3A SMA(DO-214AC)' (Basic)",
+   "datasheet_url": "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/789/3372_SS34A00000S040.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "vrrm_v": {
+     "typ": null,
+     "max": 40,
+     "min": null,
+     "condition": "distributor listings",
+     "page": ""
+    },
+    "if_av_a": {
+     "typ": null,
+     "max": 3,
+     "min": null,
+     "condition": "distributor listings",
+     "page": ""
+    },
+    "ifsm_a": {
+     "typ": null,
+     "max": 80,
+     "min": null,
+     "condition": "LCSC listing only (one snapshot)",
+     "page": ""
+    },
+    "vf_v_at_3a": {
+     "typ": null,
+     "max": 0.55,
+     "min": null,
+     "condition": "LCSC/JLC/DigiKey listings + NextGen spec-sheet search snippet",
+     "page": ""
+    },
+    "ir_ma_at_vr_rated": {
+     "typ": null,
+     "max": 0.5,
+     "min": null,
+     "condition": "VR=40V, listings",
+     "page": ""
+    },
+    "cj_pf": {
+     "typ": 250,
+     "max": null,
+     "min": null,
+     "condition": "VR=4V, 1MHz (DigiKey listing / NextGen snippet)",
+     "page": ""
+    },
+    "rth_ja_c_per_w": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "not verified",
+     "page": ""
+    },
+    "tj_max_c": {
+     "typ": null,
+     "max": 125,
+     "min": null,
+     "condition": "listings",
+     "page": ""
+    },
+    "if_avg_a": {
+     "typ": null,
+     "max": 3.0,
+     "min": null,
+     "condition": "distributor listings",
+     "page": "",
+     "alias_of": "if_av_a"
+    },
+    "rth_ja_cw": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "not verified",
+     "page": "",
+     "alias_of": "rth_ja_c_per_w"
+    }
+   },
+   "price_cny_approx": 0.11,
+   "price_evidence": "LCSC C8678 'From $0.0156' (snapshot); assumed 7.1 CNY/USD",
+   "notes": "I could NOT read an MDD datasheet: the LCSC, alldatasheet and DigiKey-media PDFs were blocked. All values come from distributor listings or search snippets. datasheet_url is the NextGen (MDD cross) sheet, seen only as a search snippet. Treat as unverified.",
+   "confidence": "low",
+   "role": "diode"
+  },
+  {
+   "id": "ss54_mdd",
+   "category": "schottky",
+   "mpn": "SS54",
+   "manufacturer": "MDD (Microdiode Semiconductor)",
+   "package": "SMA (DO-214AC)",
+   "lcsc": "C22452",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/Schottky-Barrier-Diodes-SBD_MDD-Microdiode-Electronics-SS54_C22452.html; jlcpcb C22452 'SMA(DO-214AC)' Basic. (MDD SS54C in SMC = C16103; SS54B in SMB = C32513)",
+   "datasheet_url": "https://pdf.digi-electronics.com/pdf/5541/SS54-datasheet.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "vrrm_v": {
+     "typ": null,
+     "max": 40,
+     "min": null,
+     "condition": "",
+     "page": "spec p4"
+    },
+    "if_av_a": {
+     "typ": null,
+     "max": 5.0,
+     "min": null,
+     "condition": "at TL (fig.1)",
+     "page": "spec p4"
+    },
+    "ifsm_a": {
+     "typ": null,
+     "max": 120,
+     "min": null,
+     "condition": "8.3 ms half sine",
+     "page": "spec p4"
+    },
+    "vf_v_at_5a": {
+     "typ": null,
+     "max": 0.55,
+     "min": null,
+     "condition": "IF=5.0A, 25C",
+     "page": "spec p4"
+    },
+    "vf_v_at_1a": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "not tabulated",
+     "page": ""
+    },
+    "ir_ma_at_vr_rated": {
+     "typ": null,
+     "max": 1.0,
+     "min": null,
+     "condition": "TA=25C (50 mA at TA=100C)",
+     "page": "spec p4"
+    },
+    "cj_pf": {
+     "typ": 500,
+     "max": null,
+     "min": null,
+     "condition": "VR=4V, 1MHz",
+     "page": "spec p4"
+    },
+    "rth_ja_c_per_w": {
+     "typ": 60,
+     "max": null,
+     "min": null,
+     "condition": "PCB, 5x5 mm copper pads",
+     "page": "spec p4"
+    },
+    "tj_max_c": {
+     "typ": null,
+     "max": 125,
+     "min": null,
+     "condition": "",
+     "page": "spec p4"
+    },
+    "if_avg_a": {
+     "typ": null,
+     "max": 5.0,
+     "min": null,
+     "condition": "at TL (fig.1)",
+     "page": "spec p4",
+     "alias_of": "if_av_a"
+    },
+    "rth_ja_cw": {
+     "typ": 60.0,
+     "max": null,
+     "min": null,
+     "condition": "PCB, 5x5 mm copper pads",
+     "page": "spec p4",
+     "alias_of": "rth_ja_c_per_w"
+    }
+   },
+   "price_cny_approx": 0.17,
+   "price_evidence": "LCSC C22452 'From $0.0237' (snapshot); assumed 7.1 CNY/USD",
+   "notes": "Source is the NextGen Components spec sheet for 'MDD SS54' (No. N1230-SMASS540000S54, Rev A0, Dec 30 2021), embedded in a DiGi-Electronics PDF. It is not an MDD-branded document. IFSM 120 A conflicts with Elecfans' 125 A. A 5 A rating in an SMA package is thermally optimistic.",
+   "confidence": "medium",
+   "role": "diode"
+  },
+  {
+   "id": "ss14_vishay",
+   "category": "schottky",
+   "mpn": "SS14-E3/61T",
+   "manufacturer": "Vishay General Semiconductor",
+   "package": "SMA (DO-214AC)",
+   "lcsc": "C47460",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/Schottky-Barrier-Diodes-SBD_VISHAY_SS14-E3-61T_SS14-E3-61T_C47460.html; jlcpcb C47460",
+   "datasheet_url": "https://www.vishay.com/docs/88746/ss12.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vrrm_v": {
+     "typ": null,
+     "max": 40,
+     "min": null,
+     "condition": "",
+     "page": "p1"
+    },
+    "if_av_a": {
+     "typ": null,
+     "max": 1.0,
+     "min": null,
+     "condition": "at TL (fig.1)",
+     "page": "p1"
+    },
+    "ifsm_a": {
+     "typ": null,
+     "max": 40,
+     "min": null,
+     "condition": "8.3 ms half sine",
+     "page": "p1"
+    },
+    "vf_v_at_1a": {
+     "typ": null,
+     "max": 0.5,
+     "min": null,
+     "condition": "IF=1.0A, TA=25C, pulse (SS12-SS14)",
+     "page": "p2"
+    },
+    "vf_v_at_0a5": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "curve only",
+     "page": "p3"
+    },
+    "ir_ma_at_vr_rated": {
+     "typ": null,
+     "max": 0.2,
+     "min": null,
+     "condition": "TA=25C; 6.0 mA max at 100C (column alignment for SS14 inferred)",
+     "page": "p2"
+    },
+    "cj_pf": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "curve only",
+     "page": "p3"
+    },
+    "rth_ja_c_per_w": {
+     "typ": 88,
+     "max": null,
+     "min": null,
+     "condition": "PCB, 5x5 mm copper pads",
+     "page": "p2"
+    },
+    "rth_jl_c_per_w": {
+     "typ": 28,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "p2"
+    },
+    "tj_max_c": {
+     "typ": null,
+     "max": 150,
+     "min": null,
+     "condition": "",
+     "page": "p1"
+    },
+    "if_avg_a": {
+     "typ": null,
+     "max": 1.0,
+     "min": null,
+     "condition": "at TL (fig.1)",
+     "page": "p1",
+     "alias_of": "if_av_a"
+    },
+    "rth_ja_cw": {
+     "typ": 88.0,
+     "max": null,
+     "min": null,
+     "condition": "PCB, 5x5 mm copper pads",
+     "page": "p2",
+     "alias_of": "rth_ja_c_per_w"
+    }
+   },
+   "price_cny_approx": 0.38,
+   "price_evidence": "LCSC C47460 'from $0.0539' (snapshot); assumed 7.1 CNY/USD",
+   "notes": "Datasheet Rev 23-Apr-2020. IF(AV) of 1 A is marginal against 0.5 A average and about 1.8 A peak. The common cheap alternative is MDD SS14 C2480 (listing: 550mV@1A, 25A IFSM, 40V); I did not read its datasheet.",
+   "confidence": "high",
+   "role": "diode"
+  },
+  {
+   "id": "b5819w_jscj",
+   "category": "schottky",
+   "mpn": "B5819W SL",
+   "manufacturer": "JSCJ (Jiangsu Changjing Electronics)",
+   "package": "SOD-123",
+   "lcsc": "C8598",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/Schottky-Barrier-Diodes-SBD_Changjiang-Electronics-Tech-CJ-B5819W-SL_C8598.html; jlcpcb C8598 '1A 40V 600mV@1A 9A SOD-123' (Basic)",
+   "datasheet_url": "https://www.jscj-elec.com/gallery/file/B5817W%205819W%205819W%20SOD-123.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vrrm_v": {
+     "typ": null,
+     "max": 40,
+     "min": null,
+     "condition": "",
+     "page": "p1"
+    },
+    "if_av_a": {
+     "typ": null,
+     "max": 1,
+     "min": null,
+     "condition": "",
+     "page": "p1"
+    },
+    "ifrm_a": {
+     "typ": null,
+     "max": 1.5,
+     "min": null,
+     "condition": "repetitive peak forward current",
+     "page": "p1"
+    },
+    "ifsm_a": {
+     "typ": null,
+     "max": 9,
+     "min": null,
+     "condition": "t=8.3ms",
+     "page": "p1"
+    },
+    "vf_v_at_1a": {
+     "typ": null,
+     "max": 0.6,
+     "min": null,
+     "condition": "Ta=25C",
+     "page": "p1"
+    },
+    "vf_v_at_3a": {
+     "typ": null,
+     "max": 0.9,
+     "min": null,
+     "condition": "Ta=25C",
+     "page": "p1"
+    },
+    "ir_ma_at_vr_rated": {
+     "typ": null,
+     "max": 1,
+     "min": null,
+     "condition": "VR=40V",
+     "page": "p1"
+    },
+    "cj_pf": {
+     "typ": null,
+     "max": 120,
+     "min": null,
+     "condition": "VR=4V, f=1MHz",
+     "page": "p1"
+    },
+    "rth_ja_c_per_w": {
+     "typ": null,
+     "max": 200,
+     "min": null,
+     "condition": "PCB condition not stated",
+     "page": "p1"
+    },
+    "pd_mw": {
+     "typ": null,
+     "max": 500,
+     "min": null,
+     "condition": "",
+     "page": "p1"
+    },
+    "tj_max_c": {
+     "typ": null,
+     "max": 125,
+     "min": null,
+     "condition": "",
+     "page": "p1"
+    },
+    "if_avg_a": {
+     "typ": null,
+     "max": 1.0,
+     "min": null,
+     "condition": "",
+     "page": "p1",
+     "alias_of": "if_av_a"
+    },
+    "rth_ja_cw": {
+     "typ": null,
+     "max": 200.0,
+     "min": null,
+     "condition": "PCB condition not stated",
+     "page": "p1",
+     "alias_of": "rth_ja_c_per_w"
+    }
+   },
+   "price_cny_approx": 0.11,
+   "price_evidence": "LCSC C8598 'from $0.016' (snapshot); assumed 7.1 CNY/USD",
+   "notes": "JSCJ Rev 1.0. IFRM of 1.5 A is below the about 1.8 A peak and IFSM is only 9 A, so expect a reject. The Diodes Inc equivalent is 1N5819HW (DS30217 Rev.23-2: VF max 0.45V@1A, 0.75V@3A, IFSM 25A, RthJA 225 C/W).",
+   "confidence": "high",
+   "role": "diode"
+  },
+  {
+   "id": "ucc27517",
+   "category": "gate_driver_lowside",
+   "mpn": "UCC27517DBVR",
+   "manufacturer": "Texas Instruments",
+   "package": "SOT-23-5 (DBV)",
+   "lcsc": "C99395",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/C99395.html 'UCC27517DBVR ... SOT-23-5 Low Side Gate Driver'. Clones: UMW C20623191, JSMSEMI C7432821, TECH PUBLIC C51939678 (only 300/600mA)",
+   "datasheet_url": "https://www.ti.com/lit/ds/symlink/ucc27517.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vdd_v": {
+     "typ": 12,
+     "max": 18,
+     "min": 4.5,
+     "condition": "recommended operating",
+     "page": "p5 sec 8.3"
+    },
+    "uvlo_on_v": {
+     "typ": 4.2,
+     "max": 4.65,
+     "min": 3.7,
+     "condition": "TA=-40..140C (3.91/4.20/4.5 at 25C)",
+     "page": "p6 sec 8.5"
+    },
+    "uvlo_off_v": {
+     "typ": 3.9,
+     "max": 4.35,
+     "min": 3.45,
+     "condition": "minimum operating voltage after supply start",
+     "page": "p6"
+    },
+    "uvlo_hyst_v": {
+     "typ": 0.3,
+     "max": 0.5,
+     "min": 0.2,
+     "condition": "",
+     "page": "p6"
+    },
+    "i_peak_source_sink_a": {
+     "typ": 4,
+     "max": null,
+     "min": null,
+     "condition": "+/-4 A at VDD=12V, CLOAD=0.22uF, 1kHz, ensured by design; not given at 5V",
+     "page": "p6"
+    },
+    "vin_h_v": {
+     "typ": 2.2,
+     "max": 2.4,
+     "min": null,
+     "condition": "input high threshold, independent of VDD (TTL/CMOS)",
+     "page": "p6"
+    },
+    "vin_l_v": {
+     "typ": 1.2,
+     "max": null,
+     "min": 1.0,
+     "condition": "input low threshold",
+     "page": "p6"
+    },
+    "vin_hys_v": {
+     "typ": 1.0,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "p6"
+    },
+    "logic_3v3_ok": {
+     "typ": true,
+     "max": null,
+     "min": null,
+     "condition": "VIN_H max 2.4 V < 3.3 V",
+     "page": "p6"
+    },
+    "tpd_on_ns_vdd4v5": {
+     "typ": 15,
+     "max": 26,
+     "min": 4,
+     "condition": "IN+ to OUT, VDD=4.5V, CLOAD=1.8nF",
+     "page": "p7 sec 8.6"
+    },
+    "tpd_on_ns_vdd12v": {
+     "typ": 13,
+     "max": 23,
+     "min": 4,
+     "condition": "IN+ to OUT, VDD=12V, CLOAD=1.8nF",
+     "page": "p7"
+    },
+    "tr_ns_vdd4v5": {
+     "typ": 16,
+     "max": 22,
+     "min": null,
+     "condition": "CLOAD=1.8nF, VDD=4.5V",
+     "page": "p7"
+    },
+    "tf_ns_vdd4v5": {
+     "typ": 7,
+     "max": 11,
+     "min": null,
+     "condition": "CLOAD=1.8nF, VDD=4.5V",
+     "page": "p7"
+    },
+    "tr_ns_vdd12v": {
+     "typ": 8,
+     "max": 12,
+     "min": null,
+     "condition": "CLOAD=1.8nF, VDD=12V",
+     "page": "p7"
+    },
+    "tf_ns_vdd12v": {
+     "typ": 7,
+     "max": 11,
+     "min": null,
+     "condition": "CLOAD=1.8nF, VDD=12V",
+     "page": "p7"
+    },
+    "idd_startup_ua": {
+     "typ": 100,
+     "max": 160,
+     "min": 40,
+     "condition": "VDD=3.4V (in UVLO), IN+=VDD, IN-=GND",
+     "page": "p6"
+    },
+    "idd_quiescent_ma_operating": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "not in EC table (only in Fig.6/7 curves, not read)",
+     "page": ""
+    },
+    "rth_ja_c_per_w": {
+     "typ": 217.6,
+     "max": null,
+     "min": null,
+     "condition": "JEDEC thermal metric",
+     "page": "p5"
+    },
+    "vdd_min_v": {
+     "min": 4.5,
+     "condition": "recommended operating",
+     "alias_of": "vdd_v.min"
+    },
+    "vdd_max_v": {
+     "max": 18,
+     "condition": "recommended operating",
+     "alias_of": "vdd_v.max"
+    },
+    "vih_v": {
+     "max": 2.4,
+     "typ": 2.2,
+     "condition": "input high threshold, independent of VDD (TTL/CMOS)",
+     "alias_of": "vin_h_v"
+    },
+    "i_source_a": {
+     "typ": 4.0,
+     "max": null,
+     "min": null,
+     "condition": "+/-4 A at VDD=12V, CLOAD=0.22uF, 1kHz, ensured by design; not given at 5V",
+     "page": "p6",
+     "alias_of": "i_peak_source_sink_a"
+    },
+    "i_sink_a": {
+     "typ": 4.0,
+     "max": null,
+     "min": null,
+     "condition": "+/-4 A at VDD=12V, CLOAD=0.22uF, 1kHz, ensured by design; not given at 5V",
+     "page": "p6",
+     "alias_of": "i_peak_source_sink_a"
+    }
+   },
+   "price_cny_approx": 1.11,
+   "price_evidence": "LCSC C99395 'From $0.156' (snapshot; another listing showed 5+ $0.1952); assumed 7.1 CNY/USD",
+   "notes": "Datasheet SLUSAY4D (Dec 2014). Pinout: 1 VDD, 2 GND, 3 IN+, 4 IN-, 5 OUT. With VDD=4.75-5 V, the UVLO-on max of 4.65 V leaves little margin. Tie IN- to GND for non-inverting use.",
+   "confidence": "high",
+   "role": "gate_driver"
+  },
+  {
+   "id": "eg27517",
+   "category": "gate_driver_lowside",
+   "mpn": "EG27517",
+   "manufacturer": "EGmicro (屹晶微电子)",
+   "package": "SOT-23-5",
+   "lcsc": "C2987449",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/C2987449.html; jlcpcb.com/partdetail/EGMicro-EG27517/C2987449; item.szlcsc.com/3440336.html (¥0.7492)",
+   "datasheet_url": "https://egmicro.com/static/upload/drive/%E7%BD%91%E7%AB%99%E5%85%AC%E5%BC%80%E8%8A%AF%E7%89%87%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C/%E4%BD%8E%E4%BE%A7%E9%A9%B1%E5%8A%A8/EG27517%E9%AB%98%E9%80%9F%E4%BD%8E%E4%BE%A7%E5%8D%95%E9%80%9A%E9%81%93%E9%A9%B1%E5%8A%A8%E8%8A%AF%E7%89%87%E6%95%B0%E6%8D%AE%E6%89%8B%E5%86%8C.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vdd_v": {
+     "typ": 12,
+     "max": 20,
+     "min": 4,
+     "condition": "operating; abs max -0.3..20 V",
+     "page": "p3-4 sec 7.1/7.2"
+    },
+    "uvlo_on_v": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "NOT specified in datasheet (no UVLO spec at all)",
+     "page": "p4"
+    },
+    "uvlo_off_v": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "NOT specified",
+     "page": "p4"
+    },
+    "i_peak_source_a": {
+     "typ": 4,
+     "max": null,
+     "min": null,
+     "condition": "Vo=0V, VIN=VIH, PW<=10us, VDD=12V",
+     "page": "p4"
+    },
+    "i_peak_sink_a": {
+     "typ": 4,
+     "max": null,
+     "min": null,
+     "condition": "Vo=12V, VIN=VIL, PW<=10us, VDD=12V",
+     "page": "p4"
+    },
+    "vin_h_v": {
+     "typ": null,
+     "max": null,
+     "min": 2.5,
+     "condition": "input logic high",
+     "page": "p4"
+    },
+    "vin_l_v": {
+     "typ": 0,
+     "max": 1.0,
+     "min": -0.3,
+     "condition": "input logic low",
+     "page": "p4"
+    },
+    "logic_3v3_ok": {
+     "typ": true,
+     "max": null,
+     "min": null,
+     "condition": "VIH min 2.5 V < 3.3 V (0.8 V margin)",
+     "page": "p4"
+    },
+    "tpd_on_ns": {
+     "typ": 80,
+     "max": null,
+     "min": null,
+     "condition": "VDD=12V, CL=10nF",
+     "page": "p4"
+    },
+    "tpd_off_ns": {
+     "typ": 60,
+     "max": null,
+     "min": null,
+     "condition": "VDD=12V, CL=10nF",
+     "page": "p4"
+    },
+    "tr_ns": {
+     "typ": 40,
+     "max": null,
+     "min": null,
+     "condition": "VDD=12V, CL=10nF (no 1.8nF data)",
+     "page": "p4"
+    },
+    "tf_ns": {
+     "typ": 20,
+     "max": null,
+     "min": null,
+     "condition": "VDD=12V, CL=10nF",
+     "page": "p4"
+    },
+    "iq_ua": {
+     "typ": 10,
+     "max": null,
+     "min": null,
+     "condition": "inputs floating, VDD=12V",
+     "page": "p4"
+    },
+    "iin_h_ua": {
+     "typ": null,
+     "max": 100,
+     "min": null,
+     "condition": "Vin=5V",
+     "page": "p4"
+    },
+    "vdd_min_v": {
+     "min": 4,
+     "condition": "operating; abs max -0.3..20 V",
+     "alias_of": "vdd_v.min"
+    },
+    "vdd_max_v": {
+     "max": 20,
+     "condition": "operating; abs max -0.3..20 V",
+     "alias_of": "vdd_v.max"
+    },
+    "vih_v": {
+     "max": 2.5,
+     "typ": null,
+     "condition": "input logic high",
+     "alias_of": "vin_h_v"
+    },
+    "i_source_a": {
+     "typ": 4.0,
+     "max": null,
+     "min": null,
+     "condition": "Vo=0V, VIN=VIH, PW<=10us, VDD=12V",
+     "page": "p4",
+     "alias_of": "i_peak_source_a"
+    },
+    "i_sink_a": {
+     "typ": 4.0,
+     "max": null,
+     "min": null,
+     "condition": "Vo=12V, VIN=VIL, PW<=10us, VDD=12V",
+     "page": "p4",
+     "alias_of": "i_peak_sink_a"
+    }
+   },
+   "price_cny_approx": 0.75,
+   "price_evidence": "szlcsc (立创商城) item 3440336 quoted ¥0.7492 in search snippet (already CNY)",
+   "notes": "Datasheet V1.0 (2020-11-10). Pin-compatible with UCC27517 (1 VDD, 2 GND, 3 IN+, 4 IN-, 5 OUT; 100k internal pull-down on IN+ and pull-up on IN-). It has NO UVLO spec, and timing is only typical at 10 nF, so behaviour at VDD=5V is not characterized. TC4420/MCP1407 were not verified.",
+   "confidence": "medium",
+   "role": "gate_driver"
+  },
+  {
+   "id": "ina180a1",
+   "category": "current_sense_amp",
+   "mpn": "INA180A1IDBVR",
+   "manufacturer": "Texas Instruments",
+   "package": "SOT-23-5 (DBV)",
+   "lcsc": "C122228",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/C122228.html 'INA180A1IDBVR' (XBLW clone C45351497)",
+   "datasheet_url": "https://www.ti.com/lit/ds/symlink/ina180.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "gain_v_per_v": {
+     "typ": 20,
+     "max": null,
+     "min": null,
+     "condition": "INA180A1",
+     "page": "p8"
+    },
+    "bandwidth_khz": {
+     "typ": 350,
+     "max": null,
+     "min": null,
+     "condition": "A1 devices, CLOAD=10pF",
+     "page": "p8"
+    },
+    "vcm_v": {
+     "typ": null,
+     "max": 26,
+     "min": -0.2,
+     "condition": "recommended operating (abs max GND-0.3..26 V)",
+     "page": "p7 sec 7.3"
+    },
+    "vs_v": {
+     "typ": null,
+     "max": 5.5,
+     "min": 2.7,
+     "condition": "operating supply",
+     "page": "p7"
+    },
+    "vos_uv_vcm0": {
+     "typ": 25,
+     "max": 150,
+     "min": null,
+     "condition": "+/-, VIN+=0V, RTI",
+     "page": "p8 sec 7.5"
+    },
+    "vos_uv_vcm12": {
+     "typ": 100,
+     "max": 500,
+     "min": null,
+     "condition": "+/-, VIN+=12V, RTI",
+     "page": "p8"
+    },
+    "vos_drift_uv_per_c": {
+     "typ": 0.2,
+     "max": 1,
+     "min": null,
+     "condition": "-40..125C",
+     "page": "p8"
+    },
+    "gain_error_pct": {
+     "typ": 0.1,
+     "max": 1.0,
+     "min": null,
+     "condition": "+/-, VOUT=0.5V..VS-0.5V",
+     "page": "p8",
+     "alias_of": "gain_error_pct"
+    },
+    "cmrr_db": {
+     "typ": 100,
+     "max": null,
+     "min": 84,
+     "condition": "VIN+=0..26V, -40..125C",
+     "page": "p8"
+    },
+    "swing_to_vs_v": {
+     "typ": -0.02,
+     "max": -0.03,
+     "min": null,
+     "condition": "VS-0.02 typ / VS-0.03 worst; RL=10k, -40..125C",
+     "page": "p8"
+    },
+    "swing_to_gnd_v": {
+     "typ": 0.0005,
+     "max": 0.005,
+     "min": null,
+     "condition": "GND+; RL=10k, -40..125C",
+     "page": "p8"
+    },
+    "iq_ua": {
+     "typ": 197,
+     "max": 260,
+     "min": null,
+     "condition": "25C; 300 uA max over -40..125C",
+     "page": "p8"
+    },
+    "slew_v_per_us": {
+     "typ": 2,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "p8"
+    },
+    "rth_ja_c_per_w": {
+     "typ": 197.1,
+     "max": null,
+     "min": null,
+     "condition": "DBV SOT-23-5",
+     "page": "p7"
+    },
+    "gain": 20.0,
+    "vcm_max_v": {
+     "max": 26,
+     "alias_of": "vcm_v.max"
+    },
+    "vs_min_v": {
+     "min": 2.7,
+     "alias_of": "vs_v.min"
+    },
+    "vs_max_v": {
+     "max": 5.5,
+     "alias_of": "vs_v.max"
+    },
+    "vos_uv": {
+     "typ": 100.0,
+     "max": 500.0,
+     "min": null,
+     "condition": "+/-, VIN+=12V, RTI（取共模 12 V 规格：分流电阻位于 12 V 母线）",
+     "page": "p8",
+     "alias_of": "vos_uv_vcm12"
+    }
+   },
+   "price_cny_approx": 1.21,
+   "price_evidence": "LCSC C122228 'from $0.171' (snapshot); assumed 7.1 CNY/USD",
+   "notes": "SBOS741H (Jul 2022). Pinout: INA180Ax = pinout A (SOT-23-5): 1 OUT, 2 GND, 3 IN+, 4 IN-, 5 VS. INA180Bx = pinout B: 1 IN+, 2 GND, 3 IN-, 4 OUT, 5 VS. Unidirectional. VS max is 5.5 V, so power it from 3.3 V or 5 V; the shunt can sit on the 12 V rail (VCM up to 26 V).",
+   "confidence": "high",
+   "role": "csa"
+  },
+  {
+   "id": "ina180a2",
+   "category": "current_sense_amp",
+   "mpn": "INA180A2IDBVR",
+   "manufacturer": "Texas Instruments",
+   "package": "SOT-23-5 (DBV)",
+   "lcsc": "C192764",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/C192764.html 'INA180A2IDBVR'",
+   "datasheet_url": "https://www.ti.com/lit/ds/symlink/ina180.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "gain_v_per_v": {
+     "typ": 50,
+     "max": null,
+     "min": null,
+     "condition": "INA180A2",
+     "page": "p8"
+    },
+    "bandwidth_khz": {
+     "typ": 210,
+     "max": null,
+     "min": null,
+     "condition": "A2 devices, CLOAD=10pF",
+     "page": "p8"
+    },
+    "vcm_v": {
+     "typ": null,
+     "max": 26,
+     "min": -0.2,
+     "condition": "recommended operating (abs max GND-0.3..26 V)",
+     "page": "p7 sec 7.3"
+    },
+    "vs_v": {
+     "typ": null,
+     "max": 5.5,
+     "min": 2.7,
+     "condition": "operating supply",
+     "page": "p7"
+    },
+    "vos_uv_vcm0": {
+     "typ": 25,
+     "max": 150,
+     "min": null,
+     "condition": "+/-, VIN+=0V, RTI",
+     "page": "p8 sec 7.5"
+    },
+    "vos_uv_vcm12": {
+     "typ": 100,
+     "max": 500,
+     "min": null,
+     "condition": "+/-, VIN+=12V, RTI",
+     "page": "p8"
+    },
+    "vos_drift_uv_per_c": {
+     "typ": 0.2,
+     "max": 1,
+     "min": null,
+     "condition": "-40..125C",
+     "page": "p8"
+    },
+    "gain_error_pct": {
+     "typ": 0.1,
+     "max": 1.0,
+     "min": null,
+     "condition": "+/-, VOUT=0.5V..VS-0.5V",
+     "page": "p8",
+     "alias_of": "gain_error_pct"
+    },
+    "cmrr_db": {
+     "typ": 100,
+     "max": null,
+     "min": 84,
+     "condition": "VIN+=0..26V, -40..125C",
+     "page": "p8"
+    },
+    "swing_to_vs_v": {
+     "typ": -0.02,
+     "max": -0.03,
+     "min": null,
+     "condition": "VS-0.02 typ / VS-0.03 worst; RL=10k, -40..125C",
+     "page": "p8"
+    },
+    "swing_to_gnd_v": {
+     "typ": 0.0005,
+     "max": 0.005,
+     "min": null,
+     "condition": "GND+; RL=10k, -40..125C",
+     "page": "p8"
+    },
+    "iq_ua": {
+     "typ": 197,
+     "max": 260,
+     "min": null,
+     "condition": "25C; 300 uA max over -40..125C",
+     "page": "p8"
+    },
+    "slew_v_per_us": {
+     "typ": 2,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "p8"
+    },
+    "rth_ja_c_per_w": {
+     "typ": 197.1,
+     "max": null,
+     "min": null,
+     "condition": "DBV SOT-23-5",
+     "page": "p7"
+    },
+    "gain": 50.0,
+    "vcm_max_v": {
+     "max": 26,
+     "alias_of": "vcm_v.max"
+    },
+    "vs_min_v": {
+     "min": 2.7,
+     "alias_of": "vs_v.min"
+    },
+    "vs_max_v": {
+     "max": 5.5,
+     "alias_of": "vs_v.max"
+    },
+    "vos_uv": {
+     "typ": 100.0,
+     "max": 500.0,
+     "min": null,
+     "condition": "+/-, VIN+=12V, RTI（取共模 12 V 规格：分流电阻位于 12 V 母线）",
+     "page": "p8",
+     "alias_of": "vos_uv_vcm12"
+    }
+   },
+   "price_cny_approx": 0.69,
+   "price_evidence": "LCSC C192764 'from $0.0978' (snapshot); assumed 7.1 CNY/USD",
+   "notes": "SBOS741H (Jul 2022). Pinout: INA180Ax = pinout A (SOT-23-5): 1 OUT, 2 GND, 3 IN+, 4 IN-, 5 VS. INA180Bx = pinout B: 1 IN+, 2 GND, 3 IN-, 4 OUT, 5 VS. Unidirectional. VS max is 5.5 V, so power it from 3.3 V or 5 V; the shunt can sit on the 12 V rail (VCM up to 26 V).",
+   "confidence": "high",
+   "role": "csa"
+  },
+  {
+   "id": "ina180a3",
+   "category": "current_sense_amp",
+   "mpn": "INA180A3IDBVR",
+   "manufacturer": "Texas Instruments",
+   "package": "SOT-23-5 (DBV)",
+   "lcsc": "C122882",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/Current-Sense-Amplifiers_Texas-Instruments-INA180A3IDBVR_C122882.html (LX clone C48533470)",
+   "datasheet_url": "https://www.ti.com/lit/ds/symlink/ina180.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "gain_v_per_v": {
+     "typ": 100,
+     "max": null,
+     "min": null,
+     "condition": "INA180A3",
+     "page": "p8"
+    },
+    "bandwidth_khz": {
+     "typ": 150,
+     "max": null,
+     "min": null,
+     "condition": "A3 devices, CLOAD=10pF",
+     "page": "p8"
+    },
+    "vcm_v": {
+     "typ": null,
+     "max": 26,
+     "min": -0.2,
+     "condition": "recommended operating (abs max GND-0.3..26 V)",
+     "page": "p7 sec 7.3"
+    },
+    "vs_v": {
+     "typ": null,
+     "max": 5.5,
+     "min": 2.7,
+     "condition": "operating supply",
+     "page": "p7"
+    },
+    "vos_uv_vcm0": {
+     "typ": 25,
+     "max": 150,
+     "min": null,
+     "condition": "+/-, VIN+=0V, RTI",
+     "page": "p8 sec 7.5"
+    },
+    "vos_uv_vcm12": {
+     "typ": 100,
+     "max": 500,
+     "min": null,
+     "condition": "+/-, VIN+=12V, RTI",
+     "page": "p8"
+    },
+    "vos_drift_uv_per_c": {
+     "typ": 0.2,
+     "max": 1,
+     "min": null,
+     "condition": "-40..125C",
+     "page": "p8"
+    },
+    "gain_error_pct": {
+     "typ": 0.1,
+     "max": 1.0,
+     "min": null,
+     "condition": "+/-, VOUT=0.5V..VS-0.5V",
+     "page": "p8",
+     "alias_of": "gain_error_pct"
+    },
+    "cmrr_db": {
+     "typ": 100,
+     "max": null,
+     "min": 84,
+     "condition": "VIN+=0..26V, -40..125C",
+     "page": "p8"
+    },
+    "swing_to_vs_v": {
+     "typ": -0.02,
+     "max": -0.03,
+     "min": null,
+     "condition": "VS-0.02 typ / VS-0.03 worst; RL=10k, -40..125C",
+     "page": "p8"
+    },
+    "swing_to_gnd_v": {
+     "typ": 0.0005,
+     "max": 0.005,
+     "min": null,
+     "condition": "GND+; RL=10k, -40..125C",
+     "page": "p8"
+    },
+    "iq_ua": {
+     "typ": 197,
+     "max": 260,
+     "min": null,
+     "condition": "25C; 300 uA max over -40..125C",
+     "page": "p8"
+    },
+    "slew_v_per_us": {
+     "typ": 2,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "p8"
+    },
+    "rth_ja_c_per_w": {
+     "typ": 197.1,
+     "max": null,
+     "min": null,
+     "condition": "DBV SOT-23-5",
+     "page": "p7"
+    },
+    "gain": 100.0,
+    "vcm_max_v": {
+     "max": 26,
+     "alias_of": "vcm_v.max"
+    },
+    "vs_min_v": {
+     "min": 2.7,
+     "alias_of": "vs_v.min"
+    },
+    "vs_max_v": {
+     "max": 5.5,
+     "alias_of": "vs_v.max"
+    },
+    "vos_uv": {
+     "typ": 100.0,
+     "max": 500.0,
+     "min": null,
+     "condition": "+/-, VIN+=12V, RTI（取共模 12 V 规格：分流电阻位于 12 V 母线）",
+     "page": "p8",
+     "alias_of": "vos_uv_vcm12"
+    }
+   },
+   "price_cny_approx": 0.95,
+   "price_evidence": "LCSC C122882 'from $0.1342' (snapshot); assumed 7.1 CNY/USD",
+   "notes": "SBOS741H (Jul 2022). Pinout: INA180Ax = pinout A (SOT-23-5): 1 OUT, 2 GND, 3 IN+, 4 IN-, 5 VS. INA180Bx = pinout B: 1 IN+, 2 GND, 3 IN-, 4 OUT, 5 VS. Unidirectional. VS max is 5.5 V, so power it from 3.3 V or 5 V; the shunt can sit on the 12 V rail (VCM up to 26 V).",
+   "confidence": "high",
+   "role": "csa"
+  },
+  {
+   "id": "ina199a1",
+   "category": "current_sense_amp",
+   "mpn": "INA199A1DCKR",
+   "manufacturer": "Texas Instruments",
+   "package": "SC70-6 (DCK)",
+   "lcsc": "C59135",
+   "lcsc_evidence": "WebSearch: lcsc.com product-detail page ...INA199A1DCKR_C59135.html",
+   "datasheet_url": "https://www.ti.com/lit/ds/symlink/ina199.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "gain_v_per_v": {
+     "typ": 50,
+     "max": null,
+     "min": null,
+     "condition": "INA199x1",
+     "page": "p6"
+    },
+    "bandwidth_khz": {
+     "typ": 80,
+     "max": null,
+     "min": null,
+     "condition": "CLOAD=10pF",
+     "page": "p6"
+    },
+    "vcm_v": {
+     "typ": null,
+     "max": 26,
+     "min": -0.3,
+     "condition": "version A; versions B/C min -0.1 V; -40..125C",
+     "page": "p6 sec 6.5"
+    },
+    "vs_v": {
+     "typ": null,
+     "max": 26,
+     "min": 2.7,
+     "condition": "-40..125C (2.5 V min at -20..85C)",
+     "page": "p6"
+    },
+    "vos_uv": {
+     "typ": 5,
+     "max": 150,
+     "min": null,
+     "condition": "+/-, VSENSE=0, RTI",
+     "page": "p6"
+    },
+    "vos_drift_uv_per_c": {
+     "typ": 0.1,
+     "max": 0.5,
+     "min": null,
+     "condition": "",
+     "page": "p6"
+    },
+    "gain_error_pct": {
+     "typ": 0.03,
+     "max": 1.5,
+     "min": null,
+     "condition": "+/-, versions A/B, -40..125C (version C max 1%)",
+     "page": "p6",
+     "alias_of": "gain_error_pct"
+    },
+    "cmr_db": {
+     "typ": 120,
+     "max": null,
+     "min": 100,
+     "condition": "VIN+=0..26V",
+     "page": "p6"
+    },
+    "swing_to_vplus_v": {
+     "typ": -0.05,
+     "max": -0.2,
+     "min": null,
+     "condition": "V+ -0.05 typ / V+ -0.2 worst; RL=10k",
+     "page": "p6"
+    },
+    "swing_to_gnd_v": {
+     "typ": 0.005,
+     "max": 0.05,
+     "min": null,
+     "condition": "GND+; RL=10k",
+     "page": "p6"
+    },
+    "iq_ua": {
+     "typ": 65,
+     "max": 100,
+     "min": null,
+     "condition": "25C; 115 uA max over temp",
+     "page": "p6"
+    },
+    "slew_v_per_us": {
+     "typ": 0.4,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "p6"
+    },
+    "rth_ja_c_per_w": {
+     "typ": 250,
+     "max": null,
+     "min": null,
+     "condition": "SC70",
+     "page": "p6"
+    },
+    "gain": 50.0,
+    "vcm_max_v": {
+     "max": 26,
+     "alias_of": "vcm_v.max"
+    },
+    "vs_min_v": {
+     "min": 2.7,
+     "alias_of": "vs_v.min"
+    },
+    "vs_max_v": {
+     "max": 26,
+     "alias_of": "vs_v.max"
+    }
+   },
+   "price_cny_approx": 1.6,
+   "price_evidence": "LCSC C59135 'From $0.2256' (snapshot); assumed 7.1 CNY/USD",
+   "notes": "SBOS469H (Oct 2023). NOT pin-compatible with INA180. SC70-6 pinout: 1 REF, 2 GND, 3 V+, 4 IN+, 5 IN-, 6 OUT. Tie REF to GND for unidirectional use. Lowest gain is 50 V/V (no 20 V/V). LCSC/JLC listing for A1 says 14 kHz BW, but the datasheet says 80 kHz for x1 (14 kHz is x3).",
+   "confidence": "high",
+   "role": "csa"
+  },
+  {
+   "id": "ina199a2",
+   "category": "current_sense_amp",
+   "mpn": "INA199A2DCKR",
+   "manufacturer": "Texas Instruments",
+   "package": "SC70-6 (DCK)",
+   "lcsc": "C131913",
+   "lcsc_evidence": "WebSearch: lcsc.com product-detail page ...INA199A2DCKR_C131913.html",
+   "datasheet_url": "https://www.ti.com/lit/ds/symlink/ina199.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "gain_v_per_v": {
+     "typ": 100,
+     "max": null,
+     "min": null,
+     "condition": "INA199x2",
+     "page": "p6"
+    },
+    "bandwidth_khz": {
+     "typ": 30,
+     "max": null,
+     "min": null,
+     "condition": "CLOAD=10pF",
+     "page": "p6"
+    },
+    "vcm_v": {
+     "typ": null,
+     "max": 26,
+     "min": -0.3,
+     "condition": "version A; versions B/C min -0.1 V; -40..125C",
+     "page": "p6 sec 6.5"
+    },
+    "vs_v": {
+     "typ": null,
+     "max": 26,
+     "min": 2.7,
+     "condition": "-40..125C (2.5 V min at -20..85C)",
+     "page": "p6"
+    },
+    "vos_uv": {
+     "typ": 5,
+     "max": 150,
+     "min": null,
+     "condition": "+/-, VSENSE=0, RTI",
+     "page": "p6"
+    },
+    "vos_drift_uv_per_c": {
+     "typ": 0.1,
+     "max": 0.5,
+     "min": null,
+     "condition": "",
+     "page": "p6"
+    },
+    "gain_error_pct": {
+     "typ": 0.03,
+     "max": 1.5,
+     "min": null,
+     "condition": "+/-, versions A/B, -40..125C (version C max 1%)",
+     "page": "p6",
+     "alias_of": "gain_error_pct"
+    },
+    "cmr_db": {
+     "typ": 120,
+     "max": null,
+     "min": 100,
+     "condition": "VIN+=0..26V",
+     "page": "p6"
+    },
+    "swing_to_vplus_v": {
+     "typ": -0.05,
+     "max": -0.2,
+     "min": null,
+     "condition": "V+ -0.05 typ / V+ -0.2 worst; RL=10k",
+     "page": "p6"
+    },
+    "swing_to_gnd_v": {
+     "typ": 0.005,
+     "max": 0.05,
+     "min": null,
+     "condition": "GND+; RL=10k",
+     "page": "p6"
+    },
+    "iq_ua": {
+     "typ": 65,
+     "max": 100,
+     "min": null,
+     "condition": "25C; 115 uA max over temp",
+     "page": "p6"
+    },
+    "slew_v_per_us": {
+     "typ": 0.4,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "p6"
+    },
+    "rth_ja_c_per_w": {
+     "typ": 250,
+     "max": null,
+     "min": null,
+     "condition": "SC70",
+     "page": "p6"
+    },
+    "gain": 100.0,
+    "vcm_max_v": {
+     "max": 26,
+     "alias_of": "vcm_v.max"
+    },
+    "vs_min_v": {
+     "min": 2.7,
+     "alias_of": "vs_v.min"
+    },
+    "vs_max_v": {
+     "max": 26,
+     "alias_of": "vs_v.max"
+    }
+   },
+   "price_cny_approx": 0.95,
+   "price_evidence": "LCSC C131913 'From $0.1337' (snapshot); assumed 7.1 CNY/USD",
+   "notes": "SBOS469H (Oct 2023). NOT pin-compatible with INA180. SC70-6 pinout: 1 REF, 2 GND, 3 V+, 4 IN+, 5 IN-, 6 OUT. Tie REF to GND for unidirectional use. Lowest gain is 50 V/V (no 20 V/V).",
+   "confidence": "high",
+   "role": "csa"
+  },
+  {
+   "id": "ina199a3",
+   "category": "current_sense_amp",
+   "mpn": "INA199A3DCKR",
+   "manufacturer": "Texas Instruments",
+   "package": "SC70-6 (DCK)",
+   "lcsc": "C132098",
+   "lcsc_evidence": "WebSearch: lcsc.com product-detail page ...INA199A3DCKR_C132098.html",
+   "datasheet_url": "https://www.ti.com/lit/ds/symlink/ina199.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "gain_v_per_v": {
+     "typ": 200,
+     "max": null,
+     "min": null,
+     "condition": "INA199x3",
+     "page": "p6"
+    },
+    "bandwidth_khz": {
+     "typ": 14,
+     "max": null,
+     "min": null,
+     "condition": "CLOAD=10pF",
+     "page": "p6"
+    },
+    "vcm_v": {
+     "typ": null,
+     "max": 26,
+     "min": -0.3,
+     "condition": "version A; versions B/C min -0.1 V; -40..125C",
+     "page": "p6 sec 6.5"
+    },
+    "vs_v": {
+     "typ": null,
+     "max": 26,
+     "min": 2.7,
+     "condition": "-40..125C (2.5 V min at -20..85C)",
+     "page": "p6"
+    },
+    "vos_uv": {
+     "typ": 5,
+     "max": 150,
+     "min": null,
+     "condition": "+/-, VSENSE=0, RTI",
+     "page": "p6"
+    },
+    "vos_drift_uv_per_c": {
+     "typ": 0.1,
+     "max": 0.5,
+     "min": null,
+     "condition": "",
+     "page": "p6"
+    },
+    "gain_error_pct": {
+     "typ": 0.03,
+     "max": 1.5,
+     "min": null,
+     "condition": "+/-, versions A/B, -40..125C (version C max 1%)",
+     "page": "p6",
+     "alias_of": "gain_error_pct"
+    },
+    "cmr_db": {
+     "typ": 120,
+     "max": null,
+     "min": 100,
+     "condition": "VIN+=0..26V",
+     "page": "p6"
+    },
+    "swing_to_vplus_v": {
+     "typ": -0.05,
+     "max": -0.2,
+     "min": null,
+     "condition": "V+ -0.05 typ / V+ -0.2 worst; RL=10k",
+     "page": "p6"
+    },
+    "swing_to_gnd_v": {
+     "typ": 0.005,
+     "max": 0.05,
+     "min": null,
+     "condition": "GND+; RL=10k",
+     "page": "p6"
+    },
+    "iq_ua": {
+     "typ": 65,
+     "max": 100,
+     "min": null,
+     "condition": "25C; 115 uA max over temp",
+     "page": "p6"
+    },
+    "slew_v_per_us": {
+     "typ": 0.4,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "p6"
+    },
+    "rth_ja_c_per_w": {
+     "typ": 250,
+     "max": null,
+     "min": null,
+     "condition": "SC70",
+     "page": "p6"
+    },
+    "gain": 200.0,
+    "vcm_max_v": {
+     "max": 26,
+     "alias_of": "vcm_v.max"
+    },
+    "vs_min_v": {
+     "min": 2.7,
+     "alias_of": "vs_v.min"
+    },
+    "vs_max_v": {
+     "max": 26,
+     "alias_of": "vs_v.max"
+    }
+   },
+   "price_cny_approx": 1.5,
+   "price_evidence": "LCSC C132098 'From $0.2118' (snapshot); assumed 7.1 CNY/USD; A3 stock only 217 in snapshot",
+   "notes": "SBOS469H (Oct 2023). NOT pin-compatible with INA180. SC70-6 pinout: 1 REF, 2 GND, 3 V+, 4 IN+, 5 IN-, 6 OUT. Tie REF to GND for unidirectional use. Lowest gain is 50 V/V (no 20 V/V).",
+   "confidence": "high",
+   "role": "csa"
+  },
+  {
+   "id": "ams1117_33",
+   "category": "ldo_3v3",
+   "mpn": "AMS1117-3.3",
+   "manufacturer": "Advanced Monolithic Systems",
+   "package": "SOT-223",
+   "lcsc": "C6186",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/C6186.html; jlcpcb.com/partdetail/Advanced_MonolithicSystems-AMS1117_33/C6186",
+   "datasheet_url": "http://www.advanced-monolithic.com/pdf/ds1117.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vin_max_v": {
+     "typ": null,
+     "max": 15,
+     "min": null,
+     "condition": "abs max",
+     "page": "p2"
+    },
+    "iout_max_a": {
+     "typ": null,
+     "max": 1.0,
+     "min": null,
+     "condition": "rated; current limit 0.9/1.1/1.5 A (min/typ/max) at VIN-VOUT=1.5V",
+     "page": "p1/p3"
+    },
+    "dropout_v": {
+     "typ": 1.1,
+     "max": 1.3,
+     "min": null,
+     "condition": "IOUT=0.8A, the only point specified (text: 'decreasing at lower load currents')",
+     "page": "p3"
+    },
+    "iq_ma": {
+     "typ": 5.0,
+     "max": 11.0,
+     "min": null,
+     "condition": "VIN-VOUT=1.5V",
+     "page": "p3",
+     "alias_of": "iq_ma"
+    },
+    "vout_v": {
+     "typ": 3.3,
+     "max": 3.399,
+     "min": 3.201,
+     "condition": "full-spec row; 3.251-3.349 V at VIN=4.8V, TJ=25C",
+     "page": "p2"
+    },
+    "vout_accuracy_pct": {
+     "typ": null,
+     "max": 3.0,
+     "min": null,
+     "condition": "derived from 3.201-3.399 V row (+/-1.5% at 25C)",
+     "page": "p2"
+    },
+    "load_reg_mv": {
+     "typ": 3,
+     "max": 15,
+     "min": null,
+     "condition": "VIN=4.75V, 0..0.8A (second row 7/25 mV)",
+     "page": "p3"
+    },
+    "cout_required": {
+     "typ": "22uF solid tantalum",
+     "max": null,
+     "min": null,
+     "condition": "datasheet: 22uF tantalum ensures stability for all conditions; ceramic-only stability not stated",
+     "page": "p4"
+    },
+    "rth_ja_c_per_w": {
+     "typ": 90,
+     "max": null,
+     "min": null,
+     "condition": "SOT-223; 46 to >90 depending on copper area",
+     "page": "p2"
+    },
+    "iout_ma": {
+     "typ": null,
+     "max": 1000.0,
+     "min": null,
+     "condition": "rated; current limit 0.9/1.1/1.5 A (min/typ/max) at VIN-VOUT=1.5V",
+     "page": "p1/p3",
+     "alias_of": "iout_max_a"
+    },
+    "dropout_mv": {
+     "typ": 1100.0,
+     "max": 1300.0,
+     "min": null,
+     "condition": "IOUT=0.8A, the only point specified (text: 'decreasing at lower load currents')",
+     "page": "p3",
+     "alias_of": "dropout_v"
+    },
+    "accuracy_pct": {
+     "typ": null,
+     "max": 3.0,
+     "min": null,
+     "condition": "derived from 3.201-3.399 V row (+/-1.5% at 25C)",
+     "page": "p2",
+     "alias_of": "vout_accuracy_pct"
+    }
+   },
+   "price_cny_approx": 0.79,
+   "price_evidence": "LCSC C6186 price $0.1109 (snapshot); assumed 7.1 CNY/USD",
+   "notes": "At VIN 4.75 V there is 1.45 V of headroom against a 1.3 V max dropout specified at 0.8 A. That is marginal in general but OK at 60 mA. Iq is 5-11 mA. Many same-name clones exist on LCSC.",
+   "confidence": "high",
+   "role": "ldo"
+  },
+  {
+   "id": "me6211c33",
+   "category": "ldo_3v3",
+   "mpn": "ME6211C33M5G-N",
+   "manufacturer": "MICRONE (南京微盟)",
+   "package": "SOT-23-5",
+   "lcsc": "C82942",
+   "lcsc_evidence": "WebSearch: jlcpcb.com/partdetail/84106-ME6211C33M5GN/C82942; lcsc.com/datasheet/C82942.pdf titled 'ME6211C33M5G-N'",
+   "datasheet_url": "https://img.iceasy.com/product/product/files/202111/8a8a8a1a7d35bc8a017d4ba03ae500f5.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "vin_max_v": {
+     "typ": null,
+     "max": 6.5,
+     "min": null,
+     "condition": "abs max; operating range 1.2-6.0 V",
+     "page": "p1/p5"
+    },
+    "iout_max_a": {
+     "typ": 0.5,
+     "max": null,
+     "min": null,
+     "condition": "IOUTMAX, VIN=VOUT+1V",
+     "page": "p9"
+    },
+    "dropout_mv_100ma": {
+     "typ": 120,
+     "max": null,
+     "min": null,
+     "condition": "IOUT=100mA (no max given)",
+     "page": "p9"
+    },
+    "dropout_mv_200ma": {
+     "typ": 260,
+     "max": null,
+     "min": null,
+     "condition": "IOUT=200mA (no max given)",
+     "page": "p9"
+    },
+    "iq_ua": {
+     "typ": 30,
+     "max": 60,
+     "min": null,
+     "condition": "VIN=VOUT+1V",
+     "page": "p9"
+    },
+    "vout_accuracy_pct": {
+     "typ": null,
+     "max": 1.0,
+     "min": null,
+     "condition": "+/-1%, IOUT=30mA, VIN=VOUT+1V, 25C",
+     "page": "p9"
+    },
+    "load_reg_mv": {
+     "typ": 9,
+     "max": 60,
+     "min": null,
+     "condition": "1mA<=IOUT<=100mA",
+     "page": "p9"
+    },
+    "cout_required": {
+     "typ": "1uF",
+     "max": null,
+     "min": null,
+     "condition": "test condition CIN=CL=1uF; datasheet says compatible with low-ESR ceramic",
+     "page": "p2/p9"
+    },
+    "ishort_ma": {
+     "typ": 70,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "p9"
+    },
+    "iout_ma": {
+     "typ": 500.0,
+     "max": null,
+     "min": null,
+     "condition": "IOUTMAX, VIN=VOUT+1V",
+     "page": "p9",
+     "alias_of": "iout_max_a"
+    },
+    "dropout_mv": {
+     "typ": 120.0,
+     "max": null,
+     "min": null,
+     "condition": "IOUT=100mA (no max given) @100 mA（本项目负载约 40 mA，偏保守）",
+     "page": "p9",
+     "alias_of": "dropout_mv_100ma"
+    },
+    "accuracy_pct": {
+     "typ": null,
+     "max": 1.0,
+     "min": null,
+     "condition": "+/-1%, IOUT=30mA, VIN=VOUT+1V, 25C",
+     "page": "p9",
+     "alias_of": "vout_accuracy_pct"
+    }
+   },
+   "price_cny_approx": null,
+   "price_evidence": "no price in the snippets I read",
+   "notes": "Microne datasheet V22 (iceasy mirror; manufacturer document). The C version has an EN pin; tie it to VIN.",
+   "confidence": "high",
+   "role": "ldo"
+  },
+  {
+   "id": "xc6206p332mr",
+   "category": "ldo_3v3",
+   "mpn": "XC6206P332MR-G",
+   "manufacturer": "Torex Semiconductor",
+   "package": "SOT-23 (SOT-23-3L)",
+   "lcsc": "C5446",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/Low-Dropout-Regulators-LDO_XC6206P332MR_C5446.html 'TOREX XC6206P332MR-G, C5446, SOT-23-3L' (UMW clone C347376 has different specs)",
+   "datasheet_url": "https://files.seeedstudio.com/wiki/Grove-Infrared_Temperature_Sensor_Array-AMG8833/res/XC6206.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "vin_max_v": {
+     "typ": null,
+     "max": 7.0,
+     "min": null,
+     "condition": "abs max (rev 004b); operating 1.8-6.0 V",
+     "page": "p3/p4"
+    },
+    "iout_max_a": {
+     "typ": null,
+     "max": null,
+     "min": 0.2,
+     "condition": "IOUTMAX for 3.x V types (E-2 table, merged cell)",
+     "page": "p5"
+    },
+    "dropout_mv_100ma": {
+     "typ": 250,
+     "max": 680,
+     "min": null,
+     "condition": "Vdif2 at IOUT=100mA, 3.x V row group (680 max matches DigiKey's 0.68V@100mA)",
+     "page": "p5"
+    },
+    "dropout_mv_30ma": {
+     "typ": 75,
+     "max": null,
+     "min": null,
+     "condition": "Vdif1 at 30mA; max not reliably readable from merged table",
+     "page": "p5"
+    },
+    "iq_ua": {
+     "typ": 1.0,
+     "max": 3.0,
+     "min": null,
+     "condition": "VCE=VIN",
+     "page": "p4"
+    },
+    "vout_accuracy_pct": {
+     "typ": null,
+     "max": 2.0,
+     "min": null,
+     "condition": "+/-2%, 3.234-3.366 V at IOUT=30mA",
+     "page": "p4-5"
+    },
+    "cout_required": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "ceramic compatible per datasheet; capacitor value in test circuits is image-only, not read",
+     "page": "p1/p6"
+    },
+    "iout_ma": {
+     "typ": null,
+     "max": 200.0,
+     "min": 200.0,
+     "condition": "IOUTMAX for 3.x V types (E-2 table, merged cell)",
+     "page": "p5",
+     "alias_of": "iout_max_a"
+    },
+    "dropout_mv": {
+     "typ": 250.0,
+     "max": 680.0,
+     "min": null,
+     "condition": "Vdif2 at IOUT=100mA, 3.x V row group (680 max matches DigiKey's 0.68V@100mA) @100 mA（本项目负载约 40 mA，偏保守）",
+     "page": "p5",
+     "alias_of": "dropout_mv_100ma"
+    },
+    "accuracy_pct": {
+     "typ": null,
+     "max": 2.0,
+     "min": null,
+     "condition": "+/-2%, 3.234-3.366 V at IOUT=30mA",
+     "page": "p4-5",
+     "alias_of": "vout_accuracy_pct"
+    }
+   },
+   "price_cny_approx": 0.62,
+   "price_evidence": "LCSC C5446 'from $0.0877' (snapshot); assumed 7.1 CNY/USD",
+   "notes": "The Torex site was blocked (Access Denied), so I read an older revision (ETR0305_004b) from a Seeed mirror. The current revision, ETR0305_006 (Mouser), could not be read. 200 mA is fine for 60 mA, but dropout is high.",
+   "confidence": "medium",
+   "role": "ldo"
+  },
+  {
+   "id": "rt9013_33",
+   "category": "ldo_3v3",
+   "mpn": "RT9013-33GB",
+   "manufacturer": "Richtek",
+   "package": "SOT-23-5",
+   "lcsc": "C47773",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/Low-Dropout-Regulators-LDO_RT9013-33GB_C47773.html 'RICHTEK RT9013-33GB, SOT-23-5'",
+   "datasheet_url": "https://www.unikeyic.com/media/datasheet/6f/1a/9c51/6f1a9c51c7e66d57c34f8b56aa094f36.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "vin_max_v": {
+     "typ": null,
+     "max": 6.0,
+     "min": null,
+     "condition": "abs max; recommended 2.2-5.5 V",
+     "page": "p3"
+    },
+    "iout_max_a": {
+     "typ": 0.5,
+     "max": null,
+     "min": null,
+     "condition": "rated 500 mA; current limit 0.5/0.6/0.85 A (2.7<=VIN<=5.5)",
+     "page": "p1/p4"
+    },
+    "dropout_mv": {
+     "typ": 250,
+     "max": 400,
+     "min": null,
+     "condition": "IOUT=500mA, 2.7<=VIN<=5.5V",
+     "page": "p4"
+    },
+    "iq_ua": {
+     "typ": 25,
+     "max": 50,
+     "min": null,
+     "condition": "VEN=5V, IOUT=0",
+     "page": "p4"
+    },
+    "vout_accuracy_pct": {
+     "typ": null,
+     "max": 2,
+     "min": -2,
+     "condition": "IOUT=10mA",
+     "page": "p4"
+    },
+    "cout_required": {
+     "typ": "1uF",
+     "max": null,
+     "min": null,
+     "condition": ">=1uF ceramic with ESR>5mOhm; X7R in test conditions",
+     "page": "p4/p11"
+    },
+    "rth_ja_c_per_w": {
+     "typ": 250,
+     "max": null,
+     "min": null,
+     "condition": "SOT-23-5",
+     "page": "p3"
+    },
+    "iout_ma": {
+     "typ": 500.0,
+     "max": null,
+     "min": null,
+     "condition": "rated 500 mA; current limit 0.5/0.6/0.85 A (2.7<=VIN<=5.5)",
+     "page": "p1/p4",
+     "alias_of": "iout_max_a"
+    },
+    "accuracy_pct": {
+     "typ": null,
+     "max": 2.0,
+     "min": -2.0,
+     "condition": "IOUT=10mA",
+     "page": "p4",
+     "alias_of": "vout_accuracy_pct"
+    }
+   },
+   "price_cny_approx": 0.5,
+   "price_evidence": "LCSC C47773 'from $0.0702' (snapshot); assumed 7.1 CNY/USD",
+   "notes": "Datasheet DS9013-09 (Oct 2010) via a unikeyic mirror; the richtek.com link returned 404. DigiKey lists it as Last Time Buy (LTB date 12/1/2025), so it is a sourcing risk. VIN 5.25 V is within the 5.5 V recommended max.",
+   "confidence": "medium",
+   "role": "ldo"
+  },
+  {
+   "id": "smaj15a",
+   "category": "tvs_output",
+   "mpn": "SMAJ15A",
+   "manufacturer": "Littelfuse",
+   "package": "SMA (DO-214AC)",
+   "lcsc": "C148216",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/TVS_Littelfuse_SMAJ15A_SMAJ15A_C148216.html '24.4VC Clamp 16.4A@10/1000us Ipp ... 400W ... 15V'. (ST SMAJ15A-TR is C132950; its listing shows VC 32.5V)",
+   "datasheet_url": "https://www.vishay.com/docs/88390/smaj50a.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vrwm_v": {
+     "typ": null,
+     "max": 15,
+     "min": null,
+     "condition": "",
+     "page": "Vishay p2"
+    },
+    "vbr_v": {
+     "typ": null,
+     "max": 18.5,
+     "min": 16.7,
+     "condition": "IT=1mA",
+     "page": "Vishay p2"
+    },
+    "vc_v_at_ipp": {
+     "typ": null,
+     "max": 24.4,
+     "min": null,
+     "condition": "IPP=16.4A, 10/1000us",
+     "page": "Vishay p2"
+    },
+    "ipp_a": {
+     "typ": null,
+     "max": 16.4,
+     "min": null,
+     "condition": "10/1000us",
+     "page": "Vishay p2"
+    },
+    "ppp_w": {
+     "typ": null,
+     "max": 400,
+     "min": null,
+     "condition": "10/1000us",
+     "page": "Vishay p1"
+    },
+    "ir_ua_at_vrwm": {
+     "typ": null,
+     "max": 1.0,
+     "min": null,
+     "condition": "",
+     "page": "Vishay p2"
+    },
+    "rth_ja_c_per_w": {
+     "typ": 120,
+     "max": null,
+     "min": null,
+     "condition": "Vishay, minimum recommended pad",
+     "page": "Vishay p3"
+    },
+    "vbr_min_v": {
+     "min": 16.7,
+     "alias_of": "vbr_v.min"
+    },
+    "vc_v": {
+     "typ": null,
+     "max": 24.4,
+     "min": null,
+     "condition": "IPP=16.4A, 10/1000us",
+     "page": "Vishay p2",
+     "alias_of": "vc_v_at_ipp"
+    }
+   },
+   "price_cny_approx": 0.55,
+   "price_evidence": "LCSC C148216 'from $0.0773' (snapshot); assumed 7.1 CNY/USD",
+   "notes": "The Littelfuse PDF was blocked (Access Denied). Params come from the Vishay SMAJ5.0A-188CA datasheet (88390, Rev 09-Jan-2024), SMAJ15A row. The Littelfuse values on the LCSC/DigiKey listings match (VBR 16.7-18.5, VC 24.4 V, 16.4 A, 400 W). The Vishay MPN is SMAJ15A-E3/61; I found no LCSC C-number for it.",
+   "confidence": "medium",
+   "role": "tvs"
+  },
+  {
+   "id": "smaj16a",
+   "category": "tvs_output",
+   "mpn": "SMAJ16A-E3/61",
+   "manufacturer": "Vishay General Semiconductor",
+   "package": "SMA (DO-214AC)",
+   "lcsc": null,
+   "lcsc_evidence": "No LCSC C-number found for Vishay or Littelfuse SMAJ16A. Third-party SMAJ16A on LCSC (datasheets not read): LGE C713664 (16VWM 26VC 15.38A), DOWO C283886, SEMIWARE C908385, Brightking C118305",
+   "datasheet_url": "https://www.vishay.com/docs/88390/smaj50a.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vrwm_v": {
+     "typ": null,
+     "max": 16,
+     "min": null,
+     "condition": "",
+     "page": "p2"
+    },
+    "vbr_v": {
+     "typ": null,
+     "max": 19.7,
+     "min": 17.8,
+     "condition": "IT=1mA",
+     "page": "p2"
+    },
+    "vc_v_at_ipp": {
+     "typ": null,
+     "max": 26.0,
+     "min": null,
+     "condition": "IPP=15.4A, 10/1000us",
+     "page": "p2"
+    },
+    "ipp_a": {
+     "typ": null,
+     "max": 15.4,
+     "min": null,
+     "condition": "10/1000us",
+     "page": "p2"
+    },
+    "ppp_w": {
+     "typ": null,
+     "max": 400,
+     "min": null,
+     "condition": "10/1000us",
+     "page": "p1"
+    },
+    "ir_ua_at_vrwm": {
+     "typ": null,
+     "max": 1.0,
+     "min": null,
+     "condition": "",
+     "page": "p2"
+    },
+    "rth_ja_c_per_w": {
+     "typ": 120,
+     "max": null,
+     "min": null,
+     "condition": "minimum recommended pad",
+     "page": "p3"
+    },
+    "vbr_min_v": {
+     "min": 17.8,
+     "alias_of": "vbr_v.min"
+    },
+    "vc_v": {
+     "typ": null,
+     "max": 26.0,
+     "min": null,
+     "condition": "IPP=15.4A, 10/1000us",
+     "page": "p2",
+     "alias_of": "vc_v_at_ipp"
+    }
+   },
+   "price_cny_approx": null,
+   "price_evidence": "no LCSC listing confirmed",
+   "notes": "Vishay datasheet 88390 Rev 09-Jan-2024. Littelfuse SMAJ16A (DigiKey/Newark) lists the same 17.8-19.7 V / 26 V / 15.4 A.",
+   "confidence": "high",
+   "role": "tvs"
+  },
+  {
+   "id": "lm5114b",
+   "role": "gate_driver",
+   "category": "gate_driver_lowside",
+   "mpn": "LM5114BMFX/S7003094",
+   "alt_mpn": "LM5114BMF/NOPB（同标记 SJ4B，均可）",
+   "manufacturer": "Texas Instruments",
+   "package": "SOT-23-6",
+   "lcsc": "C2676979",
+   "lcsc_evidence": "LCSC 托管数据手册 URL .../2302281101_Texas-Instruments-LM5114BMFX-S7003094_C2676979.pdf",
+   "datasheet_url": "https://www.ti.com/lit/ds/symlink/lm5114.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vdd_min_v": {
+     "min": 4.0,
+     "condition": "VDD 工作电压, TJ −40..125°C",
+     "page": "SNVS790F p5"
+    },
+    "vdd_max_v": {
+     "max": 12.6,
+     "condition": "工作电压；绝对最大 14 V",
+     "page": "p4-5"
+    },
+    "uvlo_on_v": {
+     "typ": 3.6,
+     "max": 4.0,
+     "min": 3.25,
+     "condition": "VDD 上升, TJ −40..125°C；回差 0.4 V",
+     "page": "p5"
+    },
+    "vih_v": {
+     "max": 2.4,
+     "condition": "B 版 TTL 输入（A 版为 0.67×VDD，不兼容 3.3 V）",
+     "page": "p5"
+    },
+    "i_source_a": {
+     "typ": 1.3,
+     "condition": "峰值, CL=10nF, VDD=12V；P_OUT 上拉 2.2 Ω typ @4.5V",
+     "page": "p5"
+    },
+    "i_sink_a": {
+     "typ": 7.6,
+     "condition": "峰值, CL=10nF, VDD=12V；N_OUT 0.24 Ω typ @4.5V",
+     "page": "p5"
+    },
+    "tr_ns": {
+     "typ": 12,
+     "condition": "VDD=4.5V, CL=1nF",
+     "page": "p6"
+    },
+    "tf_ns": {
+     "typ": 3.0,
+     "condition": "VDD=4.5V, CL=1nF",
+     "page": "p6"
+    },
+    "tpd_ns": {
+     "typ": 12,
+     "max": 25,
+     "condition": "CL=1nF, VDD=10V",
+     "page": "p6"
+    },
+    "iq_ma": {
+     "typ": 0.95,
+     "max": 1.9,
+     "condition": "VDD=12V",
+     "page": "p5"
+    }
+   },
+   "pinout": "1 VDD, 2 P_OUT(拉), 3 N_OUT(灌), 4 VSS, 5 INB(反相，不用接 VSS), 6 IN(同相)",
+   "price_cny_approx": 12.6,
+   "price_evidence": "立创无价格；DigiKey $1.77@1 ≈ ¥12.6",
+   "notes": "务必订 B 版。分离输出：P_OUT/N_OUT 可各串栅极电阻（开通慢关断快）。",
+   "confidence": "high"
+  },
+  {
+   "id": "lm5112",
+   "role": "gate_driver",
+   "category": "gate_driver_lowside",
+   "mpn": "LM5112MY/NOPB",
+   "manufacturer": "Texas Instruments",
+   "package": "MSOP-8 PowerPAD (EP)",
+   "lcsc": "C115281",
+   "lcsc_evidence": "lcsc.com/product-detail/..._LM5112MY-NOPB_..._C115281.html",
+   "datasheet_url": "https://www.ti.com/lit/ds/symlink/lm5112.pdf",
+   "datasheet_source_type": "manufacturer",
+   "exposed_pad": true,
+   "params": {
+    "vdd_min_v": {
+     "min": 3.5,
+     "condition": "VCC 工作电压",
+     "page": "SNVS234C p5"
+    },
+    "vdd_max_v": {
+     "max": 14,
+     "page": "p5"
+    },
+    "uvlo_on_v": {
+     "typ": 3.0,
+     "max": 3.5,
+     "min": 2.4,
+     "condition": "上升, TJ −40..125°C",
+     "page": "p5"
+    },
+    "vih_v": {
+     "max": 2.3,
+     "condition": "TTL",
+     "page": "p5"
+    },
+    "i_source_a": {
+     "typ": 3,
+     "condition": "峰值 VCC=12V",
+     "page": "p5"
+    },
+    "i_sink_a": {
+     "typ": 7,
+     "condition": "峰值 VCC=12V",
+     "page": "p5"
+    },
+    "tr_ns": {
+     "typ": 14,
+     "condition": "2nF, 12V",
+     "page": "p5"
+    },
+    "tf_ns": {
+     "typ": 12,
+     "condition": "2nF, 12V",
+     "page": "p5"
+    },
+    "iq_ma": {
+     "typ": 1,
+     "max": 2,
+     "condition": "VCC=12V",
+     "page": "p5"
+    }
+   },
+   "pinout": "1 IN_REF(接 VEE), 2 INB, 3 VEE, 4 IN, 5 NC, 6 VCC, 7 OUT, 8 NC；EP 接 VEE",
+   "price_cny_approx": 13.5,
+   "price_evidence": "LCSC 片段 $1.90@1 ≈ ¥13.5",
+   "notes": "UVLO 余量最大；裸露焊盘需热风枪或背面过孔焊接。",
+   "confidence": "high"
+  },
+  {
+   "id": "fan3100t",
+   "role": "gate_driver",
+   "category": "gate_driver_lowside",
+   "mpn": "FAN3100TSX",
+   "manufacturer": "onsemi",
+   "package": "SOT-23-5",
+   "lcsc": "C603194",
+   "lcsc_evidence": "lcsc.com/product-detail/Gate-Drive-ICs_ON-Semiconductor-FAN3100TSX_C603194.html",
+   "datasheet_url": "https://www.onsemi.com/pdf/datasheet/fan3100t-d.pdf",
+   "datasheet_source_type": "manufacturer",
+   "lifecycle_risk": true,
+   "params": {
+    "vdd_min_v": {
+     "min": 4.5,
+     "condition": "VDD 工作范围（UVLO 虽 ≤4.3 V，规格保证从 4.5 V 起）",
+     "page": "Rev.6 p4"
+    },
+    "vdd_max_v": {
+     "max": 18,
+     "page": "p4"
+    },
+    "uvlo_on_v": {
+     "typ": 3.9,
+     "max": 4.3,
+     "min": 3.5,
+     "condition": "开启, TJ −40..125°C",
+     "page": "p4"
+    },
+    "vih_v": {
+     "max": 2.0,
+     "condition": "T 版 TTL（C 版 70%VDD 不兼容）",
+     "page": "p4"
+    },
+    "i_source_a": {
+     "typ": 3,
+     "condition": "峰值 VDD=12V，非量产测试",
+     "page": "p5"
+    },
+    "i_sink_a": {
+     "typ": 3,
+     "page": "p5"
+    },
+    "tr_ns": {
+     "typ": 13,
+     "max": 20,
+     "condition": "1nF, 12V",
+     "page": "p5"
+    },
+    "tf_ns": {
+     "typ": 9,
+     "max": 14,
+     "page": "p5"
+    },
+    "iq_ma": {
+     "typ": 0.5,
+     "max": 0.8,
+     "page": "p4"
+    }
+   },
+   "pinout": "1 VDD, 2 GND, 3 IN+, 4 IN-(接地使能), 5 OUT",
+   "price_cny_approx": 6.3,
+   "price_evidence": "LCSC 经 Findchips $0.8876@1 ≈ ¥6.3",
+   "notes": "Mouser 标 EOL，生命周期不明。",
+   "confidence": "medium"
+  },
+  {
+   "id": "max15070a",
+   "role": "gate_driver",
+   "category": "gate_driver_lowside",
+   "mpn": "MAX15070AAUT+T",
+   "manufacturer": "Analog Devices (Maxim)",
+   "package": "SOT-23-6",
+   "lcsc": null,
+   "lcsc_evidence": "多次搜索未找到立创编号",
+   "datasheet_url": "https://www.analog.com/media/en/technical-documentation/data-sheets/MAX15070A-MAX15070B.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "vdd_min_v": {
+     "min": 4.0,
+     "page": "p3"
+    },
+    "vdd_max_v": {
+     "max": 14,
+     "page": "p3"
+    },
+    "uvlo_on_v": {
+     "typ": 3.45,
+     "max": 3.6,
+     "min": 3.3,
+     "condition": "上升, −40..125°C",
+     "page": "p3"
+    },
+    "vih_v": {
+     "max": 2.0,
+     "condition": "A 版 TTL",
+     "page": "p3"
+    },
+    "i_source_a": {
+     "typ": 3.0,
+     "page": "p3"
+    },
+    "i_sink_a": {
+     "typ": 7.0,
+     "page": "p3"
+    },
+    "tr_ns": {
+     "typ": 5,
+     "condition": "4.5V, 1nF",
+     "page": "p4"
+    },
+    "tf_ns": {
+     "typ": 4,
+     "page": "p4"
+    },
+    "iq_ma": {
+     "typ": 0.5,
+     "max": 1.0,
+     "page": "p3"
+    }
+   },
+   "price_cny_approx": null,
+   "price_evidence": "立创无货源",
+   "notes": "电气上最优，但立创不可购。",
+   "confidence": "high"
+  },
+  {
+   "id": "stm32g431cbt6",
+   "role": "mcu",
+   "category": "mcu",
+   "mpn": "STM32G431CBT6",
+   "manufacturer": "STMicroelectronics",
+   "package": "LQFP-48 7x7 0.5mm",
+   "lcsc": "C529355",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/...STM32G431CBT6_C529355.html; item.szlcsc.com/549633.html; jlcpcb.com/partdetail/.../C529355",
+   "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32g431cb.pdf",
+   "datasheet_source_type": "manufacturer",
+   "fpu": true,
+   "comp_to_tim1_break": true,
+   "needs_hse": false,
+   "stock_risk": false,
+   "params": {
+    "core": "Cortex-M4F",
+    "f_cpu_mhz": {
+     "max": 170,
+     "page": "DS12589 Rev6 §1"
+    },
+    "tim_clk_mhz": {
+     "max": 170,
+     "condition": "TIM1 16-bit, 100 kHz 边沿对齐 1700 计数"
+    },
+    "flash_kb": 128,
+    "ram_kb": 32,
+    "adc_count": {
+     "typ": 2,
+     "condition": "12-bit, 4 Msps, 硬件过采样 2–256 (RM0440 §21.4.29)，可由 TIM1 TRGO/TRGO2 触发 (RM0440 Table 166)"
+    },
+    "adc_channels": {
+     "typ": 17,
+     "condition": "LQFP48 封装可用通道"
+    },
+    "comp_count": {
+     "typ": 4,
+     "condition": "INM 可接内部 DAC3（RM0440 Table 200）；输出经 TIM1_AF1.BKCMPxE 送 TIM1 刹车（RM0440 Table 269）"
+    },
+    "opamp_count": 3,
+    "pitch_mm": 0.5,
+    "io_count": 38,
+    "i_run_ma": {
+     "typ": 25.5,
+     "max": 28.0,
+     "condition": "170 MHz, 25 °C, Flash+ART, 外设全关 (DS12589 Table 21)"
+    },
+    "hsi_accuracy_pct": {
+     "typ": 1,
+     "condition": "0–85 °C ±1% (DS12589 Table 42)；PLL 可由 HSI16 驱动至 170 MHz，无需晶振"
+    }
+   },
+   "pin_plan": {
+    "_source": "DS12589 Rev 6 Fig.8 / Table 12 (pin definitions) / Table 13 (AF)；最终以 STM32CubeMX 工程为准",
+    "PWM_H": {
+     "pin": "PA8",
+     "pin_no": 30,
+     "function": "TIM1_CH1 (AF6)",
+     "note": "LQFP48 中唯一 TIM1_CH1 引脚"
+    },
+    "VOUT_SNS": {
+     "pin": "PA0",
+     "pin_no": 8,
+     "function": "ADC12_IN1 + COMP3_INP",
+     "note": "COMP3 INM 接 DAC3_CH1 → TIM1 刹车（硬件 OVP）"
+    },
+    "IOUT_SNS": {
+     "pin": "PA1",
+     "pin_no": 9,
+     "function": "ADC12_IN2 + COMP1_INP",
+     "note": "COMP1 INM 接 DAC3_CH1/DAC1_CH1 → TIM1 刹车（硬件 OCP）"
+    },
+    "VIN_SNS": {
+     "pin": "PA2",
+     "pin_no": 10,
+     "function": "ADC1_IN3"
+    },
+    "NTC_SNS(可选)": {
+     "pin": "PB1",
+     "pin_no": 17,
+     "function": "ADC1_IN12",
+     "note": "预留温度检测"
+    },
+    "UART_TX": {
+     "pin": "PA9",
+     "pin_no": 31,
+     "function": "USART1_TX (AF7)"
+    },
+    "UART_RX": {
+     "pin": "PA10",
+     "pin_no": 32,
+     "function": "USART1_RX (AF7)",
+     "note": "PA9/PA10 高电平会使能 PB4/PB6 的 UCPD 5.1k 下拉，故 PB4/PB6 不作他用"
+    },
+    "SWDIO": {
+     "pin": "PA13",
+     "pin_no": 37
+    },
+    "SWCLK": {
+     "pin": "PA14",
+     "pin_no": 38
+    },
+    "NRST": {
+     "pin": "PG10-NRST",
+     "pin_no": 7,
+     "note": "100 nF 对地 + 复位按键"
+    },
+    "BOOT0": {
+     "pin": "PB8-BOOT0",
+     "pin_no": 45,
+     "note": "10 kΩ 下拉，从 Flash 启动（出厂选项字节 nSWBOOT0=1）"
+    },
+    "LED_RUN": {
+     "pin": "PB5",
+     "pin_no": 42
+    },
+    "LED_CC": {
+     "pin": "PB9",
+     "pin_no": 46
+    },
+    "LED_FAULT": {
+     "pin": "PB10",
+     "pin_no": 22
+    },
+    "KEY_EN": {
+     "pin": "PB11",
+     "pin_no": 25,
+     "note": "内部上拉，按键接地"
+    },
+    "power": {
+     "VBAT": 1,
+     "VSSA": 19,
+     "VREF+": 20,
+     "VDDA": 21,
+     "VSS": [
+      23,
+      35,
+      47
+     ],
+     "VDD": [
+      24,
+      36,
+      48
+     ],
+     "note": "VREF+ 接 VDDA（3.3 V，1 µF+100 nF）；VDDA 经磁珠/10 Ω+1 µF 与 VDD 隔离；每个 VDD 100 nF；VBAT 接 VDD"
+    },
+    "unverified": [
+     "同一引脚同时作 ADC 输入与 COMP 同相输入：手册列出两种功能但未明确允许同时使用 → 上板验证；备选：VOUT_SNS 另接 PA7(COMP2_INP)"
+    ]
+   },
+   "price_cny_approx": 20.8,
+   "price_evidence": "szlcsc 搜索片段约 ¥20.8；lcsc.com 1+ $5.17，库存 3801（片段，日期不一）",
+   "notes": "推荐：片内 COMP+DAC3→TIM1 刹车实现 L2 硬件保护；无需晶振；FPU；ADC 硬件过采样。",
+   "confidence": "high"
+  },
+  {
+   "id": "stm32g431kbt6",
+   "role": "mcu",
+   "category": "mcu",
+   "mpn": "STM32G431KBT6",
+   "manufacturer": "STMicroelectronics",
+   "package": "LQFP-32 7x7 0.8mm",
+   "lcsc": "C529357",
+   "lcsc_evidence": "WebSearch: lcsc.com/product-detail/...STM32G431KBT6_C529357.html（片段显示 Out of Stock）",
+   "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32g431cb.pdf",
+   "datasheet_source_type": "manufacturer",
+   "fpu": true,
+   "comp_to_tim1_break": true,
+   "needs_hse": false,
+   "stock_risk": true,
+   "params": {
+    "tim_clk_mhz": {
+     "max": 170
+    },
+    "adc_count": {
+     "typ": 2
+    },
+    "adc_channels": {
+     "typ": 11
+    },
+    "comp_count": {
+     "typ": 4,
+     "condition": "LQFP32 中 COMP INP 引脚：PA1/PA3/PA7/PA0/PB0"
+    },
+    "pitch_mm": 0.8,
+    "io_count": 26,
+    "i_run_ma": {
+     "typ": 25.5
+    }
+   },
+   "price_cny_approx": 30.18,
+   "price_evidence": "szlcsc 片段约 ¥30.18；lcsc.com 片段缺货",
+   "notes": "0.8 mm 引脚更好焊；但价格高、缺货风险，且无独立 VREF+、无 PB1",
+   "confidence": "high"
+  },
+  {
+   "id": "stm32f334k8t6",
+   "role": "mcu",
+   "category": "mcu",
+   "mpn": "STM32F334K8T6",
+   "manufacturer": "STMicroelectronics",
+   "package": "LQFP-32 7x7 0.8mm",
+   "lcsc": "C106758",
+   "lcsc_evidence": "WebSearch: item.szlcsc.com/107974.html; lcsc.com/product-detail/..._C106758.html",
+   "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32f334k8.pdf",
+   "datasheet_source_type": "manufacturer",
+   "fpu": true,
+   "comp_to_tim1_break": true,
+   "needs_hse": true,
+   "stock_risk": false,
+   "params": {
+    "tim_clk_mhz": {
+     "max": 144,
+     "condition": "TIM1 由 PLL×2 = 144 MHz（需 HSE）；另有 HRTIM 217 ps"
+    },
+    "adc_count": {
+     "typ": 2,
+     "condition": "5 Msps，无硬件过采样"
+    },
+    "adc_channels": {
+     "typ": 10
+    },
+    "comp_count": {
+     "typ": 2,
+     "condition": "COMP2/COMP4 可接 TIM1_BRK (RM0364 Table 21)"
+    },
+    "pitch_mm": 0.8,
+    "io_count": 25,
+    "i_run_ma": {
+     "typ": 27.1,
+     "condition": "72 MHz, 外设全关 (DS9994 Table 25)"
+    }
+   },
+   "price_cny_approx": 22.27,
+   "price_evidence": "szlcsc 片段约 ¥22.27（lcsc.com 片段 $4.25/$5.98 冲突）",
+   "notes": "HRTIM 对单管低边 PWM 属过度配置；72 MHz 需外部晶振",
+   "confidence": "high"
+  },
+  {
+   "id": "stm32f103c8t6",
+   "role": "mcu",
+   "category": "mcu",
+   "mpn": "STM32F103C8T6",
+   "manufacturer": "STMicroelectronics",
+   "package": "LQFP-48 7x7 0.5mm",
+   "lcsc": "C8734",
+   "lcsc_evidence": "WebSearch: item.szlcsc.com/9243.html; jlc-smt.com/lcsc/detail/C8734.html",
+   "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32f103c8.pdf",
+   "datasheet_source_type": "manufacturer",
+   "fpu": false,
+   "comp_to_tim1_break": false,
+   "needs_hse": true,
+   "stock_risk": false,
+   "params": {
+    "tim_clk_mhz": {
+     "max": 72,
+     "condition": "100 kHz 时仅 720 计数"
+    },
+    "adc_count": {
+     "typ": 2,
+     "condition": "约 1 Msps，无硬件过采样"
+    },
+    "adc_channels": {
+     "typ": 10
+    },
+    "comp_count": {
+     "typ": 0,
+     "condition": "无比较器/DAC，硬件保护需外加比较器接 PB12/BKIN"
+    },
+    "pitch_mm": 0.5,
+    "io_count": 37,
+    "i_run_ma": {
+     "typ": 36,
+     "condition": "72 MHz 外设全开 (DS5319 Table 17)"
+    }
+   },
+   "price_cny_approx": 5.61,
+   "price_evidence": "szlcsc 片段约 ¥5.61；JLC 阶梯 ¥6.88–4.07",
+   "notes": "最便宜、资料最多，但无比较器/DAC/FPU",
+   "confidence": "high"
+  },
+  {
+   "id": "L_SRR1260_470M",
+   "category": "inductor",
+   "mpn": "SRR1260-470M",
+   "manufacturer": "Bourns",
+   "package": "SMD 12.5x12.5x6.0 mm",
+   "lcsc": "C1329363",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/Inductors-SMD_BOURNS_C1329363.html (search title 'SRR1260-470M'; snippet 'FIXED IND 47uH 86mΩ SMD,12.5x12.5mm ... From $0.8969, 104 in stock')",
+   "datasheet_url": "https://www.bourns.com/docs/Product-Datasheets/SRR1260.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "inductance_uh": {
+     "typ": 47.0,
+     "max": null,
+     "min": null,
+     "condition": "tol ±20%, test 1 kHz/0.1 V (SRR1260-100M..102K)",
+     "page": "1"
+    },
+    "isat_a": {
+     "typ": 2.5,
+     "max": null,
+     "min": null,
+     "condition": "L drop 25% typ at Isat",
+     "page": "1"
+    },
+    "irms_a": {
+     "typ": null,
+     "max": 2.6,
+     "min": null,
+     "condition": "ΔT 40 °C typ at rated Irms",
+     "page": "1"
+    },
+    "dcr_mohm": {
+     "typ": null,
+     "max": 86.0,
+     "min": null,
+     "condition": "RDC max",
+     "page": "1"
+    },
+    "srf_mhz": {
+     "typ": 7.63,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "1"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "12.5±0.3 x 12.5±0.3 x 6.0±0.5",
+     "page": "1"
+    },
+    "operating_temp_c": {
+     "typ": null,
+     "max": 125,
+     "min": -40,
+     "condition": "incl. temperature rise",
+     "page": "1"
+    },
+    "shielding": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "shielded (ferrite DR + RI core)",
+     "page": "1"
+    }
+   },
+   "price_cny_approx": 6.37,
+   "price_evidence": "LCSC snippet: from USD 0.8969 (qty 1), 104 in stock at time of search; no CNY figure seen",
+   "notes": "Meets Isat>=2 A; ~39% margin over 1.8 A peak. Q test freq column (2.52 MHz) is Q test, not L test.",
+   "confidence": "high",
+   "role": "inductor",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "shielded": true
+  },
+  {
+   "id": "L_SWRB1207S_470MT",
+   "category": "inductor",
+   "mpn": "SWRB1207S-470MT",
+   "manufacturer": "Sunlord",
+   "package": "SMD 12.5x12.5x8.0 mm max",
+   "lcsc": "C169376",
+   "lcsc_evidence": "EasyEDA component page https://easyeda.com/component/3c0eb088a99549ea84737838e96d2d29 snippet 'LCSC Part#: C169376'; forum link lcsc.com/product-detail/Power-Inductors_Sunlord-SWRB1207S-470MT_C169376.html",
+   "datasheet_url": "https://www.alfatec.de/fileadmin/productfiles/datasheets/sunlord_swrb_s_series.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "inductance_uh": {
+     "typ": 47,
+     "max": null,
+     "min": null,
+     "condition": "tol ±20%, test 1 kHz/0.3 V",
+     "page": "5 of 12"
+    },
+    "isat_a": {
+     "typ": null,
+     "max": 2.5,
+     "min": null,
+     "condition": "无单独 Isat，取额定电流（L 跌 25% 与温升 40°C 的较小者），偏保守",
+     "page": "5-6 of 12",
+     "alias_of": "rated_current_a"
+    },
+    "rated_current_a": {
+     "typ": null,
+     "max": 2.5,
+     "min": null,
+     "condition": "Ir = smaller of (L drop 25%) or (ΔT 40 °C), 20 °C ambient (§6.3.3)",
+     "page": "5-6 of 12"
+    },
+    "dcr_mohm": {
+     "typ": null,
+     "max": 100,
+     "min": null,
+     "condition": "max DCR",
+     "page": "5 of 12"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "A 12.5 max x B 12.5 max x C 8.0 max",
+     "page": "3 of 12"
+    },
+    "operating_temp_c": {
+     "typ": null,
+     "max": 105,
+     "min": -25,
+     "condition": "chip without packing",
+     "page": "3 of 12"
+    },
+    "shielding": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "drum core + ferrite ring core (shielded)",
+     "page": "3 of 12"
+    },
+    "irms_a": {
+     "typ": null,
+     "max": 2.5,
+     "min": null,
+     "condition": "Ir = smaller of (L drop 25%) or (ΔT 40 °C), 20 °C ambient (§6.3.3)",
+     "page": "5-6 of 12",
+     "alias_of": "rated_current_a"
+    }
+   },
+   "price_cny_approx": 2.25,
+   "price_evidence": "EasyEDA snippet USD 0.3163 (stock 165), may be stale",
+   "notes": "Datasheet table text was column-shifted in extraction; values mapped by row index and cross-checked against search summaries of the same table (47 µH -> 0.100 Ω / 2.50 A). Mirror = Alfatec (Sunlord spec SWRB06180000).",
+   "confidence": "medium",
+   "role": "inductor",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "shielded": true
+  },
+  {
+   "id": "L_MWSA1206S_470MT",
+   "category": "inductor",
+   "mpn": "MWSA1206S-470MT",
+   "manufacturer": "Sunlord",
+   "package": "SMD molded 12.6x13.45x5.8 mm",
+   "lcsc": "C408531",
+   "lcsc_evidence": "https://jlcpcb.com/partdetail/Sunlord-MWSA1206S470MT/C408531 (JLCPCB uses LCSC C-numbers; snippet 'SMD 13.5x12.6mm, 47uH, Isat 5.5A, rated 5A, 90mΩ')",
+   "datasheet_url": "https://media.digikey.com/pdf/Data%20Sheets/Shenzhen%20Sunlord/MWSA-S_Series_DS.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "inductance_uh": {
+     "typ": 47,
+     "max": null,
+     "min": null,
+     "condition": "tol ±20%, @100 kHz, 1 V",
+     "page": "13 of 38 (Appendix A)"
+    },
+    "isat_a": {
+     "typ": 5.5,
+     "max": null,
+     "min": 4.4,
+     "condition": "typ = L drop ~30%; 4.40 A = column labelled 'Isat(Max)' = L drop ~20%",
+     "page": "13 of 38"
+    },
+    "irms_a": {
+     "typ": 5.0,
+     "max": null,
+     "min": 4.2,
+     "condition": "typ = ΔT 40 °C; 4.20 A = 'Irms(Max)' = ΔT 20 °C, from 20 °C ambient",
+     "page": "13 of 38"
+    },
+    "dcr_mohm": {
+     "typ": null,
+     "max": 90,
+     "min": null,
+     "condition": "max",
+     "page": "13 of 38"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "A 12.6±0.3 x B 13.45±0.35 x C(height) 5.8±0.2",
+     "page": "3 of 38"
+    },
+    "operating_temp_c": {
+     "typ": null,
+     "max": 125,
+     "min": -55,
+     "condition": "incl. self-heating",
+     "page": "3 of 38"
+    },
+    "shielding": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "molded alloy-powder (shielded)",
+     "page": "3 of 38"
+    }
+   },
+   "price_cny_approx": null,
+   "price_evidence": "no price seen for this exact C-number",
+   "notes": "Highest Isat margin of the 47 µH options. JLCPCB notes an assembly fixture is needed (irrelevant for hand solder). Mirror = DigiKey-hosted Sunlord spec.",
+   "confidence": "high",
+   "role": "inductor",
+   "shielded": true
+  },
+  {
+   "id": "L_SRR1260_680M",
+   "category": "inductor",
+   "mpn": "SRR1260-680M",
+   "manufacturer": "Bourns",
+   "package": "SMD 12.5x12.5x6.0 mm",
+   "lcsc": "C2041353",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/Inductors-SMD_BOURNS_C2041353.html and https://jlcpcb.com/partdetail/BOURNS-SRR1260680M/C2041353 (snippet 'FIXED IND 68uH 2.1A 110mΩ ... From $0.6346, Out of Stock')",
+   "datasheet_url": "https://www.bourns.com/docs/Product-Datasheets/SRR1260.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "inductance_uh": {
+     "typ": 68.0,
+     "max": null,
+     "min": null,
+     "condition": "tol ±20%, test 1 kHz/0.1 V",
+     "page": "1"
+    },
+    "isat_a": {
+     "typ": 2.1,
+     "max": null,
+     "min": null,
+     "condition": "L drop 25% typ",
+     "page": "1"
+    },
+    "irms_a": {
+     "typ": null,
+     "max": 2.1,
+     "min": null,
+     "condition": "ΔT 40 °C typ",
+     "page": "1"
+    },
+    "dcr_mohm": {
+     "typ": null,
+     "max": 110.0,
+     "min": null,
+     "condition": "RDC max",
+     "page": "1"
+    },
+    "srf_mhz": {
+     "typ": 7.43,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "1"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "12.5±0.3 x 12.5±0.3 x 6.0±0.5",
+     "page": "1"
+    },
+    "shielding": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "shielded",
+     "page": "1"
+    }
+   },
+   "price_cny_approx": 4.51,
+   "price_evidence": "LCSC snippet from USD 0.6346, OUT OF STOCK at time of search",
+   "notes": "Only ~17% margin over 1.8 A peak. Out of stock on LCSC when checked.",
+   "confidence": "high",
+   "role": "inductor",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "stock_risk": true,
+   "shielded": true
+  },
+  {
+   "id": "L_SWRB1207S_680MT",
+   "category": "inductor",
+   "mpn": "SWRB1207S-680MT",
+   "manufacturer": "Sunlord",
+   "package": "SMD 12.5x12.5x8.0 mm max",
+   "lcsc": "C169377",
+   "lcsc_evidence": "https://jlcpcb.com/partdetail/Sunlord-SWRB1207S680MT/C169377 ; EasyEDA snippet 'LCSC Part#: C169377, Stock: 379, Price: $0.2816'",
+   "datasheet_url": "https://www.alfatec.de/fileadmin/productfiles/datasheets/sunlord_swrb_s_series.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "inductance_uh": {
+     "typ": 68,
+     "max": null,
+     "min": null,
+     "condition": "tol ±20%, test 1 kHz/0.3 V",
+     "page": "5 of 12"
+    },
+    "isat_a": {
+     "typ": null,
+     "max": 2.1,
+     "min": null,
+     "condition": "无单独 Isat，取额定电流（L 跌 25% 与温升 40°C 的较小者），偏保守",
+     "page": "5-6 of 12",
+     "alias_of": "rated_current_a"
+    },
+    "rated_current_a": {
+     "typ": null,
+     "max": 2.1,
+     "min": null,
+     "condition": "smaller of L-25% or ΔT 40 °C",
+     "page": "5-6 of 12"
+    },
+    "dcr_mohm": {
+     "typ": null,
+     "max": 140,
+     "min": null,
+     "condition": "max",
+     "page": "5 of 12"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "12.5 x 12.5 x 8.0 (all max)",
+     "page": "3 of 12"
+    },
+    "operating_temp_c": {
+     "typ": null,
+     "max": 105,
+     "min": -25,
+     "condition": "",
+     "page": "3 of 12"
+    },
+    "shielding": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "shielded (ferrite ring core)",
+     "page": "3 of 12"
+    },
+    "irms_a": {
+     "typ": null,
+     "max": 2.1,
+     "min": null,
+     "condition": "smaller of L-25% or ΔT 40 °C",
+     "page": "5-6 of 12",
+     "alias_of": "rated_current_a"
+    }
+   },
+   "price_cny_approx": null,
+   "price_evidence": "EasyEDA/JLCPCB snippet USD ~0.28-0.50 depending on qty (stale)",
+   "notes": "Same row-shift caveat as SWRB1207S-470MT; value 0.140 Ω/2.10 A also matches LCSC listing text.",
+   "confidence": "medium",
+   "role": "inductor",
+   "shielded": true
+  },
+  {
+   "id": "L_MWSA1206S_680MT",
+   "category": "inductor",
+   "mpn": "MWSA1206S-680MT",
+   "manufacturer": "Sunlord",
+   "package": "SMD molded 12.6x13.45x5.8 mm",
+   "lcsc": "C408532",
+   "lcsc_evidence": "https://test.jlcpcb.com/partdetail/Sunlord-MWSA1206S680MT/C408532 (snippet 'JLCPCB Part #: C408532 ... 4A 68uH ±20% 140mΩ'); EasyEDA page lists same",
+   "datasheet_url": "https://media.digikey.com/pdf/Data%20Sheets/Shenzhen%20Sunlord/MWSA-S_Series_DS.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "inductance_uh": {
+     "typ": 68,
+     "max": null,
+     "min": null,
+     "condition": "tol ±20%, @100 kHz, 1 V",
+     "page": "13 of 38"
+    },
+    "isat_a": {
+     "typ": 4.5,
+     "max": null,
+     "min": 3.6,
+     "condition": "typ = L drop ~30%; 3.60 A = 'Isat(Max)' column = L drop ~20%",
+     "page": "13 of 38"
+    },
+    "irms_a": {
+     "typ": 4.0,
+     "max": null,
+     "min": 3.2,
+     "condition": "typ ΔT 40 °C; 3.20 A = ΔT 20 °C",
+     "page": "13 of 38"
+    },
+    "dcr_mohm": {
+     "typ": null,
+     "max": 140,
+     "min": null,
+     "condition": "max",
+     "page": "13 of 38"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "12.6±0.3 x 13.45±0.35 x 5.8±0.2",
+     "page": "3 of 38"
+    },
+    "shielding": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "molded alloy powder",
+     "page": "3 of 38"
+    }
+   },
+   "price_cny_approx": 7.5,
+   "price_evidence": "EasyEDA snippet USD 1.056 (stock 183), may be stale",
+   "notes": "C408532 seen on test.jlcpcb.com subdomain + EasyEDA; consecutive with C408531 (470MT) and C408533 (101MT).",
+   "confidence": "medium",
+   "role": "inductor",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "shielded": true
+  },
+  {
+   "id": "L_SRN8040TA_680M",
+   "category": "inductor",
+   "mpn": "SRN8040TA-680M",
+   "manufacturer": "Bourns",
+   "package": "SMD 8.0x8.0 mm, ~3.7 mm high",
+   "lcsc": "C2047059",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/power-inductors_bourns-srn8040ta-680m_C2047059.html (snippet 'SMD 8x8mm, 1.65A rated, 68uH ±20%, Isat 1.75A, DCR 205mΩ')",
+   "datasheet_url": "https://www.bourns.com/docs/Product-Datasheets/SRN8040TA.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "inductance_uh": {
+     "typ": 68,
+     "max": null,
+     "min": null,
+     "condition": "tol ±20%, @1 MHz/1 V (as printed)",
+     "page": "1"
+    },
+    "isat_a": {
+     "typ": 1.75,
+     "max": null,
+     "min": null,
+     "condition": "L drops 30% at Isat",
+     "page": "1"
+    },
+    "irms_a": {
+     "typ": 1.65,
+     "max": null,
+     "min": null,
+     "condition": "ΔT 40 °C at rated Irms",
+     "page": "1"
+    },
+    "dcr_mohm": {
+     "typ": 205,
+     "max": null,
+     "min": null,
+     "condition": "datasheet gives 205 mΩ ±20% (implies ≤246 mΩ)",
+     "page": "1"
+    },
+    "srf_mhz": {
+     "typ": 9.5,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "1"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "8.0±0.3 x 8.0±0.3; height 3.7 max for 1R0Y~471M (drawing text partly garbled; Farnell lists 3.7 mm)",
+     "page": "1"
+    },
+    "operating_temp_c": {
+     "typ": null,
+     "max": 125,
+     "min": -55,
+     "condition": "incl. temp rise",
+     "page": "1"
+    },
+    "shielding": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "semi-shielded (magnetic epoxy coating), AEC-Q200",
+     "page": "1"
+    }
+   },
+   "price_cny_approx": null,
+   "price_evidence": "none seen",
+   "notes": "8x8 example that should be REJECTED/borderline: Isat 1.75 A < 1.8 A worst-case peak.",
+   "confidence": "high",
+   "role": "inductor",
+   "shielded": false
+  },
+  {
+   "id": "L_SRR1260_101M",
+   "category": "inductor",
+   "mpn": "SRR1260-101M",
+   "manufacturer": "Bourns",
+   "package": "SMD 12.5x12.5x6.0 mm",
+   "lcsc": "C2041335",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/Inductors-SMD_BOURNS_C2041335.html (snippet 'FIXED IND 100uH 1.7A 180mΩ ... From $0.6474, 452 in stock')",
+   "datasheet_url": "https://www.bourns.com/docs/Product-Datasheets/SRR1260.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "inductance_uh": {
+     "typ": 100.0,
+     "max": null,
+     "min": null,
+     "condition": "tol ±20%, test 1 kHz/0.1 V",
+     "page": "1"
+    },
+    "isat_a": {
+     "typ": 1.7,
+     "max": null,
+     "min": null,
+     "condition": "L drop 25% typ",
+     "page": "1"
+    },
+    "irms_a": {
+     "typ": null,
+     "max": 1.7,
+     "min": null,
+     "condition": "ΔT 40 °C typ",
+     "page": "1"
+    },
+    "dcr_mohm": {
+     "typ": null,
+     "max": 180.0,
+     "min": null,
+     "condition": "RDC max",
+     "page": "1"
+    },
+    "srf_mhz": {
+     "typ": 6.07,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "1"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "12.5 x 12.5 x 6.0",
+     "page": "1"
+    },
+    "shielding": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "shielded",
+     "page": "1"
+    }
+   },
+   "price_cny_approx": 4.6,
+   "price_evidence": "LCSC snippet from USD 0.6474 (452 pcs); aggregator: 1 pc USD 1.2095",
+   "notes": "Isat 1.7 A < 1.8 A peak -> reject at worst case (higher L lowers ripple, but peak still ≈1.5 A DC + ripple/2).",
+   "confidence": "high",
+   "role": "inductor",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "shielded": true
+  },
+  {
+   "id": "L_MWSA1206S_101MT",
+   "category": "inductor",
+   "mpn": "MWSA1206S-101MT",
+   "manufacturer": "Sunlord",
+   "package": "SMD molded 12.6x13.45x5.8 mm",
+   "lcsc": "C408533",
+   "lcsc_evidence": "https://jlcpcb.com/partdetail/Sunlord-MWSA1206S101MT/C408533 ; LCSC datasheet URL lcsc_datasheet_1912111437_Sunlord-MWSA1206S-101MT_C408533.pdf (snippet '100uH 200mΩ 3.5A 3A ... about $0.6136')",
+   "datasheet_url": "https://media.digikey.com/pdf/Data%20Sheets/Shenzhen%20Sunlord/MWSA-S_Series_DS.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "inductance_uh": {
+     "typ": 100,
+     "max": null,
+     "min": null,
+     "condition": "tol ±20%, @100 kHz, 1 V",
+     "page": "13 of 38"
+    },
+    "isat_a": {
+     "typ": 3.5,
+     "max": null,
+     "min": 2.8,
+     "condition": "typ = L drop ~30%; 2.80 A = L drop ~20% ('Isat(Max)' column)",
+     "page": "13 of 38"
+    },
+    "irms_a": {
+     "typ": 3.0,
+     "max": null,
+     "min": 2.5,
+     "condition": "typ ΔT 40 °C; 2.50 A = ΔT 20 °C",
+     "page": "13 of 38"
+    },
+    "dcr_mohm": {
+     "typ": null,
+     "max": 200,
+     "min": null,
+     "condition": "max",
+     "page": "13 of 38"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "12.6±0.3 x 13.45±0.35 x 5.8±0.2",
+     "page": "3 of 38"
+    },
+    "shielding": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "molded alloy powder",
+     "page": "3 of 38"
+    }
+   },
+   "price_cny_approx": 4.36,
+   "price_evidence": "search snippet ≈USD 0.6136 (source page not identified precisely)",
+   "notes": "Best 100 µH option found (Isat ≥2.8 A even at 20% drop).",
+   "confidence": "high",
+   "role": "inductor",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "shielded": true
+  },
+  {
+   "id": "L_SRN1060_101M",
+   "category": "inductor",
+   "mpn": "SRN1060-101M",
+   "manufacturer": "Bourns",
+   "package": "SMD 10.0x9.8x6.0 mm",
+   "lcsc": "C2050993",
+   "lcsc_evidence": "https://jlcpcb.com/partdetail/BOURNS-SRN1060101M/C2050993 (snippet '1.7A 1.7A 100uH 210mΩ ±20% SMD,10x9.8mm')",
+   "datasheet_url": "https://www.bourns.com/docs/Product-Datasheets/SRN1060.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "inductance_uh": {
+     "typ": 100,
+     "max": null,
+     "min": null,
+     "condition": "tol ±20%, @100 kHz/1 V",
+     "page": "1"
+    },
+    "isat_a": {
+     "typ": 1.7,
+     "max": null,
+     "min": null,
+     "condition": "L drops 30% at Isat",
+     "page": "1"
+    },
+    "irms_a": {
+     "typ": 1.7,
+     "max": null,
+     "min": null,
+     "condition": "ΔT 40 °C at rated Irms",
+     "page": "1"
+    },
+    "dcr_mohm": {
+     "typ": null,
+     "max": 210,
+     "min": null,
+     "condition": "0.21 Ω max",
+     "page": "1"
+    },
+    "srf_mhz": {
+     "typ": 4,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "1"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "10.0±0.3 x 9.8±0.3 x 6.0 max",
+     "page": "1"
+    },
+    "shielding": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "semi-shielded",
+     "page": "1"
+    }
+   },
+   "price_cny_approx": null,
+   "price_evidence": "none seen",
+   "notes": "10x10 example; Isat 1.7 A < 1.8 A -> reject at worst case. Same series SRN1060-470M (47 µH, 0.11 Ω max, Irms 2.50 A, Isat 2.30 A, p.1) would pass but no LCSC C-number was found.",
+   "confidence": "high",
+   "role": "inductor",
+   "shielded": false
+  },
+  {
+   "id": "L_CD54_680M_HanElec",
+   "category": "inductor",
+   "mpn": "CD54-680M",
+   "manufacturer": "HanElectricity",
+   "package": "SMD 5.8x5.2 mm (CD54 class)",
+   "lcsc": "C42931109",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/inductors-smd_hanelectricity-cd54-680m_C42931109.html (snippet 'FIXED IND 68uH 600mA SMD,5.8x5.2mm, ±20%, 390mΩ, Unshielded Inductor ... Out of Stock')",
+   "datasheet_url": "https://products.sumida.com/products/pdf/CD54.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "inductance_uh": {
+     "typ": 68,
+     "max": null,
+     "min": null,
+     "condition": "±20% (LCSC listing; maker datasheet not read)",
+     "page": "LCSC listing"
+    },
+    "rated_current_a": {
+     "typ": 0.6,
+     "max": null,
+     "min": null,
+     "condition": "LCSC listing, definition unknown",
+     "page": "LCSC listing"
+    },
+    "dcr_mohm": {
+     "typ": 390,
+     "max": null,
+     "min": null,
+     "condition": "LCSC listing",
+     "page": "LCSC listing"
+    },
+    "shielding": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "UNSHIELDED",
+     "page": "LCSC listing"
+    },
+    "ref_sumida_cd54np_680kc_rated_current_a": {
+     "typ": null,
+     "max": 0.61,
+     "min": null,
+     "condition": "Sumida original: 68 µH ±10% @2.52 MHz, DCR 0.46 Ω max; Ir = L to 90% or ΔT 40 °C, whichever lower; 6.1x5.5x4.85 max; magnetically unshielded",
+     "page": "Sumida CD54 p.1-2"
+    },
+    "isat_a": {
+     "typ": 0.6,
+     "max": null,
+     "min": null,
+     "condition": "无单独 Isat，取额定电流（L 跌 25% 与温升 40°C 的较小者），偏保守",
+     "page": "LCSC listing",
+     "alias_of": "rated_current_a"
+    },
+    "irms_a": {
+     "typ": 0.6,
+     "max": null,
+     "min": null,
+     "condition": "LCSC listing, definition unknown",
+     "page": "LCSC listing",
+     "alias_of": "rated_current_a"
+    }
+   },
+   "price_cny_approx": 0.13,
+   "price_evidence": "LCSC snippet from USD 0.0179, out of stock",
+   "notes": "REJECTION EXAMPLE: ~0.6 A rating vs 1.8 A peak, unshielded. Params are from LCSC listing only; datasheet_url is the Sumida CD54 original for class reference, not this maker. Alternatives seen: XR XRCD54-680K C5289428 (610 mA, 460 mΩ per JLCPCB listing).",
+   "confidence": "low",
+   "role": "inductor",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "stock_risk": true,
+   "shielded": false
+  },
+  {
+   "id": "C_out_CL31A226KAHNNNE",
+   "category": "capacitor_ceramic_output",
+   "mpn": "CL31A226KAHNNNE",
+   "manufacturer": "Samsung Electro-Mechanics",
+   "package": "1206 (3216)",
+   "lcsc": "C12891",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/Multilayer-Ceramic-Capacitors-MLCC-SMD-SMT_SAMSUNG_CL31A226KAHNNNE_22uF-226-10-25V_C12891.html",
+   "datasheet_url": "https://datasheet.octopart.com/CL31A226KAHNNNE-Samsung-Electro-Mechanics-datasheet-136322594.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "capacitance_uf": {
+     "typ": 22,
+     "max": null,
+     "min": null,
+     "condition": "±10%, measured 120 Hz±20% / 0.5±0.1 Vrms per sheet",
+     "page": "1"
+    },
+    "rated_voltage_v": {
+     "typ": 25,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "1"
+    },
+    "dielectric": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "X5R (−55..85 °C, ±15%)",
+     "page": "1"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "3.20±0.20 x 1.60±0.20 x T 1.60±0.20",
+     "page": "1"
+    },
+    "dc_bias_cap_change_pct_at_12v": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "not given in Samsung reference sheet; Samsung tool not reachable",
+     "page": null
+    },
+    "voltage_v": {
+     "typ": 25.0,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "1",
+     "alias_of": "rated_voltage_v"
+    }
+   },
+   "price_cny_approx": 0.62,
+   "price_evidence": "LCSC snippet from USD 0.0879 (out of stock at that moment; another snapshot showed 18,020 in stock)",
+   "notes": "Samsung reference sheet effective March 2013 (Octopart mirror). Expect heavy DC-bias loss at 12 V (see Murata 1206/25V/X5R curve, ≈-73%) but not verified for this part.",
+   "confidence": "high",
+   "role": "cout_ceramic",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "stock_risk": true,
+   "dielectric": "X5R"
+  },
+  {
+   "id": "C_out_GRM31CR61E226KE15L",
+   "category": "capacitor_ceramic_output",
+   "mpn": "GRM31CR61E226KE15L",
+   "manufacturer": "Murata",
+   "package": "1206 (3216)",
+   "lcsc": "C77091",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/Multilayer-Ceramic-Capacitors-MLCC-SMD-SMT_MuRata_GRM31CR61E226KE15L_22uF-226-10-25V_C77091.html (snippet 'from $0.1626, 90,535 in stock')",
+   "datasheet_url": "https://datasheet.octopart.com/GRM31CR61E226KE15L-Murata-datasheet-14713244.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "capacitance_uf": {
+     "typ": 22,
+     "max": null,
+     "min": null,
+     "condition": "±10%",
+     "page": "1"
+    },
+    "rated_voltage_v": {
+     "typ": 25,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "1"
+    },
+    "dielectric": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "X5R (EIA), ±15% over −55..85 °C",
+     "page": "1"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "3.2±0.2 x 1.6±0.2 x T 1.6±0.2",
+     "page": "1"
+    },
+    "dc_bias_cap_change_pct_at_12v": {
+     "typ": -73,
+     "max": null,
+     "min": null,
+     "condition": "digitized by me from Murata 'DC bias characteristics' chart (typ, chart may be of a part sharing characteristics); readings: 5 V −36%, 10 V −66%, 12 V −73%, 15 V −79%, 25 V −88%; ±3% reading error",
+     "page": "2"
+    },
+    "effective_capacitance_uf_at_12v": {
+     "typ": 5.9,
+     "max": null,
+     "min": null,
+     "condition": "derived: 22 µF x (1−0.73)",
+     "page": "2"
+    },
+    "voltage_v": {
+     "typ": 25.0,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "1",
+     "alias_of": "rated_voltage_v"
+    }
+   },
+   "price_cny_approx": 1.15,
+   "price_evidence": "LCSC snippet from USD 0.1626",
+   "notes": "Murata sheet last updated 2013-03-28. DigiKey lists this MPN as Obsolete (search snippet); LCSC still had stock.",
+   "confidence": "high",
+   "role": "cout_ceramic",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "dielectric": "X5R",
+   "bias_retention_12v": 0.27
+  },
+  {
+   "id": "C_out_CL32B226KAJNNNE",
+   "category": "capacitor_ceramic_output",
+   "mpn": "CL32B226KAJNNNE",
+   "manufacturer": "Samsung Electro-Mechanics",
+   "package": "1210 (3225)",
+   "lcsc": "C309062",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/Others_Samsung-Electro-Mechanics_CL32B226KAJNNNE_Samsung-Electro-Mechanics-CL32B226KAJNNNE_C309062.html ; https://jlcpcb.com/partdetail/292813-CL32B226KAJNNNE/C309062",
+   "datasheet_url": "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/797/CL32B226KAJNNNE_Spec.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "capacitance_uf": {
+     "typ": 22,
+     "max": null,
+     "min": null,
+     "condition": "±10%",
+     "page": "1"
+    },
+    "rated_voltage_v": {
+     "typ": 25,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "1"
+    },
+    "dielectric": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "X7R",
+     "page": "1"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "L 3.20±0.30 x W 2.50±0.20 x T 2.50±0.20",
+     "page": "1"
+    },
+    "dc_bias_cap_change_pct_at_12v": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "not in reference sheet",
+     "page": null
+    },
+    "voltage_v": {
+     "typ": 25.0,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "1",
+     "alias_of": "rated_voltage_v"
+    }
+   },
+   "price_cny_approx": 1.13,
+   "price_evidence": "LCSC snippet from USD 0.1598, 30,196 in stock",
+   "notes": "Larger case/X7R -> likely less DC-bias loss than 1206 X5R, but not verified numerically.",
+   "confidence": "high",
+   "role": "cout_ceramic",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "dielectric": "X7R"
+  },
+  {
+   "id": "C_out_CL31B106KAHNNNE",
+   "category": "capacitor_ceramic_output",
+   "mpn": "CL31B106KAHNNNE",
+   "manufacturer": "Samsung Electro-Mechanics",
+   "package": "1206 (3216)",
+   "lcsc": "C14860",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/C14860.html ; https://jlcpcb.com/partdetail/15532-CL31B106KAHNNNE/C14860 (snippet 'from $0.0963, 817,480 in stock')",
+   "datasheet_url": "https://media.digikey.com/pdf/Data%20Sheets/Samsung%20PDFs/CL31B106KAHNNNE_Spec.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "capacitance_uf": {
+     "typ": 10,
+     "max": null,
+     "min": null,
+     "condition": "±10%",
+     "page": "1"
+    },
+    "rated_voltage_v": {
+     "typ": 25,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "1"
+    },
+    "dielectric": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "X7R",
+     "page": "1"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "3.20±0.20 x 1.60±0.20 x T 1.60±0.20",
+     "page": "1"
+    },
+    "dc_bias_cap_change_pct_at_12v": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "not in reference sheet",
+     "page": null
+    },
+    "voltage_v": {
+     "typ": 25.0,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "1",
+     "alias_of": "rated_voltage_v"
+    }
+   },
+   "price_cny_approx": 0.68,
+   "price_evidence": "LCSC snippet from USD 0.0963",
+   "notes": "Note: user-suggested C13585 is NOT this part; correct LCSC is C14860.",
+   "confidence": "high",
+   "role": "cout_ceramic",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "dielectric": "X7R"
+  },
+  {
+   "id": "C_in_CL31A226KOHNNNE",
+   "category": "capacitor_ceramic_input",
+   "mpn": "CL31A226KOHNNNE",
+   "manufacturer": "Samsung Electro-Mechanics",
+   "package": "1206 (3216)",
+   "lcsc": "C90146",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/Multilayer-Ceramic-Capacitors-MLCC-SMD-SMT_SAMSUNG_CL31A226KOHNNNE_22uF-226-10-16V_C90146.html (snippet 'from $0.0529, 283,070 in stock')",
+   "datasheet_url": "https://datasheet.lcsc.com/lcsc/1810311713_Samsung-Electro-Mechanics-CL31A226KOHNNNE_C90146.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "capacitance_uf": {
+     "typ": 22,
+     "max": null,
+     "min": null,
+     "condition": "±10%",
+     "page": "distributor"
+    },
+    "rated_voltage_v": {
+     "typ": 16,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "distributor"
+    },
+    "dielectric": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "X5R",
+     "page": "distributor"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "3.2 x 1.6 x T 1.6±0.2 (per search summary of Samsung sheet)",
+     "page": "distributor"
+    },
+    "dc_bias_cap_change_pct_at_5v": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "not available",
+     "page": null
+    },
+    "voltage_v": {
+     "typ": 16.0,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "distributor",
+     "alias_of": "rated_voltage_v"
+    }
+   },
+   "price_cny_approx": 0.38,
+   "price_evidence": "LCSC snippet from USD 0.0529",
+   "notes": "Datasheet PDF could NOT be downloaded (LCSC bot protection); C/V/dielectric from LCSC/DigiKey listings and Samsung MPN code (A=X5R, O=16 V). The 25 V CL31A226KAHNNNE (C12891) can also be used at input; 10 V option CL31A226KPHNNNE = C5672 (listing only).",
+   "confidence": "medium",
+   "role": "cin_ceramic",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "dielectric": "X5R"
+  },
+  {
+   "id": "C_out_EEEFK1E221P",
+   "category": "capacitor_alu_output_bulk",
+   "mpn": "EEE-FK1E221P",
+   "manufacturer": "Panasonic",
+   "package": "SMD can 8x10.2 mm (size code F)",
+   "lcsc": "C128511",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/Aluminum-Electrolytic-Capacitors-SMD_PANASONIC-EEEFK1E221P_C128511.html (LCSC writes 'EEEFK1E221P')",
+   "datasheet_url": "https://na.industrial.panasonic.com/products/capacitors/lineup/aluminum-electrolytic-capacitors/series/88994/model/89501",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "capacitance_uf": {
+     "typ": 220,
+     "max": null,
+     "min": null,
+     "condition": "±20%",
+     "page": "Panasonic model page"
+    },
+    "rated_voltage_v": {
+     "typ": 25,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "model page"
+    },
+    "impedance_mohm_100khz": {
+     "typ": null,
+     "max": 160,
+     "min": null,
+     "condition": "100 kHz, +20 °C (FK table column 'Impedance'; newer sheet calls column ESR)",
+     "page": "model page; FK datasheet mirror p.5"
+    },
+    "ripple_current_ma_100khz": {
+     "typ": null,
+     "max": 600,
+     "min": null,
+     "condition": "100 kHz, +105 °C, rms",
+     "page": "model page"
+    },
+    "tan_delta": {
+     "typ": null,
+     "max": 0.14,
+     "min": null,
+     "condition": "120 Hz, 20 °C",
+     "page": "model page"
+    },
+    "leakage_ua": {
+     "typ": null,
+     "max": 55,
+     "min": null,
+     "condition": "I ≤ 0.01CV or 3 µA after 2 min",
+     "page": "model page"
+    },
+    "endurance_h": {
+     "typ": 2000,
+     "max": null,
+     "min": null,
+     "condition": "@105 °C",
+     "page": "model page"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "D 8 x L 10.2",
+     "page": "model page"
+    },
+    "voltage_v": {
+     "typ": 25.0,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "model page",
+     "alias_of": "rated_voltage_v"
+    },
+    "esr_mohm_100khz": {
+     "typ": null,
+     "max": 160.0,
+     "min": null,
+     "condition": "100 kHz 阻抗（该尺寸下≈ESR）",
+     "page": "model page; FK datasheet mirror p.5",
+     "alias_of": "impedance_mohm_100khz"
+    }
+   },
+   "price_cny_approx": 1.22,
+   "price_evidence": "LCSC snippets from USD 0.1716-0.1727 (stock status conflicting)",
+   "notes": "LCSC listing says 5000 h; Panasonic says 2000 h -> trust Panasonic. Older FK datasheet (Octopart mirror EEE-FK1H221P, Apr 2005) row agrees: 8x10.2, F, 600 mA, 0.16 Ω, tanδ 0.14. FK flagged inactive on a Mouser page; DigiKey shows Active.",
+   "confidence": "high",
+   "role": "cout_bulk",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
+  },
+  {
+   "id": "C_out_EEEFK1E101P",
+   "category": "capacitor_alu_output_bulk",
+   "mpn": "EEE-FK1E101P",
+   "manufacturer": "Panasonic",
+   "package": "SMD can 8x6.2 mm (size code E)",
+   "lcsc": "C178539",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/Others_PANASONIC_EEEFK1E101P_PANASONIC-EEEFK1E101P_C178539.html (snippet 'SMD,D8xL6.2mm ... From $0.1497, 630 in stock')",
+   "datasheet_url": "https://datasheet.octopart.com/EEE-FK1H221P-Panasonic-datasheet-8188412.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "capacitance_uf": {
+     "typ": 100,
+     "max": null,
+     "min": null,
+     "condition": "±20%",
+     "page": "5 (EE51)"
+    },
+    "rated_voltage_v": {
+     "typ": 25,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "5"
+    },
+    "impedance_mohm_100khz": {
+     "typ": null,
+     "max": 260,
+     "min": null,
+     "condition": "100 kHz, +20 °C",
+     "page": "5"
+    },
+    "ripple_current_ma_100khz": {
+     "typ": null,
+     "max": 300,
+     "min": null,
+     "condition": "100 kHz, +105 °C",
+     "page": "5"
+    },
+    "tan_delta": {
+     "typ": null,
+     "max": 0.14,
+     "min": null,
+     "condition": "120 Hz",
+     "page": "5"
+    },
+    "endurance_h": {
+     "typ": 2000,
+     "max": null,
+     "min": null,
+     "condition": "@105 °C",
+     "page": "5"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "D 8 x L 6.2",
+     "page": "5"
+    },
+    "voltage_v": {
+     "typ": 25.0,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "5",
+     "alias_of": "rated_voltage_v"
+    },
+    "esr_mohm_100khz": {
+     "typ": null,
+     "max": 260.0,
+     "min": null,
+     "condition": "100 kHz 阻抗（该尺寸下≈ESR）",
+     "page": "5",
+     "alias_of": "impedance_mohm_100khz"
+    }
+   },
+   "price_cny_approx": 1.06,
+   "price_evidence": "LCSC snippet from USD 0.1497",
+   "notes": "Datasheet is Panasonic FK 'Standard Products' table, Apr 2005 revision (old). DigiKey lists same 300 mA@100 kHz / 260 mΩ. Ripple rating marginal vs expected Cout rms ≈0.6 A unless paralleled with ceramics.",
+   "confidence": "high",
+   "role": "cout_bulk",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
+  },
+  {
+   "id": "C_out_polymer_25SVPF100M",
+   "category": "capacitor_polymer_output",
+   "mpn": "25SVPF100M",
+   "manufacturer": "Panasonic (OS-CON SVPF)",
+   "package": "SMD can 8x6.9 mm (size code E7, 7.0 max)",
+   "lcsc": "C136279",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/Solid-Polymer-Electrolytic-Capacitor_PANASONIC_25SVPF100M_100uF-25V_C136279.html (snippet 'From $0.4844, 2,949 in stock')",
+   "datasheet_url": "https://na.industrial.panasonic.com/products/capacitors/polymer-capacitors/os-con-aluminum-polymer/series/91057/model/91093",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "capacitance_uf": {
+     "typ": 100,
+     "max": null,
+     "min": null,
+     "condition": "±20%",
+     "page": "model page"
+    },
+    "rated_voltage_v": {
+     "typ": 25,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "model page"
+    },
+    "esr_mohm_100khz": {
+     "typ": null,
+     "max": 24,
+     "min": null,
+     "condition": "100 kHz",
+     "page": "model page"
+    },
+    "ripple_current_ma_100khz": {
+     "typ": null,
+     "max": 3200,
+     "min": null,
+     "condition": "100 kHz, 105 °C",
+     "page": "model page"
+    },
+    "leakage_ua": {
+     "typ": null,
+     "max": 500,
+     "min": null,
+     "condition": "",
+     "page": "model page"
+    },
+    "endurance_h": {
+     "typ": 5000,
+     "max": null,
+     "min": null,
+     "condition": "@105 °C",
+     "page": "model page"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "D 8 x L 6.9 (height max 7)",
+     "page": "model page"
+    },
+    "voltage_v": {
+     "typ": 25.0,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "model page",
+     "alias_of": "rated_voltage_v"
+    }
+   },
+   "price_cny_approx": 3.44,
+   "price_evidence": "LCSC snippet from USD 0.4844-0.4868",
+   "notes": "Do not confuse with 25SVF100M (1000 h). No 220 µF/25 V polymer with LCSC number was verified.",
+   "confidence": "high",
+   "role": "cout_bulk",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
+  },
+  {
+   "id": "C_in_EEEFK1C101P",
+   "category": "capacitor_alu_input_bulk",
+   "mpn": "EEE-FK1C101P",
+   "manufacturer": "Panasonic",
+   "package": "SMD can 6.3x5.8 mm (size code D)",
+   "lcsc": "C128532",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/Aluminum-Electrolytic-Capacitors-SMD_PANASONIC_EEEFK1C101P_100uF-20-16V_C128532.html ; https://jlcpcb.com/partdetail/PANASONIC-EEEFK1C101P/C128532",
+   "datasheet_url": "https://datasheet.octopart.com/EEE-FK1H221P-Panasonic-datasheet-8188412.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "capacitance_uf": {
+     "typ": 100,
+     "max": null,
+     "min": null,
+     "condition": "±20%",
+     "page": "4"
+    },
+    "rated_voltage_v": {
+     "typ": 16,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "4"
+    },
+    "impedance_mohm_100khz": {
+     "typ": null,
+     "max": 360,
+     "min": null,
+     "condition": "100 kHz, 20 °C",
+     "page": "4"
+    },
+    "ripple_current_ma_100khz": {
+     "typ": null,
+     "max": 240,
+     "min": null,
+     "condition": "100 kHz, 105 °C",
+     "page": "4"
+    },
+    "tan_delta": {
+     "typ": null,
+     "max": 0.16,
+     "min": null,
+     "condition": "120 Hz",
+     "page": "4"
+    },
+    "endurance_h": {
+     "typ": 2000,
+     "max": null,
+     "min": null,
+     "condition": "@105 °C",
+     "page": "4"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "D 6.3 x L 5.8",
+     "page": "4"
+    },
+    "voltage_v": {
+     "typ": 16.0,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "4",
+     "alias_of": "rated_voltage_v"
+    },
+    "esr_mohm_100khz": {
+     "typ": null,
+     "max": 360.0,
+     "min": null,
+     "condition": "100 kHz 阻抗（该尺寸下≈ESR）",
+     "page": "4",
+     "alias_of": "impedance_mohm_100khz"
+    }
+   },
+   "price_cny_approx": 0.95,
+   "price_evidence": "LCSC snippet: 5+ USD 0.1344 ... 5000+ USD 0.0691 (another snapshot out of stock)",
+   "notes": "Search summary of Panasonic global page agrees (240 mA@100 kHz, 360 mΩ, 6.3x5.8, 2000 h). Input ripple in boost is low (continuous inductor current) so 240 mA is adequate.",
+   "confidence": "high",
+   "role": "cin_bulk",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "stock_risk": true
+  },
+  {
+   "id": "R_shunt_PA1206FRF7W0R05L",
+   "category": "resistor_shunt",
+   "mpn": "PA1206FRF7W0R05L",
+   "manufacturer": "Yageo",
+   "package": "1206",
+   "lcsc": "C7023639",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/chip-resistor-surface-mount_yageo-pa1206frf7w0r05l_C7023639.html (snippet 'RES 0.05Ω ±1% 0.5W 1206, ±100ppm/℃ ... From $0.1436, Out of Stock')",
+   "datasheet_url": "https://yageogroup.com/content/datasheet/asset/file/PYU-PA1206_L_51_ROHS",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "resistance_mohm": {
+     "typ": 50,
+     "max": null,
+     "min": null,
+     "condition": "tol F = ±1%",
+     "page": "2"
+    },
+    "power_w": {
+     "typ": null,
+     "max": 0.5,
+     "min": null,
+     "condition": "'7W' = 2x standard power (1/2 W) at 70 °C",
+     "page": "2,4"
+    },
+    "tcr_ppm": {
+     "typ": null,
+     "max": 100,
+     "min": null,
+     "condition": "TCR code F = ±100 ppm/°C",
+     "page": "2"
+    },
+    "operating_temp_c": {
+     "typ": null,
+     "max": 170,
+     "min": -55,
+     "condition": "",
+     "page": "4"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "3.20±0.25 x 1.60±0.25 x 0.65±0.25",
+     "page": "4"
+    },
+    "tolerance_pct": {
+     "max": 1.0,
+     "condition": "MPN 精度代码 F = ±1%",
+     "alias_of": "resistance_mohm.condition"
+    }
+   },
+   "price_cny_approx": 1.02,
+   "price_evidence": "LCSC snippet from USD 0.1436, OUT OF STOCK",
+   "notes": "Datasheet V.2 Jul-2017, AEC-Q200, metal (low-TCR) element. P = 1.5^2*0.05 ≈ 0.11 W at 1.5 A (if in low-side of input/inductor current). LCSC listed 1 W sibling PA1206FRF470R05L as in-stock alternative but its own C-number not found.",
+   "confidence": "high",
+   "role": "shunt",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "stock_risk": true
+  },
+  {
+   "id": "R_shunt_PA2512FKE7W0R05E",
+   "category": "resistor_shunt",
+   "mpn": "PA2512FKE7W0R05E",
+   "manufacturer": "Yageo",
+   "package": "2512",
+   "lcsc": "C375690",
+   "lcsc_evidence": "https://jlcpcb.com/partdetail/YAGEO-PA2512FKE7W0R05E/C375690 (snippet '2W 50mΩ Current Sense Resistor ±1% ±50ppm/℃ 2512')",
+   "datasheet_url": "https://yageogroup.com/content/datasheet/asset/file/PYU-PA_E_51_ROHS",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "resistance_mohm": {
+     "typ": 50,
+     "max": null,
+     "min": null,
+     "condition": "F = ±1%",
+     "page": "2"
+    },
+    "power_w": {
+     "typ": null,
+     "max": 2,
+     "min": null,
+     "condition": "'7W' = 2x standard (2 W) at 70 °C",
+     "page": "2,4"
+    },
+    "tcr_ppm": {
+     "typ": null,
+     "max": 50,
+     "min": null,
+     "condition": "code E = ±50 ppm/°C",
+     "page": "2"
+    },
+    "operating_temp_c": {
+     "typ": null,
+     "max": 170,
+     "min": -55,
+     "condition": "",
+     "page": "4"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "6.35±0.25 x 3.18±0.25 x 0.63±0.25 (7 mΩ–100 mΩ)",
+     "page": "4"
+    },
+    "tolerance_pct": {
+     "max": 1.0,
+     "condition": "MPN 精度代码 F = ±1%",
+     "alias_of": "resistance_mohm.condition"
+    }
+   },
+   "price_cny_approx": null,
+   "price_evidence": "none seen",
+   "notes": "PA_E datasheet V.10, 31-Jan-2018; range 0.5–100 mΩ, AEC-Q200, anti-sulfur. Stock not seen.",
+   "confidence": "high",
+   "role": "shunt"
+  },
+  {
+   "id": "R_shunt_CRM2512_FX_R100ELF",
+   "category": "resistor_shunt",
+   "mpn": "CRM2512-FX-R100ELF",
+   "manufacturer": "Bourns",
+   "package": "2512",
+   "lcsc": "C840603",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/chip-resistor-surface-mount_bourns-crm2512-fx-r100elf_C840603.html (search result title CRM2512-FX-R100ELF)",
+   "datasheet_url": "https://www.bourns.com/docs/Product-Datasheets/CRM.pdf",
+   "datasheet_source_type": "manufacturer",
+   "params": {
+    "resistance_mohm": {
+     "typ": 100,
+     "max": null,
+     "min": null,
+     "condition": "F = ±1% (E24 range 0.047–0.91 Ω)",
+     "page": "1-2"
+    },
+    "power_w": {
+     "typ": null,
+     "max": 2,
+     "min": null,
+     "condition": "@70 °C with 300 mm² total pad+trace; derate to 0 at 155 °C",
+     "page": "1"
+    },
+    "tcr_ppm": {
+     "typ": null,
+     "max": 100,
+     "min": null,
+     "condition": "X = ±100 ppm/°C",
+     "page": "1-2"
+    },
+    "operating_temp_c": {
+     "typ": null,
+     "max": 155,
+     "min": -55,
+     "condition": "",
+     "page": "1"
+    },
+    "dimensions_mm": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "6.3±0.20 x 3.1±0.20",
+     "page": "2"
+    },
+    "tolerance_pct": {
+     "max": 1.0,
+     "condition": "MPN 精度代码 F = ±1%",
+     "alias_of": "resistance_mohm.condition"
+    }
+   },
+   "price_cny_approx": 1.82,
+   "price_evidence": "LCSC alt-table snippet ~USD 0.2566-0.3209 for related PA2512 parts; own price not seen",
+   "notes": "Thick film (not metal element). The datasheet's own ordering example is exactly CRM2512-FX-R100ELF. Bourns PCN: silver->copper element for <1 Ω CRM parts from Jun-2021.",
+   "confidence": "medium",
+   "role": "shunt",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
+  },
+  {
+   "id": "F_in_0466003NRHF",
+   "category": "input_protection_fuse",
+   "mpn": "0466003.NRHF",
+   "manufacturer": "Littelfuse",
+   "package": "1206 thin-film fuse",
+   "lcsc": "C14165",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/Fuses_Littelfuse-0466003-NRHF_C14165.html (snippet 'Melting I2t 0.576, Interrupt Rating 50A ... 3A, 32V'); non-HF 0466003.NR = C99555 (out of stock)",
+   "datasheet_url": "https://static.chipdip.ru/lib/373/DOC018373187.pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "rated_current_a": {
+     "typ": 3.0,
+     "max": null,
+     "min": null,
+     "condition": "very fast acting; 200% opens ≤5 s, 300% ≤0.2 s, 100% ≥4 h",
+     "page": "1"
+    },
+    "max_voltage_v": {
+     "typ": null,
+     "max": 32,
+     "min": null,
+     "condition": "AC/DC",
+     "page": "1"
+    },
+    "interrupting_rating_a": {
+     "typ": null,
+     "max": 50,
+     "min": null,
+     "condition": "@32 VAC/VDC",
+     "page": "1"
+    },
+    "cold_resistance_mohm": {
+     "typ": 19,
+     "max": null,
+     "min": null,
+     "condition": "nominal, at 10% rated current, 25 °C",
+     "page": "1"
+    },
+    "melting_i2t_a2s": {
+     "typ": 0.576,
+     "max": null,
+     "min": null,
+     "condition": "nominal",
+     "page": "1"
+    },
+    "voltage_drop_mv": {
+     "typ": 75.99,
+     "max": null,
+     "min": null,
+     "condition": "nominal at rated current",
+     "page": "1"
+    },
+    "power_dissipation_w": {
+     "typ": 0.228,
+     "max": null,
+     "min": null,
+     "condition": "nominal",
+     "page": "1"
+    },
+    "derating": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "continuous at 70 °C: I = 0.75*0.80*Irat = 0.60*Irat = 1.8 A",
+     "page": "2"
+    },
+    "i_rated_a": {
+     "typ": 3.0,
+     "max": null,
+     "min": null,
+     "condition": "very fast acting; 200% opens ≤5 s, 300% ≤0.2 s, 100% ≥4 h",
+     "page": "1",
+     "alias_of": "rated_current_a"
+    },
+    "v_max_v": {
+     "typ": null,
+     "max": 32.0,
+     "min": null,
+     "condition": "AC/DC",
+     "page": "1",
+     "alias_of": "max_voltage_v"
+    },
+    "r_mohm": {
+     "typ": 19.0,
+     "max": null,
+     "min": null,
+     "condition": "nominal, at 10% rated current, 25 °C",
+     "page": "1",
+     "alias_of": "cold_resistance_mohm"
+    }
+   },
+   "price_cny_approx": 0.26,
+   "price_evidence": "0466003.NR snippet from USD 0.0367; HF price not seen",
+   "notes": "2020 Littelfuse 466 datasheet via ChipDip mirror; table columns were extracted by row-order mapping (consistent with LCSC I2t 0.576). 1.5 A continuous is within 0.75x derating (2.25 A at 25 °C).",
+   "confidence": "medium",
+   "role": "fuse",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+   "stock_risk": true
+  },
+  {
+   "id": "F_in_1812L200_12DR",
+   "category": "input_protection_ptc",
+   "mpn": "1812L200/12DR",
+   "manufacturer": "Littelfuse",
+   "package": "1812",
+   "lcsc": "C315901",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/C315901.html (search title '1812L200/12DR'; snippet 'From $0.0836, 3,145 in stock')",
+   "datasheet_url": "https://sy-dep-epc-lpc.web.cern.ch/components/datasheets/epc-lpc%20(converters)/1812LSeries_Polyswitch_(Littelfuse).pdf",
+   "datasheet_source_type": "mirror",
+   "params": {
+    "hold_current_a": {
+     "typ": 2.0,
+     "max": null,
+     "min": null,
+     "condition": "20 °C still air",
+     "page": "1"
+    },
+    "trip_current_a": {
+     "typ": 3.5,
+     "max": null,
+     "min": null,
+     "condition": "20 °C still air",
+     "page": "1"
+    },
+    "max_voltage_v": {
+     "typ": null,
+     "max": 12,
+     "min": null,
+     "condition": "Vmax",
+     "page": "1"
+    },
+    "max_fault_current_a": {
+     "typ": null,
+     "max": 100,
+     "min": null,
+     "condition": "Imax",
+     "page": "1"
+    },
+    "resistance_cold_mohm": {
+     "typ": null,
+     "max": null,
+     "min": 20,
+     "condition": "Rmin",
+     "page": "1"
+    },
+    "resistance_post_trip_mohm": {
+     "typ": null,
+     "max": 70,
+     "min": null,
+     "condition": "R1max, 1 h after trip/reflow",
+     "page": "1"
+    },
+    "time_to_trip_s": {
+     "typ": null,
+     "max": 2.0,
+     "min": null,
+     "condition": "at 8.00 A",
+     "page": "1"
+    },
+    "power_tripped_w": {
+     "typ": 1.0,
+     "max": null,
+     "min": null,
+     "condition": "Pd",
+     "page": "1"
+    },
+    "hold_current_derated_a": {
+     "typ": null,
+     "max": null,
+     "min": null,
+     "condition": "derating table ≈1.78 A @40 °C, 1.29 A @85 °C (table extraction partly misaligned; verify)",
+     "page": "1-2"
+    },
+    "i_hold_a": {
+     "typ": 2.0,
+     "max": null,
+     "min": null,
+     "condition": "20 °C still air",
+     "page": "1",
+     "alias_of": "hold_current_a"
+    },
+    "v_max_v": {
+     "typ": null,
+     "max": 12.0,
+     "min": null,
+     "condition": "Vmax",
+     "page": "1",
+     "alias_of": "max_voltage_v"
+    },
+    "r_mohm": {
+     "typ": null,
+     "max": 70.0,
+     "min": null,
+     "condition": "R1max, 1 h after trip/reflow",
+     "page": "1",
+     "alias_of": "resistance_post_trip_mohm"
+    }
+   },
+   "price_cny_approx": 0.59,
+   "price_evidence": "LCSC snippet from USD 0.0836",
+   "notes": "Copy hosted by CERN (Littelfuse PolySwitch 1812L 2023). Hold margin at 1.5 A is thin above ~50 °C; 1812L260/12 would give more margin (C-number not searched). Bourns MF-MSMF200-2 (C210837) exists on LCSC but is EOL (Feb-2026) and not in current datasheet.",
+   "confidence": "medium",
+   "role": "fuse",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
+  },
+  {
+   "id": "J_KF301_5_0_2P",
+   "category": "connector_screw_terminal",
+   "mpn": "KF301-5.0-2P",
+   "manufacturer": "Cixi Kefa Elec (KEFA)",
+   "package": "THT 2P, 5.0 mm pitch",
+   "lcsc": "C474881",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/C474881.html ; https://jlcpcb.com/partdetail/Cixi_KefaElec-KF301_5_02P/C474881 (snippet '17A, 1x2P, 250V, 5mm pitch, M2.5, 14~22 AWG')",
+   "datasheet_url": null,
+   "datasheet_source_type": null,
+   "params": {
+    "rated_current_a": {
+     "typ": null,
+     "max": 17,
+     "min": null,
+     "condition": "LCSC/JLCPCB listing",
+     "page": "listing"
+    },
+    "rated_voltage_v": {
+     "typ": null,
+     "max": 250,
+     "min": null,
+     "condition": "listing",
+     "page": "listing"
+    },
+    "pitch_mm": {
+     "typ": 5.0,
+     "max": null,
+     "min": null,
+     "condition": "NOT 5.08",
+     "page": "listing"
+    }
+   },
+   "price_cny_approx": 0.42,
+   "price_evidence": "LCSC snippet from USD 0.0589, 41,760 in stock",
+   "notes": "Maker datasheet not read. Pitch is 5.0 mm; use footprint CONN-TH_P5.00_KF301-5.0-2P.",
+   "confidence": "medium",
+   "role": "terminal",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
+  },
+  {
+   "id": "J_KF128_5_08_2P",
+   "category": "connector_screw_terminal",
+   "mpn": "KF128-5.08-2P-AA",
+   "manufacturer": "Cixi Kefa Elec (KEFA)",
+   "package": "THT 2P, 5.08 mm pitch",
+   "lcsc": "C474952",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/Screw-terminal_Cixi-Kefa-Elec-KF128-5-08-2P-AA_C474952.html ; https://jlcpcb.com/partdetail/Cixi_KefaElec-KF128_5_08_2PAA/C474952 (snippet 'Current Rating 24A, 250V, 12~22 AWG, Pitch 5.08mm')",
+   "datasheet_url": null,
+   "datasheet_source_type": null,
+   "params": {
+    "rated_current_a": {
+     "typ": null,
+     "max": 24,
+     "min": null,
+     "condition": "listing",
+     "page": "listing"
+    },
+    "rated_voltage_v": {
+     "typ": null,
+     "max": 250,
+     "min": null,
+     "condition": "listing",
+     "page": "listing"
+    },
+    "pitch_mm": {
+     "typ": 5.08,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "listing"
+    }
+   },
+   "price_cny_approx": 0.71,
+   "price_evidence": "LCSC snippet from USD 0.1005",
+   "notes": "True 5.08 mm alternative. Maker datasheet not read.",
+   "confidence": "medium",
+   "role": "terminal",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
+  },
+  {
+   "id": "J_hdr_1x4_B2100S04P",
+   "category": "connector_pin_header",
+   "mpn": "B-2100S04P-A110",
+   "manufacturer": "Ckmtw (Shenzhen Cankemeng)",
+   "package": "THT 1x4 2.54 mm straight",
+   "lcsc": "C124378",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/C124378.html ; szlcsc item 125653 (snippet 'Rated current 3 A ... szlcsc ￥0.1424')",
+   "datasheet_url": null,
+   "datasheet_source_type": null,
+   "params": {
+    "rated_current_a": {
+     "typ": null,
+     "max": 3,
+     "min": null,
+     "condition": "listing",
+     "page": "listing"
+    },
+    "pitch_mm": {
+     "typ": 2.54,
+     "max": null,
+     "min": null,
+     "condition": "6 mm mating, 3 mm tail",
+     "page": "listing"
+    }
+   },
+   "price_cny_approx": 0.14,
+   "price_evidence": "szlcsc snippet ￥0.1424 (JLC ref ￥0.194); LCSC from USD 0.027",
+   "notes": "For SWD (SWDIO/SWCLK/GND/3V3).",
+   "confidence": "medium",
+   "role": "header_uart"
+  },
+  {
+   "id": "J_hdr_1x5_B2100S05P",
+   "category": "connector_pin_header",
+   "mpn": "B-2100S05P-A110",
+   "manufacturer": "Ckmtw (Shenzhen Cankemeng)",
+   "package": "THT 1x5 2.54 mm straight",
+   "lcsc": "C124379",
+   "lcsc_evidence": "https://www.lcsc.com/product-detail/Male-Header_Headers-Pins-1-5P-2-54mm-Straight-line_C124379.html ; https://jlcpcb.com/partdetail/125654-B_2100S05PA110/C124379 (snippet '1x5P, 2.54mm, 3A')",
+   "datasheet_url": null,
+   "datasheet_source_type": null,
+   "params": {
+    "rated_current_a": {
+     "typ": null,
+     "max": 3,
+     "min": null,
+     "condition": "listing",
+     "page": "listing"
+    },
+    "pitch_mm": {
+     "typ": 2.54,
+     "max": null,
+     "min": null,
+     "condition": "",
+     "page": "listing"
+    }
+   },
+   "price_cny_approx": 0.19,
+   "price_evidence": "LCSC snippet from USD 0.0261, 16,710 in stock",
+   "notes": "For SWD+NRST or UART.",
+   "confidence": "medium",
+   "role": "header_swd",
+   "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
+  }
+ ]
+}

@@ -1,0 +1,104 @@
+{
+  "schema": "boost-design-choices/1",
+  "revision": "r1",
+  "_how_to_use": "智能体在阶段 3/4 复制本文件到工作目录并按论证修改；每个改动在 rationale 中写理由。脚本只从这里读取设计决策。",
+  "topology": "async_boost",
+  "fsw_hz": 100000,
+  "power_stage": {
+    "inductor_ripple_ratio": 0.35,
+    "inductor_tolerance": 0.2,
+    "inductor_std_values_uh": [
+      22,
+      33,
+      47,
+      68,
+      82,
+      100,
+      150
+    ],
+    "eta_assumed": 0.85,
+    "eta_worst": 0.75,
+    "diode_vf_assumed_v": 0.5,
+    "ripple_design_pct": 1.0,
+    "vin_ripple_design_pct": 1.0,
+    "voltage_derating": 1.5,
+    "isat_margin": 1.25,
+    "irms_margin": 1.2,
+    "cout_ceramic_bias_retention": 0.3
+  },
+  "duty": {
+    "dmax_margin": 0.05,
+    "dmax_step": 0.05,
+    "dmin": 0.0
+  },
+  "control": {
+    "structure": "dual_pi_min_select",
+    "f_ctrl_hz": 20000,
+    "pwm_alignment": "edge",
+    "timer_clk_hz": 170000000,
+    "cpu_clk_hz": 170000000,
+    "isr_cycles_est": 1500,
+    "pm_min_deg": 45,
+    "gm_min_db": 6,
+    "soft_start_ms": 20
+  },
+  "sensing": {
+    "adc_bits": 12,
+    "adc_vref_v": 3.3,
+    "adc_usable_frac": 0.95,
+    "vout_fs_over_ovp_hw": 1.15,
+    "vin_fs_over_vin_max": 1.15,
+    "divider_rbot_ohm": 10000,
+    "divider_filter_fc_hz": 10000,
+    "iout_fs_min_a": 1.25,
+    "csa_gain_options": [
+      20,
+      50,
+      100,
+      200
+    ],
+    "shunt_options_ohm": [
+      0.01,
+      0.02,
+      0.025,
+      0.05,
+      0.1
+    ],
+    "shunt_max_loss_w": 0.05,
+    "csa_supply_v": 3.3,
+    "csa_swing_to_rail_v": 0.05,
+    "current_sense_location": "output_high_side"
+  },
+  "protection": {
+    "ovp_sw_pct": 10,
+    "ovp_hw_pct": 15,
+    "ocp_sw_pct": 20,
+    "ocp_sw_delay_ms": 10,
+    "ocp_hw_a": 1.0,
+    "uvlo_off_v": 4.3,
+    "uvlo_on_v": 4.5,
+    "cc_vout_min_margin_v": 0.5,
+    "input_reverse_protection": "pmos",
+    "output_tvs": true
+  },
+  "aux": {
+    "mcu_run_ma": 30,
+    "csa_ma": 0.3,
+    "led_count": 3,
+    "led_ma": 2,
+    "misc_ma": 3,
+    "gate_driver_iq_ma": 0.1
+  },
+  "comms": {
+    "uart_baud": 115200,
+    "log_frame_bytes": 48,
+    "log_rate_hz": 50
+  },
+  "selection": {
+    "preferred_packages_note": "实物手工焊接：优先 SOT-23/SOT-23-5/SMA/SMB/SOP/0603 以上/LQFP；避免 QFN/DFN/BGA",
+    "overrides": {}
+  },
+  "rationale": {
+    "_note": "阶段 3/4 由智能体逐项填写理由；示例见 outputs/module1/design_choices.json"
+  }
+}
