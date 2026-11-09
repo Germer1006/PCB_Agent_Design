@@ -8,8 +8,11 @@
    skill 位于 `A/.agents/skills/boost-system-design/`，Codex 从当前项目目录查找 `.agents/skills`。
 2. 在输入框输入 `$` 选择 `boost-system-design`，例如：
    ```
-   $boost-system-design 按 inputs/course_requirements.json 完成模块一系统设计，工作目录用 outputs/test1，每个关键阶段向我确认后再继续
+   $boost-system-design 按 inputs/course_requirements.json 完成模块一系统设计，工作目录用 outputs/test2
    ```
+   默认为**新手模式**：只在需求确认（S1）、出现只有你能回答的问题（偏好、采购、焊接能力等）以及交接前（S9）停下；
+   拓扑、控制、选型阶段用白话汇报后继续，并附“答辩可能被问到的问题”。工程正确性由工具计算和规则检查把关，不需要你判断。
+   可在指令里加：“每个阶段都确认” / “专家模式” / “自动推进，最后统一确认”。
 3. 不经过 Codex、只验证工具链：
    ```bash
    cd .agents/skills/boost-system-design/scripts
