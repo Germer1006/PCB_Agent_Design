@@ -24,7 +24,8 @@
     "voltage_derating": 1.5,
     "isat_margin": 1.25,
     "irms_margin": 1.2,
-    "cout_ceramic_bias_retention": 0.3
+    "cout_ceramic_bias_retention": 0.3,
+    "inductor_rounding_allowance": 0.03
   },
   "duty": {
     "dmax_margin": 0.05,
@@ -87,7 +88,25 @@
     "led_count": 3,
     "led_ma": 2,
     "misc_ma": 3,
-    "gate_driver_iq_ma": 0.1
+    "gate_driver_iq_ma": 1.9
+  },
+  "losses": {
+    "ambient_c": 40,
+    "gate_resistor_ohm": 10,
+    "miller_plateau_v": 2.5,
+    "rds_hot_factor": 1.3,
+    "core_loss_frac_of_copper": 0.25,
+    "inductor_tolerance": 0.2,
+    "bulk_cap_tolerance": 0.2,
+    "ceramic_cap_tolerance": 0.1,
+    "bulk_esr_sensitivity_factors": [
+      0.5,
+      1.0,
+      2.0
+    ],
+    "current_filter_r_ohm": 1000,
+    "current_filter_c_f": 1e-08,
+    "switching_loss_factor": 1.5
   },
   "comms": {
     "uart_baud": 115200,
@@ -99,6 +118,6 @@
     "overrides": {}
   },
   "rationale": {
-    "_note": "阶段 3/4 由智能体逐项填写理由；示例见 outputs/module1/design_choices.json"
+    "_note": "阶段 3/4 由智能体逐项填写理由；参考示例见 outputs/test1/design_choices.json（r5，含逐项理由与修订记录）"
   }
 }

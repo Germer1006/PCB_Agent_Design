@@ -7,7 +7,7 @@ import unittest
 from _common import TEMPLATE_DIR, load_json, pick_at_least, pick_nearest
 from boost_model import Boost
 from calc_boost import calc
-from loss_thermal import ripple_harmonic
+from loss_model import ripple
 
 REQ = {
     "vin": {"nom_v": 5.0, "tol_pct": 5}, "vout": {"set_v": 12.0}, "iout": {"cc_set_a": 0.5},
@@ -44,7 +44,8 @@ class TestModel(unittest.TestCase):
 class TestRipple(unittest.TestCase):
     def test_ideal_cap(self):
         d, ipk, ival, f, C = 0.6, 1.4, 1.2, 1e5, 47e-6
-        vpp, simple = ripple_harmonic(d, ipk, ival, f, [(C, 1e-6)], 1e9, n_harm=200)
+        vpp, _, _ = ripple(d, ipk, ival, f, [(C, 1e-6)], 1e9, nh=200)
+        simple = (1 - d) * (ipk + ival) / 2 * d / (f * C)
         self.assertAlmostEqual(vpp, simple, delta=0.08 * simple)
 
 
@@ -59,6 +60,21 @@ class TestCalc(unittest.TestCase):
         p = c["protection"]
         self.assertTrue(12 < p["ovp_sw"]["value"] < p["ovp_hw"]["value"])
         self.assertLess(p["ocp_hw"]["adc_code"], 4095)
+
+    def test_current_lsb_uses_adc_reference(self):
+        """回归：电流 LSB 按 ADC 基准 Vref/(Rs·G)/(2^N−1)，不按放大器摆幅（Codex 测试运行发现）."""
+        c = calc(REQ, load_json(TEMPLATE_DIR / "design_choices.default.json"))
+        i = c["sensing"]["iout"]
+        self.assertAlmostEqual(i["lsb_ma"], 3.3 / (i["shunt_ohm"] * i["gain"]) / 4095 * 1e3, places=4)
+
+    def test_dcm_corner_detected(self):
+        """回归：电感取 −20% 容差、负载 0.08 A 时谷值电流 < 0，属 DCM，CCM 环路结论不得覆盖该点；
+        标称电感、0.5 A 额定点则为 CCM."""
+        for L, io, dcm in ((68e-6 * 0.8, 0.08, True), (68e-6, 0.5, False)):
+            m = Boost(L, 0.14, 0.04, 0.47, 0.016, [(6e-6, 0.0025), (100e-6, 0.024)])
+            d, il = m.solve_dc(5.0, 12.0, io)
+            valley = il - 5.0 * d / (1e5 * L) / 2
+            self.assertEqual(valley <= 0, dcm, (L, io, valley))
 
     def test_series(self):
         self.assertEqual(pick_at_least(40.6e3), 43e3)

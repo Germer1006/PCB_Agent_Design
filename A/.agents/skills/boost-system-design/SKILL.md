@@ -23,8 +23,10 @@ description: 模块一·系统总体设计智能体。把“MCU 控制的 Boost 
 ## 目录
 
 ```
-scripts/      calc_boost.py  select_parts.py  loss_thermal.py  loop_design.py
-              check_design.py  export_handoff.py  run_all.py（一键） _common.py boost_model.py stage_params.py svgplot.py
+scripts/      calc_boost.py  select_parts.py  loss_thermal.py(+loss_model.py)  loop_design.py  validate_loop.py
+              check_design.py  export_handoff.py(+handoff_contract.py, handoff_header.py)  run_all.py（一键）
+              draw_figures.py（框图/工作区图）  md2docx.mjs（报告转 Word，可选）  test_tools.py（单元测试）
+              _common.py  boost_model.py  stage_params.py（含容差场景 variants）  svgplot.py
 knowledge/    parts_db.json（结构化器件库，含出处）  design_rules.md（工程规则与常见错误，按需检索）
 templates/    design_choices.default.json（设计决策模板）  report_outline.md（报告结构）
 ```
@@ -38,13 +40,13 @@ Windows 下建议设置 `PYTHONIOENCODING=utf-8`。只用 Python 标准库。
 |---|---|---|---|---|
 | S0 准备 | 读需求文件与已有工作目录；新项目则复制需求与决策模板 | — | `requirements.json`, `design_choices.json` | 文件齐全 |
 | S1 需求解析 ⏸ | 建需求矩阵（编号/出处/must·target/验证方法）；识别隐含约束与冲突（CC/CV 工作区、输入电流、测试负载模式、Boost 短路限制） | `design_rules.md §1` | 报告 §1 草稿 | 无未处理冲突 |
-| S2 功能划分 | 划分功能块（MOD-IN/PWR/DRV/SENSE/MCU/AUX/OUT/DBG）、软硬件分工、能量流/信号流/保护流框图、系统状态机 | `design_rules.md §5,§8` | `system_architecture.mmd`, `operating_states.mmd` | 每条需求至少落到一个功能块 |
+| S2 功能划分 | 划分功能块（MOD-IN/PWR/DRV/SENSE/MCU/AUX/OUT/DBG）、软硬件分工、能量流/信号流/保护流框图、系统状态机 | `design_rules.md §5,§8` | `system_architecture.mmd`, `operating_states.mmd`（S9 后可用 `draw_figures.py` 生成与 BOM 一致的正式框图） | 每条需求至少落到一个功能块 |
 | S3 拓扑选择 ⏸ | 比较非同步/同步 Boost、SEPIC、专用 IC；确定开关频率 | `design_rules.md §2` | `design_choices.json`(topology, fsw) + rationale | 结论写明排除理由与适用边界 |
 | S4 控制方案 ⏸ | 确定 CC/CV 结构、采样位置、控制频率、ADC 触发、Dmax/Dmin 策略、保护分层与阈值百分比、软启动 | `design_rules.md §4,§5,§6` | `design_choices.json`(control/sensing/protection) + rationale | 每个参数有理由 |
 | S5 参数计算 | `python calc_boost.py <wd>` | 工具 | `calc.json` | 无异常；检查 notes 中的提示 |
 | S6 器件选型 ⏸ | `python select_parts.py <wd>`；逐类阅读淘汰原因；某类无候选 → 扩充器件库或回 S3/S4 | `parts_db.json` | `selection.json` | 每类有入选器件 |
-| S7 复核 | `python loss_thermal.py <wd>`（效率、结温、纹波、增益峰、浪涌）；若提示 η 偏差 → 改 `eta_assumed` 回 S5；`python loop_design.py <wd>`（PI 初值与全工况裕度） | 工具 | `losses.json`, `loop.json`, `bode_*.csv`, `bode_loops.svg` | η 一致；两个环路 ok |
-| S8 设计规则检查 | `python check_design.py <wd>` | 工具 | `check.json` | FAIL = 0；WARN 逐条解释 |
+| S7 复核 | `python loss_thermal.py <wd>`（标称 + L/C 容差 × ESR 敏感性全组合：效率、结温、纹波、增益峰、浪涌包络）；若提示 η 偏差 → 改 `eta_assumed` 回 S5；`python loop_design.py <wd>`（全工况 × 容差场景的 PI 初值；DCM 点单列排除，不得据 CCM 结论宣称其稳定）；`python validate_loop.py <wd>`（用导出后的 PI 系数独立密扫复核） | 工具 | `losses.json`, `loop.json`, `loop_validation.json`, `bode_*.csv`, `bode_loops.svg` | η 一致；两个环路 ok；独立复核 PASS |
+| S8 设计规则检查 | `python check_design.py <wd>` | 工具 | `check.json` | FAIL = 0；WARN 逐条解释。状态 `conditional_review` = 无设计错误，但仍有只能靠仿真/实测关闭的验证项（如 DCM 稳定性、TVS 配合、浪涌限制），它们以 open 项交接，不得宣称“已实测合格” |
 | S9 交接与报告 ⏸ | `python export_handoff.py <wd>`；按 `templates/report_outline.md` 写 `system_design_report.md`（论证文字由模型写，数字只引用工具输出与 `report_tables.md`） | 工具 + 模板 | `design_spec.json`, `bom_module1.csv`, `boost_params.h`, `report_tables.md`, `system_design_report.md` | 报告与 JSON 版本号一致 |
 
 快速路径：用户只要结果时，S3/S4 采用模板默认决策，`python run_all.py <wd> --requirements <需求文件>` 一次跑完 S5–S9 的工具部分

@@ -107,8 +107,8 @@ def r_inductor(p, x):
     L, isat, irms = param(p, "inductance_uh"), param(p, "isat_a", ("min", "typ")), param(p, "irms_a", ("min", "typ"))
     dcr = param(p, "dcr_mohm", ("max", "typ"))
     ind = x.c["inductor"]
-    check(R, "L 在 [L_req, 1.6×L_sel] 内", L is not None and ind["l_required_uh"] * 0.97 <= L <= 1.6 * ind["l_selected_uh"],
-          f"{L} µH vs {ind['l_required_uh']:.1f}–{1.6*ind['l_selected_uh']:.0f} µH")
+    check(R, "L 在 [(1−rounding_allowance)×L_req, 1.6×L_sel] 内", L is not None and ind["l_required_uh"] * (1 - x.ch["power_stage"].get("inductor_rounding_allowance", 0.0)) <= L <= 1.6 * ind["l_selected_uh"],
+          f"{L} µH；需求 {ind['l_required_uh']:.1f} µH，向下取整允许 {x.ch['power_stage'].get('inductor_rounding_allowance', 0.0):.0%}；上限 {1.6*ind['l_selected_uh']:.0f} µH")
     check(R, "Isat ≥ 需求", isat is not None and isat >= ind["isat_required_a"], f"{isat} A vs ≥{ind['isat_required_a']} A")
     check(R, "Irms(温升) ≥ 需求", irms is not None and irms >= ind["irms_required_a"], f"{irms} A vs ≥{ind['irms_required_a']} A")
     check(R, "DCR 有规格", dcr is not None, f"{dcr} mΩ")
@@ -224,7 +224,7 @@ def r_csa(p, x):
     err = abs(vos) * 1e-6 / (s["shunt_ohm"] * x.io) * 100 if vos is not None else None
     cond = p.get("params", {}).get("vos_uv", {}).get("condition", "")
     check(R, "失调误差 ≤ 稳态精度要求的一半（2.5%）", err is not None and err <= 2.5, f"{r3(err)} %（{cond}，最大值）")
-    check(R, "失调误差 ≤ 1%（否则需固件零点标定）", err is not None and err <= 1.0, f"{r3(err)} %", hard=False)
+    check(R, "失调误差 ≤ 1%（否则需实际高边共模条件下标定）", err is not None and err <= 1.0, f"{r3(err)} %", hard=False)
     pkg_pen = 2.0 if "SC70" in (p.get("package") or "").upper() or "SC-70" in (p.get("package") or "").upper() else 0.0
     return R, (err + pkg_pen if err is not None else None), "失调误差 %@0.5A（最大值）+ SC70 封装手焊难度 2"
 
@@ -318,13 +318,15 @@ def select(calc, choices, db):
         evals = []
         for p in cands:
             rules, score, score_note = fn(p, x)
-            check(rules, "数据来自已核实的数据手册（confidence ≠ low）", p.get("confidence") != "low",
-                  f"confidence={p.get('confidence')}")
+            check(rules, "数据手册与立创编号证据齐全且 confidence 为 high/medium", p.get("confidence") in ("high", "medium") and bool(p.get("datasheet_url")) and bool(p.get("lcsc")) and bool(p.get("lcsc_evidence")),
+                  f"confidence={p.get('confidence')}，datasheet={bool(p.get('datasheet_url'))}，LCSC={p.get('lcsc')}")
             hard_ok = all(r["ok"] for r in rules if r["hard"])
             evals.append({"id": p["id"], "mpn": p.get("mpn"), "manufacturer": p.get("manufacturer"),
                           "package": p.get("package"), "lcsc": p.get("lcsc"), "price_cny_approx": p.get("price_cny_approx"),
                           "pass": hard_ok, "score": r3(score) if score is not None else None, "score_note": score_note,
-                          "qty": p.get("_qty", 1), "stock_risk": bool(p.get("stock_risk")), "rules": rules})
+                          "qty": p.get("_qty", 1), "stock_risk": bool(p.get("stock_risk")), "rules": rules,
+                          "price_status": "知识库价格快照，采购前复核" if p.get("price_cny_approx") is not None else "价格缺失；评分含缺省估值，不是报价",
+                          "datasheet_url": p.get("datasheet_url"), "confidence": p.get("confidence")})
         passing = [e for e in evals if e["pass"] and e["score"] is not None]
         chosen = None
         if cat in overrides:
@@ -338,7 +340,7 @@ def select(calc, choices, db):
             chosen = min(band, key=lambda e: (e["stock_risk"], e["price_cny_approx"] if e["price_cny_approx"] is not None else 99, e["score"]))
             if chosen is not best:
                 tie_note = (f"；评分与最优 {best['mpn']}（{best['score']}）相差 ≤{TIE_BAND:.0%}，视为无显著差异，"
-                            f"按价格/价格可查优先")
+                            f"先无缺货风险，再价格低/价格可查优先")
         if cat == "cout_bulk" and chosen:
             x.bulk_ceff_uf = next(p for p in cands if p["id"] == chosen["id"]).get("_ceff_counted_uf", 0.0)
         out["categories"][cat] = {"candidates": evals, "selected": chosen["id"] if chosen else None,

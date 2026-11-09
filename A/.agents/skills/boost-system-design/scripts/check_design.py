@@ -42,8 +42,9 @@ def run(req, ch, calc, sel, loss, loop, db):
 
     # --- 占空比 / 增益峰 ---
     gp = loss["gain_peak"]
-    K.add("SR20", "Dmax > 实际最坏占空比", prot["duty_limit"]["dmax"] > max(c["D"] for c in loss["cases"].values() if "D" in c),
-          f"Dmax={prot['duty_limit']['dmax']} vs D,max={max(c['D'] for c in loss['cases'].values() if 'D' in c)}", ref="CTRL-DUTY")
+    env = loss['envelope']
+    K.add("SR20", "Dmax > 已建模额定容差场景最大占空比", prot["duty_limit"]["dmax"] > env['D_max'],
+          f"Dmax={prot['duty_limit']['dmax']} vs D,max={env['D_max']}", ref="CTRL-DUTY")
     K.add("SR21", "Dmax < 升压比峰值点占空比", prot["duty_limit"]["dmax"] < gp["d_peak"],
           f"Dmax={prot['duty_limit']['dmax']} < D_peak={gp['d_peak']}（峰值 Vo={gp['vo_peak_v']} V）", ref="CTRL-DUTY")
     vpk_dmax_ok = gp["vo_peak_v"] > prot["ovp_hw"]["value"]
@@ -65,15 +66,30 @@ def run(req, ch, calc, sel, loss, loop, db):
     if vcl:
         K.add("SR31", "TVS 钳位电压 ≤ MOSFET Vds 额定", vds is not None and vcl <= vds, f"VC={vcl} V vs Vds={vds} V",
               warn_only=True, ref="PROT")
-        K.add("SR32", "TVS 钳位电压 ≤ 输出电容耐压", vcl <= v_caps, f"VC={vcl} V vs {v_caps} V（VC 为 IPP 大电流下的值，"
-              "实际故障电流小得多，通常可接受）", warn_only=True, ref="PROT")
+        K.add("SR32", "TVS 钳位电压 ≤ 输出电容耐压（仅手册脉冲条件对照）", vcl <= v_caps,
+              f"VC={vcl} V vs {v_caps} V；未计温漂与布局尖峰，另见 SR35", warn_only=True, ref="PROT")
+        K.add('SR35', 'TVS 全条件保护配合已验证', False,
+              '24.4V 仅对应手册16.4A、10/1000µs脉冲；25V电容裕量小。温度、布线寄生与故障能量未验证。',
+              warn_only=True, ref='PROT')
     K.add("SR33", "OCP 次序 Icc < OCPsw < OCPhw", io < prot["ocp_sw"]["value"] < prot["ocp_hw"]["value"],
           f"{io} < {prot['ocp_sw']['value']} < {prot['ocp_hw']['value']} A", ref="PROT")
     ind, _ = selected(sel, db, "inductor")
-    il_ocp = prot["ocp_hw"]["value"] / (1 - max(c["D"] for c in loss["cases"].values() if "D" in c))
+    il_ocp = prot["ocp_hw"]["value"] / (1 - env['D_max'])
     isat = param(ind, "isat_a", ("min", "typ")) if ind else None
-    K.add("SR34", "硬件 OCP 动作前电感不深度饱和", isat is not None and isat >= il_ocp * 0.9,
-          f"OCPhw 对应 IL≈{il_ocp:.2f} A vs Isat={isat} A（瞬态，比较器 μs 级关断）", warn_only=True, ref="PROT")
+    K.add("SR34", "故障电感峰值及输入保护配合已证明", False,
+          f"仅稳态换算输出OCPhw对应IL≈{il_ocp:.2f} A vs Isat={isat} A；不是故障上界。无电感逐周期限流，"
+          "输出OCP不能保证避免电感饱和；独立输入限流的瞬态与短路耐受尚未验证。", warn_only=True, ref="PROT")
+    irms = param(ind, 'irms_a', ('min','typ')) if ind else None
+    K.add('SR36', '额定容差场景电感峰值低于手册Isat', isat is not None and env['IL_pk_max_A'] < isat,
+          f"ILpk={env['IL_pk_max_A']} A vs Isat={isat} A；非故障工况", ref='PWR')
+    K.add('SR37', '额定容差场景电感RMS低于手册温升电流', irms is not None and env['IL_rms_max_A'] < irms,
+          f"ILrms={env['IL_rms_max_A']} A vs Irms={irms} A；适用手册温升条件", ref='PWR')
+    K.add('SR38', '电感实际纹波比满足内部设计目标', env['ripple_ratio_max'] <= ch['power_stage']['inductor_ripple_ratio'],
+          f"容差场景最大{env['ripple_ratio_max']} vs 内部目标{ch['power_stage']['inductor_ripple_ratio']}；非课程硬指标", warn_only=True, ref='DEC-L')
+    bulk_rms = max(x['capacitor_branch_rms_A'][-1] for x in loss['corner_cases'])
+    bulk_rating = param(cb, 'ripple_current_ma_100khz', ('max','typ')) / 1000
+    K.add('SR39', '输出储能电容支路纹波电流低于手册额定', bulk_rms < bulk_rating,
+          f'支路谐波RMS最大{bulk_rms:.4g} A vs {bulk_rating} A@100kHz；模型未含尖峰和漏电', ref='PWR')
 
     # --- 采样 ---
     s = calc["sensing"]
@@ -89,36 +105,45 @@ def run(req, ch, calc, sel, loss, loop, db):
         vos = param(csa, "vos_uv", ("max", "typ")) or 0
         ge = param(csa, "gain_error_pct", ("max", "typ")) or 0
         err = vos * 1e-6 / (s["iout"]["shunt_ohm"] * io) * 100 + ge + 1.0  # + 分流电阻 1%
-        K.add("SR44", "电流测量最坏误差 ≤ 稳态精度要求的一半", err <= req["iout"]["steady_err_pct"] / 2,
-              f"失调 + 增益误差 + 分流 1% ≈ {err:.2f}% vs ≤{req['iout']['steady_err_pct']/2}%（可两点标定进一步降低）",
+        K.add("SR44", "电流测量部分误差预算 ≤ 稳态精度要求的一半", err <= req["iout"]["steady_err_pct"] / 2,
+              f"失调 + 增益误差 + 分流 1% ≈ {err:.2f}% vs ≤{req['iout']['steady_err_pct']/2}%；"
+              "失调条件为12V共模，未含ADC/基准/温漂/CMRR，非完整最坏保证；须在实际共模下标定。",
               warn_only=True, ref="REQ-ACC")
     verr = 2 * 1.0 + 0.5  # 两只 1% 电阻 + ADC/基准
-    K.add("SR45", "电压测量最坏误差 ≤ 稳态精度要求的一半", verr <= req["vout"]["steady_err_pct"] / 2,
-          f"≈{verr}%（1% 电阻×2 + ADC 0.5%）", warn_only=True, ref="REQ-ACC")
+    K.add("SR45", "电压测量规划预算 ≤ 稳态精度要求的一半", verr <= req["vout"]["steady_err_pct"] / 2,
+          f"≈{verr}%（1%电阻×2 + ADC/基准0.5%占位预算，非已验证上界）；另见SR46", warn_only=True, ref="REQ-ACC")
+    K.add('SR46', '电压/电流完整误差与硬件阈值容差已闭合', False,
+          'ADC、基准、温漂、共模范围和阈值源须补预算；ADC等效码不是DAC码；独立DAC/COMP/BKIN及ADC并用路由尚待核实。', warn_only=True, ref='IF-ADC')
 
     # --- 效率 / 热 / 纹波 ---
     eta = loss["cases"]["nom"]["eta_total"] * 100
-    K.add("SR50", "额定点效率估算 ≥ 课程目标 + 5% 裕量", eta >= req["efficiency"]["target_pct"] + 5,
-          f"{eta:.1f}% vs {req['efficiency']['target_pct']}%（+5% 留给未建模损耗）", ref="REQ-EFF")
-    for c in loss["cases"].values():
-        for n, t in c.get("tj_C", {}).items():
-            if c is loss["cases"]["min"]:
-                K.add(f"SR51-{n}", f"{n} 结温 < 100 °C（Vin_min, Ta={loss['assumptions']['ambient_c']}°C）", t < 100, f"{t} °C",
-                      ref="THERM")
+    K.add("SR50", "额定点效率估算 ≥ 课程建议目标", eta >= req["efficiency"]["target_pct"],
+          f"{eta:.2f}% vs target {req['efficiency']['target_pct']}%（未实测）", warn_only=True, ref="REQ-EFF")
+    K.add('SR50-margin', '容差场景效率估算 ≥ 课程目标+5个百分点内部裕量', 100*env['eta_min'] >= req['efficiency']['target_pct']+5,
+          f"最低{100*env['eta_min']:.2f}%（{env['eta_min_case']}）；+5个百分点为内部目标", warn_only=True, ref='DEC-EFF')
+    for n,t in env['tj_max_C'].items():
+        K.add(f'SR51-{n}', f'{n}容差场景估计结温 < 100°C', t<100,
+              f"最大{t}°C，Ta={loss['assumptions']['ambient_c']}°C；依赖热阻/铜面积假设，非实测", ref='THERM')
     rp = loss["ripple"]["ripple_pct"]
-    K.add("SR52", "输出纹波估算 ≤ 建议值 3%", rp <= req["ripple"]["target_pct"], f"{rp}%（不含开关尖峰）", ref="REQ-RIP")
-    K.add("SR53", "上电浪涌已评估并有对策", loss["inrush"]["i_peak_a"] < 3 or ch["protection"].get("input_reverse_protection") == "pmos",
-          f"{loss['inrush']['i_peak_a']} A；对策：PMOS 缓启动/电源限流", warn_only=True, ref="PROT")
+    K.add("SR52", "输出纹波估算 ≤ 课程硬性上限", rp <= req["ripple"]["max_pct"], f"{rp}% vs {req['ripple']['max_pct']}%（不含ESL/开关尖峰）", ref="REQ-RIP")
+    K.add('SR52-target', '输出纹波估算 ≤ 课程建议值', rp <= req['ripple']['target_pct'],
+          f"{rp}% vs target {req['ripple']['target_pct']}%", warn_only=True, ref='REQ-RIP')
+    K.add("SR53", "上电浪涌限制措施已验证", loss["inrush"]["mitigation_verified"],
+          f"线性峰值{loss['inrush']['i_peak_a']}A；超过Isat时不是可靠上界。PMOS防反接与数字软启动均不等于浪涌限流；外部输入限流瞬态/其输出电容或PMOS缓启SOA待验证。", warn_only=True, ref="PROT")
 
     fi = loss["inrush"].get("fuse_melting_i2t_a2s")
-    K.add("SR54", "保险丝不因上电浪涌熔断（熔断 I²t ≥ 10×浪涌 I²t）", fi is not None and fi >= 10 * loss["inrush"]["i2t_a2s"],
-          f"熔断 {fi} A²s vs 浪涌 {loss['inrush']['i2t_a2s']} A²s", warn_only=fi is None, ref="PROT")
+    K.add("SR54", "保险丝nominal I²t与线性浪涌模型对照 ≥ 10倍", fi is not None and fi >= 10 * loss["inrush"]["i2t_a2s"],
+          f"熔断nominal {fi} A²s vs 线性浪涌{loss['inrush']['i2t_a2s']} A²s；非不熔断/重复寿命/短路保护配合证明", warn_only=True, ref="PROT")
 
     # --- 控制 ---
     for m in ("CV", "CC"):
         r = loop[m]
-        K.add(f"SR60-{m}", f"{m} 环路在所有工况角满足 PM≥{ch['control']['pm_min_deg']}°, GM≥{ch['control']['gm_min_db']} dB",
+        K.add(f"SR60-{m}", f"{m} 环路在已建模CCM工况满足 PM≥{ch['control']['pm_min_deg']}°, GM≥{ch['control']['gm_min_db']} dB",
               r["ok"], f"Kp={r.get('Kp')}, Ki={r.get('Ki')}, 最差 fc={r.get('fc_min_Hz')} Hz", ref="CTRL")
+        bad = [x for x in r.get('excluded_corners',[]) if not x['error'].startswith('DCM')]
+        K.add(f'SR60-reachable-{m}', f'{m}指定工况均可达', not bad, f'不可达点{len(bad)}', ref='CTRL')
+    K.add('SR65', 'DCM/空载/停脉冲/CC-CV切换/饱和已验证', False,
+          f"CV有{len(loop['CV'].get('excluded_corners',[]))}个DCM点排除于CCM搜索；需开关仿真和实测，禁止把CCM通过推为全负载稳定。", warn_only=True, ref='CTRL')
     K.add("SR61", "PWM 分辨率 ≥ 10 bit", calc["pwm"]["resolution_bits"] >= 10, f"{calc['pwm']['resolution_bits']} bit", ref="CTRL")
     K.add("SR62", "控制中断 CPU 占用 < 50%", calc["timing"]["cpu_load_pct"] < 50, f"{calc['timing']['cpu_load_pct']}%", ref="FW")
     K.add("SR63", "日志串口占用 < 50%", calc["timing"]["uart_load_pct"] < 50, f"{calc['timing']['uart_load_pct']}%", ref="FW")
@@ -140,15 +165,17 @@ def run(req, ch, calc, sel, loss, loop, db):
         r_path = ((param(pm, "rds_on_mohm_vgs4v5", ("max", "typ")) or 0) * loss["model"]["rds_hot_factor"]
                   + (param(fu, "r_mohm", ("max", "typ")) or 0)) / 1000
         iin = loss["cases"]["min"]["iin_avg_A"]
-        vdd = vin["min"] - iin * r_path
+        vdd = min(env['driver_vdd_min_v'], vin["min"] - iin * r_path)
         need = max(x for x in (uv, vmin) if x is not None) if (uv or vmin) else None
         K.add("SR71", "驱动器最低供电 > max(UVLO 开启最大值, 保证工作下限) + 0.1 V", need is not None and vdd >= need + 0.1,
               f"VDD,min = {vin['min']:.2f} − {iin:.2f} A×{r_path*1000:.0f} mΩ = {vdd:.2f} V vs {need} V", ref="PWR-AUX")
     K.add("SR72", "η 假设与复核一致", not loss["eta_consistency"]["needs_iteration"], loss["eta_consistency"]["advice"],
           warn_only=True, ref="ITER")
 
+    K.add('SR73', '模型假设与实物功率/采样时序已验证', False,
+          '开关/磁损、热Rds系数、MLCC保持率、陶瓷ESR、ESR敏感性范围及热布局均为估计；放大器典型带宽非最坏保证；ADC窗口/CPU最坏执行时间需B/C/D实测。', warn_only=True, ref='MODEL')
     summ = K.summary()
-    status = "ready_for_downstream" if summ["FAIL"] == 0 else "needs_rework"
+    status = "conditional_review" if summ["FAIL"] == 0 else "needs_rework"
     return {"schema": "boost-sdrc/1", "revision": ch.get("revision"), "summary": summ, "status": status, "checks": K.items}
 
 

@@ -53,8 +53,10 @@ def calc(req, ch):
     l_req = S.add("L1", "电感量需求（最坏角）", "L ≥ Vin·D/(fsw·r·Iin)",
                   f"{vin[worst_k]:.3f}×{op[worst_k]['d_est']:.3f}/({fsw:.0f}×{r}×{op[worst_k]['iin_avg_a']:.3f})",
                   lreq[worst_k] * 1e6, "µH", f"r={r} 为纹波比；最坏角 Vin_{worst_k}")
-    l_sel_uh = min(v for v in ps["inductor_std_values_uh"] if v >= l_req * 0.97)
-    S.add("L2", "电感标称值（取标准值）", "取 ≥ L_req 的最近标准值", f"{l_req:.1f} µH → {l_sel_uh} µH", l_sel_uh, "µH")
+    rounding = ps.get("inductor_rounding_allowance", 0.0)
+    l_sel_uh = min(v for v in ps["inductor_std_values_uh"] if v >= l_req * (1 - rounding))
+    S.add("L2", "电感标称值（取标准值）", "取 ≥ (1−rounding_allowance)·L_req 的最近标准值", f"{l_req:.1f} µH → {l_sel_uh} µH", l_sel_uh, "µH",
+          f"标准值向下取整允许 {rounding:.0%}；r 为初算目标，负容差下实际纹波比须另行核查")
     l_min = l_sel_uh * 1e-6 * (1 - ps["inductor_tolerance"])
     for k, o in op.items():
         dI = o["vin_v"] * o["d_est"] / (fsw * l_min)
@@ -77,7 +79,7 @@ def calc(req, ch):
     io_crit = op["nom"]["dIL_pp_a"] / 2 * (1 - d_nom)
     S.add("L8", "CCM/DCM 临界输出电流 (Vin_nom)", "Io,crit = ΔIL/2·(1−D)",
           f"{op['nom']['dIL_pp_a']:.3f}/2×(1−{d_nom:.3f})", io_crit, "A",
-          f"负载 < {io_crit*1000:.0f} mA（R > {vo/io_crit:.0f} Ω）进入 DCM，环路增益下降，需在环路设计中考虑")
+          f"初算负载 < {io_crit*1000:.0f} mA（R > {vo/io_crit:.0f} Ω）可能进入 DCM，CCM模型不适用，须另行验证")
 
     # ---------- 4. 保护阈值（先算，供应力使用） ----------
     v_ovp_sw = vo * (1 + pro["ovp_sw_pct"] / 100)
@@ -184,9 +186,9 @@ def calc(req, ch):
           f"Rs={rs*1e3:.0f} mΩ, G={g}", rs * g, "V/A",
           f"满量程 {i_fs:.2f} A；0.5 A 时采样电压 {rs*io*1e3:.0f} mV，ADC 输入 {rs*g*io:.2f} V")
     isen = {"location": sen["current_sense_location"], "shunt_ohm": rs, "gain": g, "transimpedance_v_per_a": rs * g,
-            "fullscale_a": i_fs, "lsb_ma": i_fs / full * 1e3, "code_at_icc": round(io * rs * g / vref * full),
+            "fullscale_a": i_fs, "adc_fullscale_a": vref / (rs * g), "lsb_ma": vref / (rs * g) / full * 1e3, "code_at_icc": round(io * rs * g / vref * full),
             "shunt_loss_rated_w": rs * io ** 2, "v_sense_at_icc_mv": rs * io * 1e3}
-    S.add("S5", "输出电流分辨率", "LSB = IFS/(2^N−1)", f"{i_fs:.3f}/{full}", isen["lsb_ma"], "mA",
+    S.add("S5", "输出电流分辨率", "LSB = Vref/(Rs·G)/(2^N−1)", f"{vref}/({rs}×{g})/{full}", isen["lsb_ma"], "mA",
           f"0.5 A 对应码值 {isen['code_at_icc']}")
 
     # ---------- 10. 保护阈值与码值 ----------
@@ -202,31 +204,31 @@ def calc(req, ch):
     prot = {
         "ovp_sw": {"value": v_ovp_sw, "unit": "V", "adc_code": vcode(v_ovp_sw), "action": "软件关断 PWM 并锁存故障"},
         "ovp_hw": {"value": v_ovp_hw, "unit": "V", "adc_code": vcode(v_ovp_hw),
-                   "action": "片内比较器 + DAC 阈值 → TIM1 刹车，逐周期硬件封锁 PWM"},
+                   "action": "片内比较器 + 独立阈值源 → TIM1 刹车并锁存；关闭自动重使能，显式复位后才允许启动"},
         "ocp_sw": {"value": i_ocp_sw, "unit": "A", "adc_code": icode(i_ocp_sw), "delay_ms": pro["ocp_sw_delay_ms"],
                    "action": "持续超限后关断 PWM 并锁存（CC 环正常时不会触发）"},
         "ocp_hw": {"value": i_ocp_hw, "unit": "A", "adc_code": icode(i_ocp_hw),
-                   "action": "片内比较器 → TIM1 刹车"},
+                   "action": "输出电流比较器 → TIM1 刹车并锁存；不是电感逐周期峰值限流，不切断输入直通路径"},
         "uvlo": {"off_v": pro["uvlo_off_v"], "on_v": pro["uvlo_on_v"],
                  "adc_code_off": vincode(pro["uvlo_off_v"]), "adc_code_on": vincode(pro["uvlo_on_v"]),
-                 "action": "输入欠压停机，回差恢复"},
+                 "action": "输入欠压停机并锁存；回差恢复仅允许显式复位、自检、软启动，不自动重启"},
         "duty_limit": {"dmin": dmin, "dmax": dmax, "ccr_max": ccr_max, "action": "PI 输出限幅 + 定时器比较值钳位"},
         "soft_start": {"ramp_ms": ctl["soft_start_ms"],
-                       "action": "参考电压从当前 Vout 以斜坡升至 12 V，避免启动过冲与浪涌"},
+                       "action": "参考电压从当前 Vout 斜坡升至设定值，控制开关加能；不限制插电时经 L/D 的直通浪涌"},
     }
     S.add("PR1", "软件过压阈值", "Vovp,sw = Vo·(1+x%)", f"{vo}×(1+{pro['ovp_sw_pct']}%)", v_ovp_sw, "V",
           f"ADC 码值 {prot['ovp_sw']['adc_code']}")
     S.add("PR2", "硬件过压阈值", "Vovp,hw = Vo·(1+y%)", f"{vo}×(1+{pro['ovp_hw_pct']}%)", v_ovp_hw, "V",
-          f"比较器参考码值 {prot['ovp_hw']['adc_code']}")
+          f"同一电压在 ADC 通道的等效码值 {prot['ovp_hw']['adc_code']}；不是已验证 DAC 阈值码")
     S.add("PR3", "软件过流阈值", "Iocp,sw = Icc·(1+z%)", f"{io}×(1+{pro['ocp_sw_pct']}%)", i_ocp_sw, "A")
     S.add("PR4", "硬件过流阈值", "设定值", f"{i_ocp_hw}", i_ocp_hw, "A",
-          f"此时电感电流约 {i_ocp_hw/(1-op['min']['d_est']):.2f} A（瞬态），提示电感饱和裕量")
+          f"仅按稳态换算的电感平均电流约 {i_ocp_hw/(1-op['min']['d_est']):.2f} A，不是故障瞬态上界；须复核饱和与保护协调")
 
     # ---------- 11. CC 可调范围 / 短路边界 ----------
     vo_cc_min = vin["max"] + vf + pro["cc_vout_min_margin_v"]
     S.add("CC1", "CC 模式最低可调输出电压", "Vo,cc,min = Vin,max + VF + margin",
           f"{vin['max']:.2f}+{vf}+{pro['cc_vout_min_margin_v']}", vo_cc_min, "V",
-          "Boost 关断时输入经 L、D 直通输出，Vo 不可能低于 Vin−VF，故无法对短路限流")
+          "Boost 关断时仍有输入经 L/D 的直通路径，电压随器件压降及负载变化；本规划式不是物理下限，也不保证短路恒流")
     r_cc_min = S.add("CC2", "CC 模式最小负载电阻", "Rmin = Vo,cc,min/Icc", f"{vo_cc_min:.2f}/{io}", vo_cc_min / io, "Ω",
                      f"CR 测试 CC 段负载范围 {vo_cc_min/io:.1f}–{rl:.0f} Ω；更低阻值或短路依靠输入保险丝/电源限流")
 
@@ -246,7 +248,10 @@ def calc(req, ch):
         "inputs": {"vin": vin, "vout_v": vo, "iout_cc_a": io, "pout_w": po, "fsw_hz": fsw,
                    "eta_assumed": eta, "eta_worst": eta_w, "diode_vf_assumed_v": vf},
         "operating_points": {k: {kk: r3(vv) for kk, vv in o.items()} for k, o in op.items()},
-        "inductor": {"l_required_uh": r3(l_req), "l_selected_uh": l_sel_uh, "l_min_effective_uh": r3(l_min * 1e6),
+        "inductor": {"rounding_allowance": rounding, "ripple_ratio_target": r,
+                     "ripple_ratio_worst": r3(max(o["ripple_ratio"] for o in op.values())),
+                     "ripple_target_met_at_min_l": max(o["ripple_ratio"] for o in op.values()) <= r,
+                     "l_required_uh": r3(l_req), "l_selected_uh": l_sel_uh, "l_min_effective_uh": r3(l_min * 1e6),
                      "ipk_a": r3(ipk), "irms_a": r3(ilrms), "isat_required_a": r3(isat_req),
                      "irms_required_a": r3(irms_req), "io_crit_dcm_a": r3(io_crit)},
         "output_cap": {"c_eff_required_uf": r3(c_req), "esr_max_mohm": r3(esr_max), "ripple_current_a": r3(ic_rms),

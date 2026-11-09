@@ -126,6 +126,17 @@
 | LDO 压差只看典型 | AMS1117 只给 1.3 V max @0.8 A | 4.75 V 输入余量不足；选 ME6211（120 mV @100 mA） |
 | 端子“5.08 mm” | KF301-5.0-2P 实为 **5.0 mm** 间距 | 原理图/PCB 封装要与实物一致 |
 
+### 9.2 智能体测试运行中发现并已修入工具的问题（2026-11-09，Codex 运行 outputs/test1 → 合并入 skill）
+
+| 问题 | 正确做法 | 落点 |
+|---|---|---|
+| 电流 ADC 分辨率按放大器输出摆幅算（0.3175 mA） | LSB = Vref/(Rs·G)/(2^N−1) = 0.3223 mA；摆幅只决定可用满量程 | calc_boost.py S5；test_tools 回归测试 |
+| CC 环沿用电压采样 RC 极点 | 电流通道用自身 RC（1 kΩ/10 nF）与放大器带宽极点 | loop_design.py |
+| 轻载工况落入 DCM 仍按 CCM 判稳定 | 计算电感谷值电流，≤0 的点单列排除并声明“DCM 未证明” | loop_design.py；SDRC SR65 |
+| 电感取标准值用隐含 0.97 系数 | 显式参数 inductor_rounding_allowance 并检查实际纹波比 | calc_boost.py / select_parts.py；SR38 |
+| 只在标称参数下复核 | 对 L/C 容差与 ESR 敏感性做全组合扫描，按包络判定；导出的四舍五入 PI 系数再独立复核 | stage_params.variants；loss_model.py；validate_loop.py |
+| 措辞夸大（“逐周期封锁”“比较器参考码值”“软启动避免浪涌”） | 写清实际语义：刹车并锁存；ADC 等效码≠DAC 码；数字软启动不限制插电直通浪涌 | calc_boost.py / export_handoff.py / handoff_header.py |
+
 ## 参考资料
 
 - [R1] TI, *Basic Calculation of a Boost Converter's Power Stage*, SLVA372.
