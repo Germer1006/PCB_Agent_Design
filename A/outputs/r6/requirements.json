@@ -1,0 +1,27 @@
+{
+  "schema": "boost-requirements/1",
+  "project": "MCU 控制的 Boost 恒流恒压电源",
+  "source_document": "嵌入式系统实践课程设计要求(1).docx — 2.1 模块一、四、设计参考",
+  "notes": "level: must = 基本要求栏 / 课程明确要求；target = 建议目标栏。数值单位见字段名后缀。",
+
+  "vin":   { "nom_v": 5.0, "tol_pct": 5, "level": "must", "origin": "四、输入电压：5V 直流，允许 ±5% 波动" },
+  "vout":  { "set_v": 12.0, "steady_err_pct": 5, "level": "must", "origin": "四、目标输出电压 12V，稳态误差不超过 ±5%" },
+  "iout":  { "cc_set_a": 0.5, "steady_err_pct": 5, "level": "must", "origin": "四、恒流目标 0.5A，稳态误差不超过 ±5%" },
+  "pout":  { "rated_w": 6.0, "level": "must", "origin": "四、额定输出功率约 6W，稳定连续运行" },
+  "fsw":   { "range_hz": [50000, 100000], "suggested_hz": 100000, "level": "must", "origin": "四、开关频率 50～100kHz，建议统一 100kHz" },
+  "ripple": { "max_pct": 5, "target_pct": 3, "level": "must", "origin": "四、输出电压纹波 ≤5%，建议 ≤3%" },
+  "controller": { "type": "32-bit MCU", "preferred": "STM32", "level": "must", "origin": "四、控制器 32 位 MCU，推荐 STM32" },
+  "control": { "method": "digital PI", "modes": ["CC", "CV"], "level": "must", "origin": "四、控制方式数字 PI，实现 CC/CV 控制" },
+  "protection": { "required": ["OVP", "OCP", "duty_limit"], "suggested": ["soft_start"], "level": "must", "origin": "四、保护功能：过压、过流、占空比限幅；建议增加软启动" },
+  "efficiency": { "target_pct": 75, "measure": true, "level": "target", "origin": "四、效率完成实测，额定点尽量 ≥75%" },
+  "test_load": { "type": "electronic load", "modes": ["CC", "CR"], "level": "must", "origin": "四、调试负载：电子负载，支持 CC/CR 模式" },
+  "pcb": { "layers": 2, "note": "功率级与控制级布局合理", "level": "must", "origin": "四、PCB 两层板即可" },
+
+  "project_constraints": {
+    "build_physical": true,
+    "assembly": "hand-soldered",
+    "eda": "嘉立创EDA",
+    "sourcing": "立创商城 (LCSC)",
+    "origin": "小组确认（2026-11-09）：要做实物，原理图用嘉立创 EDA，芯片无现成，由智能体选型"
+  }
+}

@@ -3350,30 +3350,30 @@
       },
       "pin_plan": {
         "_source": "DS12589 Rev 6 Fig.8 / Table 12 (pin definitions) / Table 13 (AF)；最终以 STM32CubeMX 工程为准",
-        "PWM_H": {
+        "PWM_SW": {
           "pin": "PA8",
           "pin_no": 30,
           "function": "TIM1_CH1 (AF6)",
           "note": "LQFP48 中唯一 TIM1_CH1 引脚"
         },
-        "VOUT_SNS": {
+        "VOUT_SENSE": {
           "pin": "PA0",
           "pin_no": 8,
           "function": "ADC12_IN1 + COMP3_INP",
           "note": "COMP3 INM 接 DAC3_CH1 → TIM1 刹车（硬件 OVP）"
         },
-        "IOUT_SNS": {
+        "IOUT_SENSE": {
           "pin": "PA1",
           "pin_no": 9,
           "function": "ADC12_IN2 + COMP1_INP",
           "note": "COMP1 INM 接 DAC3_CH1/DAC1_CH1 → TIM1 刹车（硬件 OCP）"
         },
-        "VIN_SNS": {
+        "VIN_SENSE": {
           "pin": "PA2",
           "pin_no": 10,
           "function": "ADC1_IN3"
         },
-        "NTC_SNS(可选)": {
+        "NTC_SENSE(可选)": {
           "pin": "PB1",
           "pin_no": 17,
           "function": "ADC1_IN12",
@@ -3443,7 +3443,7 @@
           "note": "VREF+ 接 VDDA（3.3 V，1 µF+100 nF）；VDDA 经磁珠/10 Ω+1 µF 与 VDD 隔离；每个 VDD 100 nF；VBAT 接 VDD"
         },
         "unverified": [
-          "同一引脚同时作 ADC 输入与 COMP 同相输入：手册列出两种功能但未明确允许同时使用 → 上板验证；备选：VOUT_SNS 另接 PA7(COMP2_INP)"
+          "同一引脚同时作 ADC 输入与 COMP 同相输入：手册列出两种功能但未明确允许同时使用 → 上板验证；备选：VOUT_SENSE 另接 PA7(COMP2_INP)"
         ]
       },
       "price_cny_approx": 20.8,

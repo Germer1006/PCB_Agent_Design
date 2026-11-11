@@ -99,7 +99,7 @@
 3. 地：功率地与信号地在输出电容负端/分流处单点汇合，底层整面地。
 4. 分流电阻开尔文走线；电压采样从输出端子取。
 5. 驱动器紧靠 MOSFET，栅极回路短；栅极串 10 Ω、对地 10 kΩ 下拉。
-6. 预留测试点与端子：SW、GATE、VOUT、IOUT_SNS、VOUT_SNS、PWM、GND 钩、SWD、UART。
+6. 预留测试点与端子：SW、GATE、VOUT、IOUT_SENSE、VOUT_SENSE、PWM_SW、GND 钩、SWD、UART。
 
 ## 9. 常见错误清单（自检用）
 

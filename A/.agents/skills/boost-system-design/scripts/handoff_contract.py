@@ -146,7 +146,7 @@ def proposed_pin_plan(mcu):
     pins = copy.deepcopy(mcu.get('pin_plan', {}))
     pins['_status'] = 'tentative_unverified_not_for_schematic_freeze'
     pins['_source'] = '器件库资源提案；B/D 必须核对 DS/RM/CubeMX、封装引脚和并用条件后冻结'
-    for name in ('VOUT_SNS', 'IOUT_SNS'):
+    for name in ('VOUT_SENSE', 'IOUT_SENSE'):
         if name in pins:
             pins[name]['note'] = '仅候选资源；ADC/COMP 并用、独立阈值 DAC 及 TIM1 刹车路径未核实，见 SR46'
     pins['unverified'] = ['ADC/COMP 同时使用及输入滤波/快速保护分支', '两路不同硬件阈值所需独立 DAC 通道、参考与容差',
