@@ -180,7 +180,7 @@ def run(req, ch, calc, sel, loss, loop, chk, db):
         "traceability": trace,
         "open_issues": [c["id"] + " 检查目标「" + c["rule"] + "」尚未关闭；观测：" + c["detail"] for c in chk["checks"] if c["verdict"] != "PASS"],
         "implementation_closures": issues(chk),
-        "handoff_scope": "r5 系统设计交接；conditional_review，实施关闭条件保留；不是无条件制造/上电批准",
+        "handoff_scope": f"{ch.get('revision')} 系统设计交接；实施关闭条件见 implementation_closures",
         "bom_scope": "主要器件清单；generic_passives 为未选型提案，不列入可采购 BOM；完整装配 BOM 由 B 按有证据器件库补齐",
         "data_classification": {"calculation": ["calc.json", "losses.json", "loop.json", "loop_validation.json"],
                                 "switching_simulation": "未进行", "measurement": "未进行，verification_plan 均为计划"},
@@ -250,6 +250,18 @@ def main():
         raise ValueError('交接禁止：环路初值复核未通过')
     db = load_json(a.db)
     spec, parts, passives = run(J["requirements"], J["choices"], J["calc"], J["selection"], J["losses"], J["loop"], J["check"], db)
+    if p["sim"].exists():
+        simulation = load_json(p["sim"])
+        if simulation.get("revision") != spec["revision"]:
+            raise ValueError("交接禁止：仿真报告版本不一致")
+        spec["source_documents"].append("sim.json")
+        spec["data_classification"]["switching_simulation"] = "已运行；sim.json 为仿真证据"
+        spec["switching_simulation_summary"] = {
+            "file": "sim.json",
+            "cases": len(simulation["cases"]),
+            "passed": sum(c["verdict"] == "PASS" for c in simulation["cases"]),
+            "hardware_validation_required": True,
+        }
     if not all(x['blocks'] and x['tests'] for x in spec['traceability']):
         raise ValueError('需求缺少功能块或验证计划')
     w = Path(a.workdir)

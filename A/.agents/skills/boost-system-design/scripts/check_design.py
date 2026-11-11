@@ -12,8 +12,12 @@ from _common import KNOWLEDGE_DIR, Checks, load_json, param, save_json, workdir_
 from stage_params import selected
 
 
-def run(req, ch, calc, sel, loss, loop, db):
+def run(req, ch, calc, sel, loss, loop, db, sim=None):
     K = Checks()
+    if sim is not None and (sim.get("schema") != "boost-switching-sim/1" or sim.get("revision") != ch.get("revision")):
+        K.add("SR79", "T1 仿真报告对应本次设计版本", False, "sim.json 版本或格式不一致；重新运行 T1", ref="SIM")
+        sim = None
+    sim_cases = sim["cases"] if sim else []
     vo, io = calc["inputs"]["vout_v"], calc["inputs"]["iout_cc_a"]
     vin = calc["inputs"]["vin"]
     prot = calc["protection"]
@@ -76,8 +80,11 @@ def run(req, ch, calc, sel, loss, loop, db):
     ind, _ = selected(sel, db, "inductor")
     il_ocp = prot["ocp_hw"]["value"] / (1 - env['D_max'])
     isat = param(ind, "isat_a", ("min", "typ")) if ind else None
+    ocp = [c for c in sim_cases if "SR87" in c["checks"]]
+    ocp_evidence = (f"输出 OCP 仿真 {sum(c['checks']['SR87'] is True for c in ocp)}/{len(ocp)} 通过。"
+                    if ocp else "")
     K.add("SR34", "故障电感峰值及输入保护配合已证明", False,
-          f"仅稳态换算输出OCPhw对应IL≈{il_ocp:.2f} A vs Isat={isat} A；不是故障上界。无电感逐周期限流，"
+          f"{ocp_evidence}仅稳态换算输出OCPhw对应IL≈{il_ocp:.2f} A vs Isat={isat} A；不是故障上界。无电感逐周期限流，"
           "输出OCP不能保证避免电感饱和；独立输入限流的瞬态与短路耐受尚未验证。", warn_only=True, ref="PROT")
     irms = param(ind, 'irms_a', ('min','typ')) if ind else None
     K.add('SR36', '额定容差场景电感峰值低于手册Isat', isat is not None and env['IL_pk_max_A'] < isat,
@@ -128,8 +135,13 @@ def run(req, ch, calc, sel, loss, loop, db):
     K.add("SR52", "输出纹波估算 ≤ 课程硬性上限", rp <= req["ripple"]["max_pct"], f"{rp}% vs {req['ripple']['max_pct']}%（不含ESL/开关尖峰）", ref="REQ-RIP")
     K.add('SR52-target', '输出纹波估算 ≤ 课程建议值', rp <= req['ripple']['target_pct'],
           f"{rp}% vs target {req['ripple']['target_pct']}%", warn_only=True, ref='REQ-RIP')
+    ramp_cases = [c for c in sim_cases if "SR88" in c["checks"]]
+    ramp_evidence = (f"独立输入缓升仿真 {sum(c['checks']['SR88'] is True for c in ramp_cases)}/{len(ramp_cases)} 通过，"
+                     f"电源峰值预算估算最高 {max(c['metrics']['source_peak_bound_a'] for c in ramp_cases):.3f} A。"
+                     if ramp_cases else "")
     K.add("SR53", "上电浪涌限制措施已验证", loss["inrush"]["mitigation_verified"],
-          f"线性峰值{loss['inrush']['i_peak_a']}A；超过Isat时不是可靠上界。PMOS防反接与数字软启动均不等于浪涌限流；外部输入限流瞬态/其输出电容或PMOS缓启SOA待验证。", warn_only=True, ref="PROT")
+          f"{ramp_evidence}无保护线性峰值{loss['inrush']['i_peak_a']}A，超过Isat时不是可靠上界。"
+          "待验证独立缓升硬件斜率、电源释放能量、PWM禁止及SOA。", warn_only=True, ref="PROT")
 
     fi = loss["inrush"].get("fuse_melting_i2t_a2s")
     K.add("SR54", "保险丝nominal I²t与线性浪涌模型对照 ≥ 10倍", fi is not None and fi >= 10 * loss["inrush"]["i2t_a2s"],
@@ -142,8 +154,41 @@ def run(req, ch, calc, sel, loss, loop, db):
               r["ok"], f"Kp={r.get('Kp')}, Ki={r.get('Ki')}, 最差 fc={r.get('fc_min_Hz')} Hz", ref="CTRL")
         bad = [x for x in r.get('excluded_corners',[]) if not x['error'].startswith('DCM')]
         K.add(f'SR60-reachable-{m}', f'{m}指定工况均可达', not bad, f'不可达点{len(bad)}', ref='CTRL')
+    dcm_points = len(loop["CV"].get("excluded_corners", []))
+    if sim:
+        dynamic = [c for c in sim["cases"] if c["name"].startswith(("S-light", "S-handover"))]
+        covered = (f"开关仿真覆盖 {len(dynamic)} 个轻载/切换工况，"
+                   f"{sum(c['verdict'] == 'PASS' for c in dynamic)} 个通过；仍需实测。")
+    else:
+        covered = "需开关仿真和实测。"
     K.add('SR65', 'DCM/空载/停脉冲/CC-CV切换/饱和已验证', False,
-          f"CV有{len(loop['CV'].get('excluded_corners',[]))}个DCM点排除于CCM搜索；需开关仿真和实测，禁止把CCM通过推为全负载稳定。", warn_only=True, ref='CTRL')
+          f"CV有{dcm_points}个DCM点排除于CCM搜索；{covered}", warn_only=True, ref='CTRL')
+    if sim:
+        rules = {
+            "SR80": "启动过冲 < 10%，进入 ±2% 带且无故障锁存",
+            "SR81": "稳态恒压与恒流误差满足需求",
+            "SR82": "开关仿真输出纹波满足硬性上限",
+            "SR82-target": "开关仿真输出纹波满足建议值",
+            "SR83": "CV/CC 切换后收敛且无持续波动",
+            "SR84": "轻载及空载末段电压波动不超过 1%",
+            "SR85": "卸载过压峰值低于 TVS 最小击穿电压",
+            "SR87": "输出过流仿真验证无误触发、软件延时、硬件关断及锁存",
+        }
+        if ch["protection"].get("input_ramp"):
+            rules["SR88"] = "独立输入缓升下的冷插电电感及电源峰值满足预算"
+        for rule_id, title in rules.items():
+            applicable = [c for c in sim["cases"] if rule_id in c["checks"]]
+            failed = [c["waveform"] for c in applicable if c["checks"][rule_id] is False]
+            missing = [c["waveform"] for c in applicable if c["checks"][rule_id] is None]
+            detail = f"{len(applicable)} 个工况，失败 {len(failed)}，缺数据 {len(missing)}"
+            if failed or missing:
+                detail += "；" + "、".join(failed + missing)
+            K.add(rule_id, title, bool(applicable) and not failed and not missing, detail,
+                  warn_only=rule_id == "SR82-target" or not failed, ref="SIM")
+        cross = sim["cross_validation"]
+        K.add("SR86", "额定点开关仿真与平均模型交叉验证", all(v["passed"] for v in cross.values()),
+              "；".join(f"{key}: {value['error_pct']:.2f}% / {value['limit_pct']:g}%"
+                       for key, value in cross.items()), ref="SIM")
     K.add("SR61", "PWM 分辨率 ≥ 10 bit", calc["pwm"]["resolution_bits"] >= 10, f"{calc['pwm']['resolution_bits']} bit", ref="CTRL")
     K.add("SR62", "控制中断 CPU 占用 < 50%", calc["timing"]["cpu_load_pct"] < 50, f"{calc['timing']['cpu_load_pct']}%", ref="FW")
     K.add("SR63", "日志串口占用 < 50%", calc["timing"]["uart_load_pct"] < 50, f"{calc['timing']['uart_load_pct']}%", ref="FW")
@@ -185,7 +230,9 @@ def main():
     ap.add_argument("--db", default=str(KNOWLEDGE_DIR / "parts_db.json"))
     a = ap.parse_args()
     p = workdir_paths(a.workdir)
-    res = run(*(load_json(p[k]) for k in ("requirements", "choices", "calc", "selection", "losses", "loop")), load_json(a.db))
+    sim = load_json(p["sim"]) if p["sim"].exists() else None
+    res = run(*(load_json(p[k]) for k in ("requirements", "choices", "calc", "selection", "losses", "loop")),
+              load_json(a.db), sim)
     save_json(p["check"], res)
     print(f"SDRC: {res['summary']} → {res['status']}")
     for c in res["checks"]:

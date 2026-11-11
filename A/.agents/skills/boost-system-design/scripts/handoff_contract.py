@@ -8,7 +8,7 @@ ISSUE_ACTIONS = {
     'SR38': ('A/B/C', '实物额定纹波/温升验收前', '记录偏离内部纹波目标；若实物不满足纹波或温升则增大电感，升级版本并重算。'),
     'SR44': ('B/D', 'CC 精度验收前', '在实际 CC 共模范围进行标定；补齐 ADC、参考源、温漂、CMRR、残余误差并实测稳态精度。'),
     'SR46': ('B/D', '模拟保护原理图冻结及上电前', '完成完整电压/电流误差预算、ADC/COMP 并用验证、独立 DAC 阈值及容差、BKIN 锁存路由；必要时分配独立引脚或外部比较器。'),
-    'SR53': ('B/C', '插电及故障试验前', '验证独立输入限流瞬态和电源输出电容释放能量；PMOS 缓启须另有栅极时序和线性 SOA 设计；防反接或数字软启动不构成关闭依据。'),
+    'SR53': ('B/C', '插电及故障试验前', '实现并验证独立输入缓升与输入限流；记录输入斜率、输入电流和电感电流峰值，核对 PWM 禁止、电源释放能量与器件 SOA。'),
     'SR65': ('D', '动态/全负载验收前', '另行仿真和实测 DCM、空载、停脉冲、负载阶跃、CC/CV 切换、积分跟踪及恢复；考虑电子负载动态。'),
     'SR73': ('B/C/D', '布局冻结及系统验收前', '核对偏压/温度参数和热铜面积；测采样窗口、延迟、WCET；实际器件、滤波、平均算法或时序变化后重跑模型。'),
 }
@@ -71,7 +71,7 @@ def verification_plan(req, calc):
     def t(tid, ids, title, condition, criterion, prerequisite='', **extra):
         return dict(id=tid, req=ids[0], requirements=ids, item=title, condition=condition,
                     criterion=criterion, status='计划，未实测', prerequisite=prerequisite, **extra)
-    return [
+    tests = [
         t('T01', ['REQ-CV', 'REQ-IN', 'REQ-LOAD'], 'CV 稳态精度',
           f'输入 {vins} V；电子负载 CC {currents} A；端子处用校准外部仪表测压',
           f'各 CV 稳态点 |Vout−{v:g}|/{v:g} ≤ {req["vout"]["steady_err_pct"]}%；轻载 DCM 点另验，不能引用 CCM 裕度作为证明',
@@ -120,6 +120,16 @@ def verification_plan(req, calc):
           '在独立输入限流及保护条件关闭后受控接近 CC 下限，记录越界识别和故障处理，不直接短接输出',
           f'低于 {cc["vo_min_v"]:g} V 或 CR {cc["r_min_ohm"]:g} Ω 不声明恒流；未误标为 CC 精度通过'),
     ]
+    ramp = pr.get("input_ramp")
+    if ramp:
+        tests.append(t(
+            "T15", ["REQ-IN", "REQ-PROT"], "独立输入缓升和冷插电电流",
+            "在独立限能平台冷启动，记录保护器件后端 Vin、源电流、电感电流及 PWM；核对输入电容和开关 SOA",
+            f"实测输入斜率 ≤ {ramp['max_slew_v_per_ms']:g} V/ms、源峰值 ≤ {ramp['source_peak_budget_a']:g} A，"
+            "电感峰值低于适用 Isat，输入就绪前 PWM 保持关断",
+            "完成缓升硬件、输入限流与实物接线审查；SR88 是仿真证据",
+        ))
+    return tests
 
 
 def traceability(reqs, blocks, tests, check):

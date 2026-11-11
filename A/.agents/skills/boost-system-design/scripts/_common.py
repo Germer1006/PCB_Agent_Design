@@ -104,5 +104,6 @@ def workdir_paths(workdir):
         "selection": w / "selection.json",
         "losses": w / "losses.json",
         "loop": w / "loop.json",
+        "sim": w / "sim.json",
         "check": w / "check.json",
     }
