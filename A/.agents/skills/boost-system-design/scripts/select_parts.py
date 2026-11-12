@@ -14,6 +14,7 @@ import argparse
 import math
 
 from _common import KNOWLEDGE_DIR, load_json, param, r3, save_json, workdir_paths
+from kicad_lib import INDEX as KICAD_INDEX, verify_part
 from stage_params import diode_line
 
 MIN_CERAMIC_OUT = 2  # 输出端至少 2 只陶瓷电容紧贴功率回路作高频去耦
@@ -313,6 +314,7 @@ def select(calc, choices, db):
     x = Ctx(calc, choices)
     overrides = choices.get("selection", {}).get("overrides", {})
     out = {"schema": "boost-selection/1", "revision": choices.get("revision"), "categories": {}}
+    kidx = load_json(KICAD_INDEX) if KICAD_INDEX.exists() else None
     for cat, fn in RULESETS.items():
         cands = [p for p in db["parts"] if p.get("role") == cat]
         evals = []
@@ -320,6 +322,8 @@ def select(calc, choices, db):
             rules, score, score_note = fn(p, x)
             check(rules, "数据手册与立创编号证据齐全且 confidence 为 high/medium", p.get("confidence") in ("high", "medium") and bool(p.get("datasheet_url")) and bool(p.get("lcsc")) and bool(p.get("lcsc_evidence")),
                   f"confidence={p.get('confidence')}，datasheet={bool(p.get('datasheet_url'))}，LCSC={p.get('lcsc')}")
+            kv, kd = verify_part(p, kidx) if kidx else ("FAIL", "缺 KiCad 库快照，先运行 python kicad_lib.py snapshot")
+            check(rules, "KiCad 库有可用符号与封装（引脚号一致）", kv != "FAIL", kd)
             hard_ok = all(r["ok"] for r in rules if r["hard"])
             evals.append({"id": p["id"], "mpn": p.get("mpn"), "manufacturer": p.get("manufacturer"),
                           "package": p.get("package"), "lcsc": p.get("lcsc"), "price_cny_approx": p.get("price_cny_approx"),

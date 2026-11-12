@@ -1,0 +1,180 @@
+{
+  "schema": "boost-design-choices/1",
+  "revision": "r7",
+  "_how_to_use": "智能体在阶段 3/4 复制本文件到工作目录并按论证修改；每个改动在 rationale 中写理由。脚本只从这里读取设计决策。",
+  "topology": "async_boost",
+  "fsw_hz": 100000,
+  "power_stage": {
+    "inductor_ripple_ratio": 0.35,
+    "inductor_tolerance": 0.2,
+    "inductor_std_values_uh": [
+      22,
+      33,
+      47,
+      68,
+      82,
+      100,
+      150
+    ],
+    "eta_assumed": 0.85,
+    "eta_worst": 0.75,
+    "diode_vf_assumed_v": 0.5,
+    "ripple_design_pct": 1.0,
+    "vin_ripple_design_pct": 1.0,
+    "voltage_derating": 1.5,
+    "isat_margin": 1.25,
+    "irms_margin": 1.2,
+    "cout_ceramic_bias_retention": 0.3,
+    "inductor_rounding_allowance": 0.03
+  },
+  "duty": {
+    "dmax_margin": 0.05,
+    "dmax_step": 0.05,
+    "dmin": 0.0
+  },
+  "control": {
+    "structure": "dual_pi_min_select",
+    "f_ctrl_hz": 20000,
+    "pwm_alignment": "edge",
+    "timer_clk_hz": 170000000,
+    "cpu_clk_hz": 170000000,
+    "isr_cycles_est": 1500,
+    "pm_min_deg": 45,
+    "gm_min_db": 6,
+    "soft_start_ms": 20
+  },
+  "sensing": {
+    "adc_bits": 12,
+    "adc_vref_v": 3.3,
+    "adc_usable_frac": 0.95,
+    "vout_fs_over_ovp_hw": 1.15,
+    "vin_fs_over_vin_max": 1.15,
+    "divider_rbot_ohm": 10000,
+    "divider_filter_fc_hz": 10000,
+    "iout_fs_min_a": 1.25,
+    "csa_gain_options": [
+      20,
+      50,
+      100,
+      200
+    ],
+    "shunt_options_ohm": [
+      0.01,
+      0.02,
+      0.025,
+      0.05,
+      0.1
+    ],
+    "shunt_max_loss_w": 0.05,
+    "csa_supply_v": 3.3,
+    "csa_swing_to_rail_v": 0.05,
+    "current_sense_location": "output_high_side"
+  },
+  "protection": {
+    "ovp_sw_pct": 10,
+    "ovp_hw_pct": 15,
+    "ocp_sw_pct": 20,
+    "ocp_sw_delay_ms": 10,
+    "ocp_hw_a": 1.0,
+    "uvlo_off_v": 4.3,
+    "uvlo_on_v": 4.5,
+    "cc_vout_min_margin_v": 0.5,
+    "input_reverse_protection": "pmos",
+    "output_tvs": true
+  },
+  "aux": {
+    "mcu_run_ma": 30,
+    "csa_ma": 0.3,
+    "led_count": 3,
+    "led_ma": 2,
+    "misc_ma": 3,
+    "gate_driver_iq_ma": 1.9
+  },
+  "comms": {
+    "uart_baud": 115200,
+    "log_frame_bytes": 48,
+    "log_rate_hz": 50
+  },
+  "selection": {
+    "preferred_packages_note": "实物手工焊接：优先 SOT-23/SOT-23-5/SMA/SMB/SOP/0603 以上/LQFP；避免 QFN/DFN/BGA",
+    "overrides": {}
+  },
+  "rationale": {
+    "_note": "S6 r4 初选已获用户“确认，继续”；r5 仅修正 S7/S8 本地模型、明确复核假设。器件、拓扑和已确认控制/保护设定不变。",
+    "revision_history": [
+      {
+        "revision": "r2",
+        "stage": "S3",
+        "change": "将原模板 async_boost、100000 Hz 明确为本次有论证的 S3 提案；数值未变，补充适用边界与确认状态。",
+        "reason": "用户确认分区验收及短路边界，并授权继续 S2/S3；非同步 Boost 符合升压、MCU 数字 PI、手工焊接及两层板约束，频率采用课程建议值。",
+        "basis": "requirements.json：vin/vout/control/fsw/project_constraints；knowledge/design_rules.md §1、§2、§5；S1 用户确认及补充要求。"
+      },
+      {
+        "revision": "r3",
+        "stage": "S4",
+        "change": "确认记录 S3 的 async_boost/100000 Hz；将模板中的双 PI、控制频率、采样、占空比策略、保护和软启动参数形成有论证的 S4 待确认提案，数值沿用模板。",
+        "reason": "用户确认 S3 并要求逐关键阶段确认；采用输出电流直接闭环及最小值选择简化 CC/CV 交接，抗饱和及独立硬件刹车降低切换和软件失效风险。",
+        "basis": "knowledge/design_rules.md §4–§7；calc_boost.py 的占空比、采样、保护与 CC 范围字段；parts_db.json 内 STM32G431 系列的定时器、ADC、COMP 证据。"
+      },
+      {
+        "revision": "r4",
+        "stage": "S5/S6",
+        "change": "显式登记原脚本隐藏的 3% 电感标准值取整允许量；修正 ADC 电流 LSB；保护动作改为锁存且不自动重启；补齐 5 项 PDF 证据；驱动静态电流预算改用库内 1.9 mA max（测试条件 12 V）。",
+        "reason": "68 uH 为初选标准值；0.35 是规划目标，负容差下实际纹波需按工具值披露。不得误用放大器摆幅限制计算 ADC LSB、暗示电感逐周期限流，或将同名异厂 TVS 参数当作原厂依据。",
+        "basis": "calc/select 原代码；sources/retrieval.json 与已阅 PDF；parts_db lm5114b iq_ma p5。控制与保护已确认数值不变，器件及初算取整在 S6 一并提交确认。"
+      },
+      {
+        "revision": "r5",
+        "stage": "S7/S8",
+        "change": "加入 L/C 容差和 ESR 敏感性；计入输入串联压降与输出分流；电容 ESR 损耗按支路谐波电流计算；驱动 Iq 用库内 max、MOS 热阻用稳态 max；比较器/浪涌/精度判据不再把未验证项报为通过。",
+        "reason": "S6 获确认后首轮复核发现原工具忽略容差、以陶瓷支路 ESR 代替总电容损耗、把 PMOS 存在等同已解决浪涌，并对 DCM 作超出模型范围的判断。",
+        "basis": "history/r4 首轮 losses/loop/check；本地器件库各参数条件；boost_model CCM 适用范围。"
+      },
+      {
+        "revision": "r6",
+        "stage": "S9",
+        "change": "仅交接网络命名与模块 B 规范 §12.3 统一：PWM_H→PWM_SW，VOUT_SNS→VOUT_SENSE，IOUT_SNS→IOUT_SENSE，IOUT_RAW→IOUT_SENSE_RAW，VIN_SNS→VIN_SENSE，NTC_SNS→NTC_SENSE；器件连接说明中的 PGND 改为唯一地网络 GND（功率回流区为布局说明）。设计决策、器件与全部数值不变。",
+        "reason": "模块 B 以 VIN/VOUT/GND/PWM_SW/VOUT_SENSE/IOUT_SENSE 等稳定命名建原理图；连接说明引用未在 nets 中定义的 PGND 会被 B 的离线检查判为未定义网络/地网络混接。",
+        "basis": "PCB_Agent_Design/B/B_原理图设计智能体.md §12.3、§32.3；与 r5 逐字段对比仅网络名、revision、日期不同。"
+      }
+    ],
+    "topology": "S3 用户已确认：采用非同步 Boost（电感、低边 MOSFET、整流二极管、输出电容），MCU 经独立驱动器控制功率开关。理由是单路 PWM、实现与调试负担较低，可由 MCU 数字 PI 直接闭环。同步 Boost 的死区、高边驱动及反向电流管理增加实现负担；SEPIC/升降压在当前已确认的工作区边界下没有必要；内置闭环的专用 Boost 控制 IC 不满足本次由 MCU 数字 PI 闭环的实现要求。效率是否达标须待 S7 复核与实测，不能由拓扑选择直接保证。",
+    "fsw": "S3 用户已确认：fsw_hz=100000，采用 requirements.json 的 suggested_hz，处于课程 range_hz 内；在磁性器件体积、纹波、开关损耗与 PWM 分辨率间折中。PWM 分辨率及驱动损耗在选定 MCU、驱动器和 MOSFET 后由 S5/S7 工具核算，若不满足则回溯本阶段。",
+    "operating_boundary": "S1 已确认：CC/CV 分区验收，非同步 Boost 不要求短路恒流。按 calc_boost.py 的保守规划公式 Vo_cc_min=Vin_max+VF_assumed+cc_vout_min_margin_v，Rcc_min=Vo_cc_min/Icc，Rcc_max=Vset/Icc；低于该规划范围属于本设计不保证恒流的不可控区。VF 和余量在 S4 审定，S5 计算并将数值写入报告，S7 及实测复核，不把此规划公式当作器件物理极限。",
+    "acceptance_load_modes": "用户明确指定：测 CV 时电子负载用 CC 模式；测 CC 时电子负载用 CR 模式，且在所声明 CC 可调范围内验收。不得用负载 CC 模式验收电源 CC 稳态精度。",
+    "short_circuit": "关闭 PWM 不会切断输入经电感和二极管到输出的直通路径。短路由输入限流与保险丝等独立措施处理；防反接 PMOS 不默认具有主动短路关断功能。若要求主动隔离输出或更低电压恒流，回溯拓扑并重新确认。",
+    "control_structure": "S4 用户已确认：CV 与 CC 两个 PI 并行计算占空比，取较小值后统一限幅。两环使用校准后的 V/A 物理量；未主导环跟踪最终实际占空比，激活环采用条件积分或回算抗饱和，状态切换时无扰初始化。相比级联电感电流内环，无需新增高频电感电流控制链；相比切换单 PI，避免硬切换控制对象。",
+    "control_timing": "S4 用户已确认：控制更新 20000 Hz，100000 Hz 边沿对齐 PWM；170000000 Hz 的定时器/CPU 为基于库内 STM32G431 候选的预算，未构成最终选型；中断 1500 cycles 为待测预算。TIM1 比较事件映射 TRGO2，目标在实际导通区间中点采样，更新采样相位时与 PWM 占空比同步预装载。可每个 PWM 周期采样，以新鲜完整数据帧作整数抽取控制；RCR 不默认门控比较触发。注入/规则组及 DMA、采样时长与延迟在 S6/D 核实，不隐含跨周期平均。",
+    "adc_edge_cases": "D=0 或导通窗口不足时使用远离开关沿的稳定区触发，不使用不存在的导通中点；硬件比较器持续工作。过期/缺失/饱和的 ADC 数据不继续闭环，进入故障。过采样、软件低通和多周期平均若增加延迟，必须重新做环路复核。",
+    "sensing": "S4 用户已确认：输出端子电压分压，输出电容之后、外部负载之前高边分流采实际负载电流；负载地与系统地相同。输入电压独立采样用于欠压管理。12-bit ADC/3.3 V 基准预算，VREFINT 校正，分流 Kelvin 连接，电流增益/零点标定；只有确认无电流时允许零点校准。分压下臂 10000 ohm，滤波目标 10000 Hz，ADC 可用比例 0.95，输出满量程规划系数 1.15（相对硬件 OVP），输入系数 1.15（相对输入上限）；均用于精度、量程与抗噪声折中，S5 计算电阻/电容及码值，S6 核实建立时间和模拟输出摆幅。",
+    "current_sensing_budget": "S4 用户已确认：最小电流满量程 1.25 A，采样放大器 3.3 V 供电、摆幅预留 0.05 V，分流在硬件 OCP 下允许损耗 0.05 W；工具仅在预置 gain/shunt 离散候选组合中选择，S6 必须有库内器件数据支持。电流模拟滤波须与 S7 环路使用的滤波假设一致；放大器带宽和滤波会影响硬件 OCP 反应，不能宣称理想瞬时保护。",
+    "duty": "S4 用户已确认：Dmin=0，允许停脉冲；Dmax 由工具按最坏效率假设加 0.05 占空比绝对余量，再按 0.05 网格向上取值。具体 Dmax/CCR 由 S5 输出，S7 必须验证高于最坏所需值且低于寄生损耗增益峰（SR20/SR21），不直接把该策略当作已验证上限。低占空比的最小有效脉宽由驱动器及 MOSFET 核实，不能用强制正 Dmin 替代停脉冲。",
+    "protection": "S4 用户已确认：软件 OVP 比设定电压高 10%，硬件 OVP 高 15%；软件 OCP 比 Icc 高 20%、持续 10 ms 触发；硬件 OCP 为输出电流 1.0 A。电压、码值及实际阈值容差由 S5/S6 核实，额定值<软件 OVP<硬件 OVP<TVS 最小击穿，且钳位需匹配器件耐压。硬件 OCP 只测输出负载电流，不等同于电感峰值逐周期限流；S7/S8 检查故障电感应力（含 SR34）。输入限流和保险丝独立存在。",
+    "fault_and_uvlo": "S4 用户已确认：欠压关闭 4.3 V、重新允许启动 4.5 V；恢复输入只解除启动禁止，不自动重启，故障需显式复位、自检和软启动。比较器与独立阈值源直接作用于 TIM1 刹车，自动输出重使能关闭，故障锁存。比较器/ADC 引脚复用、独立 DAC 通道和采样滤波延迟在 S6/B/D 逐项核实，不把 ADC 码直接当成已验证 DAC 码。",
+    "soft_start": "S4 用户已确认：20 ms 参考电压斜坡，从当前实测输出升至 Vset；全程保留电流限制、抗饱和及硬件保护。输出已过压时不得进入启动，未满足可调区的启动异常进入故障。数字软启动仅控制开关加能过程，不能限制插电时经 L/D 给输出电容充电的直通浪涌；后者由输入限流和经 SOA/栅极时序验证的 PMOS 缓启动方案处理。",
+    "cc_boundary_assumptions": "S4 用户已确认：用于 calc_boost.py 的 VF 初算假设为 0.5 V，CC 规划余量为 0.5 V，保留较输入最大值更高的正向调节工作区；不是新选器件参数。获确认后 S5 输出 CC 电压下限及 CR 范围写入报告，S6/S7 检查二极管数据及器件压降，必要时回溯更新。",
+    "loop_targets": "S4 用户已确认：PM 最低 45 deg、GM 最低 6 dB，为 S7 平均模型 PI 搜索目标，非已验证结果。搜索包含控制计算延迟、零阶保持及模拟滤波，限制 Boost 右半平面零点与谐振的影响；DCM/空载/停脉冲和非线性模式切换需单独仿真及实测，不从 CCM 模型推定稳定。",
+    "inductor_rounding": "允许标称标准值比初算 L_req 低至 3%，仅作 S6 初选；纹波比 0.35 为目标，非硬性课程指标。披露实际负容差纹波比，S7 以纹波、峰值电流、热和环路复核；不通过则回溯增大电感。",
+    "gate_driver_iq_budget": "LM5114B 库内 max 1.9 mA@VDD=12 V 替代模板 0.1 mA。此数用于保守规划，不是 5 V 全温保证；栅极充放电功耗在 S7 单列，不能与静态电流混淆。",
+    "s7_model_limits": "ESR 0.5/1/2 倍是敏感性场景，非保证温度界限；热阻依赖手册铜面积；磁损、开关损耗和 1.3 热阻值系数均为估计。CCM 初值不能证明空载/DCM/限幅切换稳定。电流滤波暂用 1k/10nF 加 INA180A2 210kHz 典型极点，B/D 实现须与该模型一致或重跑。",
+    "eda": "r7（2026-11-11）：全组 EDA 由嘉立创 EDA 改为 KiCad（原理图 + PCB）。设计决策与计算与 r6 相同；选型新增硬性规则“KiCad 库有可用符号与封装、引脚号一致”（依据 knowledge/kicad_lib_index.json，KiCad 官方库 10.0.8 快照），SDRC 新增 SR12（各入选器件 KiCad 映射）/SR13（MCU 引脚规划与 KiCad 符号一致）；交接新增 design_spec.eda、components[].kicad、BOM 的 KiCad 列与 kicad/ 项目符号库（LM5114B 由 UCC27511ADBV 派生）。"
+  },
+  "losses": {
+    "ambient_c": 40,
+    "gate_resistor_ohm": 10,
+    "miller_plateau_v": 2.5,
+    "rds_hot_factor": 1.3,
+    "core_loss_frac_of_copper": 0.25,
+    "inductor_tolerance": 0.2,
+    "bulk_cap_tolerance": 0.2,
+    "ceramic_cap_tolerance": 0.1,
+    "bulk_esr_sensitivity_factors": [
+      0.5,
+      1.0,
+      2.0
+    ],
+    "current_filter_r_ohm": 1000,
+    "current_filter_c_f": 1e-08,
+    "switching_loss_factor": 1.5
+  }
+}

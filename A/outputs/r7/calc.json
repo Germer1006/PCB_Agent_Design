@@ -1,0 +1,605 @@
+{
+  "schema": "boost-calc/1",
+  "revision": "r7",
+  "inputs": {
+    "vin": {
+      "min": 4.75,
+      "nom": 5.0,
+      "max": 5.25
+    },
+    "vout_v": 12.0,
+    "iout_cc_a": 0.5,
+    "pout_w": 6.0,
+    "fsw_hz": 100000,
+    "eta_assumed": 0.85,
+    "eta_worst": 0.75,
+    "diode_vf_assumed_v": 0.5
+  },
+  "operating_points": {
+    "min": {
+      "vin_v": 4.75,
+      "d_ideal": 0.6042,
+      "d_est": 0.6635,
+      "iin_avg_a": 1.486,
+      "dIL_pp_a": 0.5794,
+      "il_pk_a": 1.776,
+      "il_valley_a": 1.196,
+      "il_rms_a": 1.495,
+      "ripple_ratio": 0.3899
+    },
+    "nom": {
+      "vin_v": 5.0,
+      "d_ideal": 0.5833,
+      "d_est": 0.6458,
+      "iin_avg_a": 1.412,
+      "dIL_pp_a": 0.5936,
+      "il_pk_a": 1.709,
+      "il_valley_a": 1.115,
+      "il_rms_a": 1.422,
+      "ripple_ratio": 0.4205
+    },
+    "max": {
+      "vin_v": 5.25,
+      "d_ideal": 0.5625,
+      "d_est": 0.6281,
+      "iin_avg_a": 1.345,
+      "dIL_pp_a": 0.6062,
+      "il_pk_a": 1.648,
+      "il_valley_a": 1.041,
+      "il_rms_a": 1.356,
+      "ripple_ratio": 0.4509
+    }
+  },
+  "inductor": {
+    "rounding_allowance": 0.03,
+    "ripple_ratio_target": 0.35,
+    "ripple_ratio_worst": 0.4509,
+    "ripple_target_met_at_min_l": false,
+    "l_required_uh": 70.08,
+    "l_selected_uh": 68,
+    "l_min_effective_uh": 54.4,
+    "ipk_a": 1.776,
+    "irms_a": 1.495,
+    "isat_required_a": 2.22,
+    "irms_required_a": 1.795,
+    "io_crit_dcm_a": 0.1051
+  },
+  "output_cap": {
+    "c_eff_required_uf": 55.3,
+    "esr_max_mohm": 33.79,
+    "ripple_current_a": 0.7022,
+    "v_rating_required_v": 20.7,
+    "ripple_design_v": 0.12
+  },
+  "input_cap": {
+    "c_required_uf": 15.15
+  },
+  "stress": {
+    "mosfet_vds_required_v": 21.45,
+    "mosfet_irms_a": 1.218,
+    "mosfet_ipk_a": 1.776,
+    "diode_vr_required_v": 20.7,
+    "diode_iavg_a": 0.5,
+    "diode_ipk_a": 1.776
+  },
+  "duty": {
+    "d_worst": 0.7031,
+    "dmax": 0.8,
+    "dmin": 0.0
+  },
+  "pwm": {
+    "timer_clk_hz": 170000000,
+    "counts_per_period": 1700.0,
+    "arr": 1699,
+    "resolution_bits": 10.7,
+    "ccr_max": 1360,
+    "vout_step_per_lsb_mv": 19.93,
+    "alignment": "edge"
+  },
+  "timing": {
+    "f_ctrl_hz": 20000,
+    "tim1_rcr": 4,
+    "cpu_load_pct": 17.65,
+    "uart_load_pct": 20.83
+  },
+  "sensing": {
+    "adc_bits": 12,
+    "adc_vref_v": 3.3,
+    "vout": {
+      "r_top_ohm": 43000.0,
+      "r_bot_ohm": 10000,
+      "ratio": 0.1887,
+      "fullscale_v": 17.49,
+      "filter_c_f": 2.2e-09,
+      "filter_fc_hz": 8917.0,
+      "r_thevenin_ohm": 8113.0,
+      "lsb_mv": 4.271,
+      "code_at_vset": 2810,
+      "divider_loss_w": 0.002717
+    },
+    "vin": {
+      "r_top_ohm": 10000.0,
+      "r_bot_ohm": 10000,
+      "ratio": 0.5,
+      "fullscale_v": 6.6,
+      "filter_c_f": 3.3e-09,
+      "filter_fc_hz": 9646.0,
+      "r_thevenin_ohm": 5000.0
+    },
+    "iout": {
+      "location": "output_high_side",
+      "shunt_ohm": 0.05,
+      "gain": 50,
+      "transimpedance_v_per_a": 2.5,
+      "fullscale_a": 1.3,
+      "adc_fullscale_a": 1.32,
+      "lsb_ma": 0.3223,
+      "code_at_icc": 1551,
+      "shunt_loss_rated_w": 0.0125,
+      "v_sense_at_icc_mv": 25.0
+    }
+  },
+  "protection": {
+    "ovp_sw": {
+      "value": 13.200000000000001,
+      "unit": "V",
+      "adc_code": 3091,
+      "action": "软件关断 PWM 并锁存故障"
+    },
+    "ovp_hw": {
+      "value": 13.799999999999999,
+      "unit": "V",
+      "adc_code": 3231,
+      "action": "片内比较器 + 独立阈值源 → TIM1 刹车并锁存；关闭自动重使能，显式复位后才允许启动"
+    },
+    "ocp_sw": {
+      "value": 0.6,
+      "unit": "A",
+      "adc_code": 1861,
+      "delay_ms": 10,
+      "action": "持续超限后关断 PWM 并锁存（CC 环正常时不会触发）"
+    },
+    "ocp_hw": {
+      "value": 1.0,
+      "unit": "A",
+      "adc_code": 3102,
+      "action": "输出电流比较器 → TIM1 刹车并锁存；不是电感逐周期峰值限流，不切断输入直通路径"
+    },
+    "uvlo": {
+      "off_v": 4.3,
+      "on_v": 4.5,
+      "adc_code_off": 2668,
+      "adc_code_on": 2792,
+      "action": "输入欠压停机并锁存；回差恢复仅允许显式复位、自检、软启动，不自动重启"
+    },
+    "duty_limit": {
+      "dmin": 0.0,
+      "dmax": 0.8,
+      "ccr_max": 1360,
+      "action": "PI 输出限幅 + 定时器比较值钳位"
+    },
+    "soft_start": {
+      "ramp_ms": 20,
+      "action": "参考电压从当前 Vout 斜坡升至设定值，控制开关加能；不限制插电时经 L/D 的直通浪涌"
+    }
+  },
+  "cc_range": {
+    "vo_min_v": 6.25,
+    "r_min_ohm": 12.5,
+    "r_max_ohm": 24.0,
+    "short_circuit": "非同步 Boost 无法限制短路电流，需输入保险丝/实验电源限流"
+  },
+  "aux": {
+    "i_3v3_ma": 39.3,
+    "ldo_loss_mw": 76.64,
+    "ldo_dropout_allow_v": 1.45,
+    "p_aux_w": 0.206
+  },
+  "steps": [
+    {
+      "id": "P1",
+      "name": "额定输出功率",
+      "formula": "Po = Vo·Io",
+      "substitution": "12.0×0.5",
+      "value": 6.0,
+      "unit": "W",
+      "note": ""
+    },
+    {
+      "id": "P2",
+      "name": "额定负载电阻（CV/CC 交界）",
+      "formula": "R = Vo/Io",
+      "substitution": "12.0/0.5",
+      "value": 24.0,
+      "unit": "Ω",
+      "note": ""
+    },
+    {
+      "id": "P3",
+      "name": "输入电压范围",
+      "formula": "Vin = Vnom·(1±tol)",
+      "substitution": "5.0×(1±0.05)",
+      "value": 4.75,
+      "unit": "V",
+      "note": "min=4.750 V, max=5.250 V"
+    },
+    {
+      "id": "D1",
+      "name": "理想占空比 (Vin_min)",
+      "formula": "D = 1 − Vin/Vo",
+      "substitution": "1 − 4.750/12.0",
+      "value": 0.6042,
+      "unit": "",
+      "note": ""
+    },
+    {
+      "id": "D2",
+      "name": "计及效率的占空比 (Vin_min)",
+      "formula": "D ≈ 1 − η·Vin/Vo",
+      "substitution": "1 − 0.85×4.750/12.0",
+      "value": 0.6635,
+      "unit": "",
+      "note": "η=0.85 为初算假设，阶段 7 用实际器件复核"
+    },
+    {
+      "id": "I1",
+      "name": "输入平均电流 (Vin_min, 最大)",
+      "formula": "Iin = Po/(η·Vin)",
+      "substitution": "6.0/(0.85×4.750)",
+      "value": 1.486,
+      "unit": "A",
+      "note": "电感平均电流 = 输入电流，远大于输出 0.5 A"
+    },
+    {
+      "id": "L1",
+      "name": "电感量需求（最坏角）",
+      "formula": "L ≥ Vin·D/(fsw·r·Iin)",
+      "substitution": "5.250×0.628/(100000×0.35×1.345)",
+      "value": 70.08,
+      "unit": "µH",
+      "note": "r=0.35 为纹波比；最坏角 Vin_max"
+    },
+    {
+      "id": "L2",
+      "name": "电感标称值（取标准值）",
+      "formula": "取 ≥ (1−rounding_allowance)·L_req 的最近标准值",
+      "substitution": "70.1 µH → 68 µH",
+      "value": 68,
+      "unit": "µH",
+      "note": "标准值向下取整允许 3%；r 为初算目标，负容差下实际纹波比须另行核查"
+    },
+    {
+      "id": "L3",
+      "name": "电感纹波 (Vin_min, L 取 −容差)",
+      "formula": "ΔIL = Vin·D/(fsw·L·(1−tol))",
+      "substitution": "4.750×0.664/(100000×54.4µ)",
+      "value": 0.5794,
+      "unit": "A",
+      "note": ""
+    },
+    {
+      "id": "L4",
+      "name": "电感峰值电流（最坏）",
+      "formula": "IL,pk = Iin + ΔIL/2",
+      "substitution": "见各角",
+      "value": 1.776,
+      "unit": "A",
+      "note": ""
+    },
+    {
+      "id": "L5",
+      "name": "电感 RMS 电流（最坏）",
+      "formula": "IL,rms = √(Iin² + ΔIL²/12)",
+      "substitution": "见各角",
+      "value": 1.495,
+      "unit": "A",
+      "note": ""
+    },
+    {
+      "id": "L6",
+      "name": "电感饱和电流需求",
+      "formula": "Isat ≥ k·IL,pk",
+      "substitution": "1.25×1.776",
+      "value": 2.22,
+      "unit": "A",
+      "note": ""
+    },
+    {
+      "id": "L7",
+      "name": "电感温升电流需求",
+      "formula": "Irms ≥ k·IL,rms",
+      "substitution": "1.2×1.495",
+      "value": 1.795,
+      "unit": "A",
+      "note": ""
+    },
+    {
+      "id": "L8",
+      "name": "CCM/DCM 临界输出电流 (Vin_nom)",
+      "formula": "Io,crit = ΔIL/2·(1−D)",
+      "substitution": "0.594/2×(1−0.646)",
+      "value": 0.1051,
+      "unit": "A",
+      "note": "初算负载 < 105 mA（R > 114 Ω）可能进入 DCM，CCM模型不适用，须另行验证"
+    },
+    {
+      "id": "Q1",
+      "name": "MOSFET 耐压需求",
+      "formula": "Vds ≥ k·(Vovp,hw + VF)",
+      "substitution": "1.5×(13.80+0.5)",
+      "value": 21.45,
+      "unit": "V",
+      "note": "以硬件过压点而非额定 12 V 作为应力基准"
+    },
+    {
+      "id": "Q2",
+      "name": "MOSFET RMS 电流",
+      "formula": "IQ,rms ≈ √D·IL,rms",
+      "substitution": "最坏角",
+      "value": 1.218,
+      "unit": "A",
+      "note": ""
+    },
+    {
+      "id": "D3",
+      "name": "二极管反向耐压需求",
+      "formula": "VR ≥ k·Vovp,hw",
+      "substitution": "1.5×13.80",
+      "value": 20.7,
+      "unit": "V",
+      "note": ""
+    },
+    {
+      "id": "D4",
+      "name": "二极管平均电流",
+      "formula": "ID,avg = Io",
+      "substitution": "0.5",
+      "value": 0.5,
+      "unit": "A",
+      "note": "峰值 = IL,pk = 1.78 A"
+    },
+    {
+      "id": "D5",
+      "name": "二极管导通损耗初估",
+      "formula": "PD ≈ VF·Io",
+      "substitution": "0.5×0.5",
+      "value": 0.25,
+      "unit": "W",
+      "note": ""
+    },
+    {
+      "id": "C1",
+      "name": "输出电容有效容量需求",
+      "formula": "C ≥ Io·D/(fsw·ΔVc)，ΔVc = ΔVo/2",
+      "substitution": "0.5×0.664/(100000×0.060)",
+      "value": 55.3,
+      "unit": "µF",
+      "note": "设计纹波 1.0%（120 mV）留余量于课程 ≤3% 建议值；电容放电与 ESR 各占一半"
+    },
+    {
+      "id": "C2",
+      "name": "输出电容 ESR 上限",
+      "formula": "ESR ≤ (ΔVo/2)/IL,pk",
+      "substitution": "0.060/1.776",
+      "value": 33.79,
+      "unit": "mΩ",
+      "note": "二极管电流在 0 与 IL,pk 间跳变，ESR 纹波 = IL,pk·ESR"
+    },
+    {
+      "id": "C3",
+      "name": "输出电容纹波电流",
+      "formula": "IC,rms ≈ Io·√(D/(1−D))",
+      "substitution": "0.5×√(0.664/0.336)",
+      "value": 0.7022,
+      "unit": "A",
+      "note": ""
+    },
+    {
+      "id": "C4",
+      "name": "输出电容耐压需求",
+      "formula": "VC ≥ k·Vovp,hw",
+      "substitution": "1.5×13.80",
+      "value": 20.7,
+      "unit": "V",
+      "note": ""
+    },
+    {
+      "id": "C5",
+      "name": "输入电容需求",
+      "formula": "Cin ≥ ΔIL/(8·fsw·ΔVin)",
+      "substitution": "0.606/(8×100000×0.050)",
+      "value": 15.15,
+      "unit": "µF",
+      "note": "Boost 输入电流连续，仅需滤除三角纹波"
+    },
+    {
+      "id": "D6",
+      "name": "最坏占空比需求",
+      "formula": "D = 1 − ηworst·Vin,min/Vo",
+      "substitution": "1 − 0.75×4.750/12.0",
+      "value": 0.7031,
+      "unit": "",
+      "note": ""
+    },
+    {
+      "id": "D7",
+      "name": "占空比上限 Dmax",
+      "formula": "Dmax = ceil(Dworst + margin, step)",
+      "substitution": "ceil(0.703+0.05, 0.05)",
+      "value": 0.8,
+      "unit": "",
+      "note": "阶段 7 用实际寄生参数核对 Dmax 低于升压比峰值点"
+    },
+    {
+      "id": "T1",
+      "name": "PWM 周期计数值",
+      "formula": "N = ftim/fsw",
+      "substitution": "170000000/100000",
+      "value": 1700.0,
+      "unit": "count",
+      "note": "ARR = 1699；分辨率 10.7 bit"
+    },
+    {
+      "id": "T2",
+      "name": "1 LSB 占空比对应输出电压步长",
+      "formula": "ΔVo = (Vo/(1−D))/N",
+      "substitution": "(12.0/(1−0.646))/1700",
+      "value": 19.93,
+      "unit": "mV",
+      "note": "须远小于 ±5% 精度要求"
+    },
+    {
+      "id": "T3",
+      "name": "控制周期",
+      "formula": "Tc = 1/fctrl",
+      "substitution": "1/20000",
+      "value": 50.0,
+      "unit": "µs",
+      "note": "TIM1 重复计数 RCR = 4，每 5 个 PWM 周期更新一次"
+    },
+    {
+      "id": "T4",
+      "name": "控制中断 CPU 占用",
+      "formula": "load = cycles·fctrl/fcpu",
+      "substitution": "1500×20000/170000000",
+      "value": 17.65,
+      "unit": "%",
+      "note": ""
+    },
+    {
+      "id": "T5",
+      "name": "调试串口带宽占用",
+      "formula": "load = bytes·10·rate/baud",
+      "substitution": "48×10×50/115200",
+      "value": 20.83,
+      "unit": "%",
+      "note": ""
+    },
+    {
+      "id": "S1",
+      "name": "输出电压 分压比",
+      "formula": "k = Rb/(Rt+Rb)，Rt 取 E24",
+      "substitution": "Rb=10000, Rt=43000",
+      "value": 0.1887,
+      "unit": "",
+      "note": "ADC 满量程对应 17.49 V；滤波电容 2.2 nF（fc≈8917 Hz）"
+    },
+    {
+      "id": "S2",
+      "name": "输出电压分辨率",
+      "formula": "LSB = VFS/(2^N−1)",
+      "substitution": "17.49/4095",
+      "value": 4.271,
+      "unit": "mV",
+      "note": "12 V 对应码值 2810"
+    },
+    {
+      "id": "S3",
+      "name": "输入电压 分压比",
+      "formula": "k = Rb/(Rt+Rb)，Rt 取 E24",
+      "substitution": "Rb=10000, Rt=10000",
+      "value": 0.5,
+      "unit": "",
+      "note": "ADC 满量程对应 6.60 V；滤波电容 3.3 nF（fc≈9646 Hz）"
+    },
+    {
+      "id": "S4",
+      "name": "电流采样电阻 × 放大倍数",
+      "formula": "选 max(Rs·G) 使 IFS ≥ IFS,min 且 Rs·Iocp² ≤ Ploss,max",
+      "substitution": "Rs=50 mΩ, G=50",
+      "value": 2.5,
+      "unit": "V/A",
+      "note": "满量程 1.30 A；0.5 A 时采样电压 25 mV，ADC 输入 1.25 V"
+    },
+    {
+      "id": "S5",
+      "name": "输出电流分辨率",
+      "formula": "LSB = Vref/(Rs·G)/(2^N−1)",
+      "substitution": "3.3/(0.05×50)/4095",
+      "value": 0.3223,
+      "unit": "mA",
+      "note": "0.5 A 对应码值 1551"
+    },
+    {
+      "id": "PR1",
+      "name": "软件过压阈值",
+      "formula": "Vovp,sw = Vo·(1+x%)",
+      "substitution": "12.0×(1+10%)",
+      "value": 13.2,
+      "unit": "V",
+      "note": "ADC 码值 3091"
+    },
+    {
+      "id": "PR2",
+      "name": "硬件过压阈值",
+      "formula": "Vovp,hw = Vo·(1+y%)",
+      "substitution": "12.0×(1+15%)",
+      "value": 13.8,
+      "unit": "V",
+      "note": "同一电压在 ADC 通道的等效码值 3231；不是已验证 DAC 阈值码"
+    },
+    {
+      "id": "PR3",
+      "name": "软件过流阈值",
+      "formula": "Iocp,sw = Icc·(1+z%)",
+      "substitution": "0.5×(1+20%)",
+      "value": 0.6,
+      "unit": "A",
+      "note": ""
+    },
+    {
+      "id": "PR4",
+      "name": "硬件过流阈值",
+      "formula": "设定值",
+      "substitution": "1.0",
+      "value": 1.0,
+      "unit": "A",
+      "note": "仅按稳态换算的电感平均电流约 2.97 A，不是故障瞬态上界；须复核饱和与保护协调"
+    },
+    {
+      "id": "CC1",
+      "name": "CC 模式最低可调输出电压",
+      "formula": "Vo,cc,min = Vin,max + VF + margin",
+      "substitution": "5.25+0.5+0.5",
+      "value": 6.25,
+      "unit": "V",
+      "note": "Boost 关断时仍有输入经 L/D 的直通路径，电压随器件压降及负载变化；本规划式不是物理下限，也不保证短路恒流"
+    },
+    {
+      "id": "CC2",
+      "name": "CC 模式最小负载电阻",
+      "formula": "Rmin = Vo,cc,min/Icc",
+      "substitution": "6.25/0.5",
+      "value": 12.5,
+      "unit": "Ω",
+      "note": "CR 测试 CC 段负载范围 12.5–24 Ω；更低阻值或短路依靠输入保险丝/电源限流"
+    },
+    {
+      "id": "A1",
+      "name": "3.3 V 负载电流",
+      "formula": "I = IMCU + ICSA + n·ILED + Imisc",
+      "substitution": "30+0.3+3×2+3",
+      "value": 39.3,
+      "unit": "mA",
+      "note": ""
+    },
+    {
+      "id": "A2",
+      "name": "LDO 功耗",
+      "formula": "P = (Vin,max − 3.3)·I",
+      "substitution": "(5.25−3.3)×39.3m",
+      "value": 76.64,
+      "unit": "mW",
+      "note": ""
+    },
+    {
+      "id": "A3",
+      "name": "LDO 允许压差",
+      "formula": "Vdo ≤ Vin,min − 3.3",
+      "substitution": "4.75−3.3",
+      "value": 1.45,
+      "unit": "V",
+      "note": "选 LDO 时其满载压差须小于该值并留裕量"
+    }
+  ]
+}

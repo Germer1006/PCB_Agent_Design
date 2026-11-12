@@ -81,5 +81,53 @@ class TestCalc(unittest.TestCase):
         self.assertAlmostEqual(pick_nearest(1.95e-9), 2.2e-9)
 
 
+class TestKicad(unittest.TestCase):
+    SYM = ('(kicad_symbol_lib (version 20251024) (symbol "BASE" (property "Footprint" "Package_TO_SOT_SMD:SOT-23-6") '
+           '(symbol "BASE_1_1" (pin input line (at 0 0 0) (length 2.54) (name "IN+" (effects)) (number "6" (effects))) '
+           '(pin output line (at 0 0 0) (length 2.54) (name "OUTH" (effects)) (number "2" (effects))))))')
+
+    def test_parse_and_read_symbol(self):
+        from kicad_lib import _FileSource, block_text, parse, read_symbol
+        self.assertEqual(parse('(a "x \\"y\\"" (b 1))'), ["a", 'x "y"', ["b", "1"]])
+        src = _FileSource.__new__(_FileSource)
+        src.t = self.SYM
+        s = read_symbol(src, "lib:BASE")
+        self.assertEqual(s["pins"]["6"]["name"], "IN+")
+        self.assertEqual(s["default_footprint"], "Package_TO_SOT_SMD:SOT-23-6")
+        self.assertTrue(block_text(self.SYM, "symbol", "BASE").endswith("))))"))
+
+    def test_verify_part(self):
+        from kicad_lib import verify_part
+        idx = {"symbols": {"L:S": {"exists": True, "pins": {"1": {}, "2": {}, "3": {}}}},
+               "footprints": {"F:SOT23": {"exists": True, "pads": ["1", "2", "3"]},
+                              "F:SOT23-5": {"exists": True, "pads": ["1", "2", "3", "4", "5"]},
+                              "F:2P": {"exists": True, "pads": ["1", "2"]}}}
+        k = {"symbol": "L:S", "footprint": "F:SOT23", "pinmap": {"G": "1", "S": "2", "D": "3"}, "status": "official"}
+        self.assertEqual(verify_part({"kicad": k}, idx)[0], "PASS")
+        self.assertEqual(verify_part({"kicad": {**k, "pinmap": {"G": "4"}}}, idx)[0], "FAIL")
+        self.assertEqual(verify_part({"kicad": {**k, "footprint": "F:2P"}}, idx)[0], "FAIL")      # 符号引脚 3 无焊盘
+        self.assertEqual(verify_part({"kicad": {**k, "footprint": "F:SOT23-5"}}, idx)[0], "WARN")  # 多余焊盘
+        self.assertEqual(verify_part({"kicad": {**k, "symbol": None}}, idx)[0], "FAIL")
+
+    def test_snapshot_covers_db(self):
+        """真实快照：parts_db 引用的 lib_id 都已记录。"""
+        from kicad_lib import INDEX, collect
+        if not INDEX.exists():
+            self.skipTest("无 KiCad 快照")
+        idx, db = load_json(INDEX), load_json(TEMPLATE_DIR.parent / "knowledge" / "parts_db.json")
+        syms, fps = collect(db)
+        self.assertFalse([s for s in syms if s not in idx["symbols"]])
+        self.assertFalse([f for f in fps if f not in idx["footprints"]])
+
+    def test_mcu_pin_plan(self):
+        from kicad_lib import INDEX, verify_mcu_pins
+        if not INDEX.exists():
+            self.skipTest("无 KiCad 快照")
+        db = load_json(TEMPLATE_DIR.parent / "knowledge" / "parts_db.json")
+        mcu = next(p for p in db["parts"] if p["id"] == "stm32g431cbt6")
+        ok, detail = verify_mcu_pins(mcu, load_json(INDEX))
+        self.assertTrue(ok, detail)
+
+
 if __name__ == "__main__":
     unittest.main()

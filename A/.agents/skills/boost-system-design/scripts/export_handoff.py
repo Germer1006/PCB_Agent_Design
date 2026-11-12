@@ -2,7 +2,8 @@
 
 输出（均写入 workdir）：
   design_spec.json   系统设计基线：需求、功能块、网络、接口、器件、控制/保护参数、引脚规划、测试计划、追踪
-  bom_module1.csv    主要器件清单（位号/值/封装/立创编号），供嘉立创 EDA 原理图模块使用
+  bom_module1.csv    主要器件清单（位号/值/封装/立创编号 + KiCad 符号/封装/引脚映射）
+  kicad/             KiCad 项目符号库及 sym-lib-table
   boost_params.h     固件常量（PWM、采样换算、PI 参数、保护阈值），供程序模块使用
   report_tables.md   报告用数据表（自动生成，勿手改；改设计后重跑）
 
@@ -11,10 +12,12 @@
 
 import argparse
 import csv
+import re
 from datetime import date
 from pathlib import Path
 
 from _common import KNOWLEDGE_DIR, load_json, param, r3, save_json, workdir_paths
+from kicad_lib import DERIVED_DIR, INDEX as KICAD_INDEX, PASSIVE_FP, PROJECT_LIB, block_text, write_lib
 from stage_params import selected
 from handoff_header import write_header
 from handoff_contract import issues, proposed_pin_plan, requirement_rows, traceability, verification_plan
@@ -66,7 +69,7 @@ NETS = [
 ]
 
 
-def run(req, ch, calc, sel, loss, loop, chk, db):
+def run(req, ch, calc, sel, loss, loop, chk, db, kidx=None):
     s, prot = calc["sensing"], calc["protection"]
     parts = []
     for role, (des, blk, conn) in ROLE_META.items():
@@ -86,6 +89,7 @@ def run(req, ch, calc, sel, loss, loop, chk, db):
                       "lcsc": p.get("lcsc"), "datasheet": p.get("datasheet_url"),
                       "part_id": p['id'], "confidence": p.get('confidence'), "parameter_evidence": p.get('params'),
                       "lcsc_evidence": p.get('lcsc_evidence'), "stock_risk": p.get('stock_risk', False),
+                      "kicad": {k: (p.get("kicad") or {}).get(k) for k in ("symbol", "footprint", "pinmap", "status", "note")},
                       "connection": conn + (f"；引脚：{p['pinout']}" if p.get("pinout") else "")
                       + (f"；库内替代提案（采用前重审）：{p['alt_mpn']}" if p.get("alt_mpn") else "")})
     vd, idv = s["vout"], s["vin"]
@@ -108,6 +112,11 @@ def run(req, ch, calc, sel, loss, loop, chk, db):
         x.update(status='engineering_value_proposal_not_selected', lcsc=None,
                  sourcing='B 从有出处的器件库补选；缺失时先按器件库扩充流程查证',
                  note=x.get('note', '') + '；数值/封装提案，不是已查证可采购器件')
+        kind = x["designator"][0]
+        x["kicad"] = ({"symbol": f"Device:{kind}", "footprint": PASSIVE_FP[kind], "status": "proposal",
+                       "note": "KiCad generic symbol and 0603 hand-solder footprint proposal; verify after part selection"}
+                      if kind in PASSIVE_FP and x["designator"][1:2].isdigit() else
+                      {"symbol": None, "footprint": None, "status": "proposal", "note": "待 B 选型后指定"})
     mcu, _ = selected(sel, db, "mcu")
     pin_plan = proposed_pin_plan(mcu or {})
     full = 2 ** s["adc_bits"] - 1
@@ -166,6 +175,12 @@ def run(req, ch, calc, sel, loss, loop, chk, db):
         "functional_blocks": blocks,
         "nets": [{"name": n, "desc": d, "class": c} for n, d, c in NETS],
         "interfaces": interfaces,
+        "eda": {"tool": "KiCad",
+                "library_snapshot": {"source": kidx["source"], "fetched": kidx["fetched"]} if kidx else None,
+                "project_symbol_lib": {"nickname": PROJECT_LIB, "file": f"kicad/{PROJECT_LIB}.kicad_sym",
+                                       "symbols": sorted({p["kicad"]["symbol"] for p in parts
+                                                          if (p["kicad"]["symbol"] or "").startswith(PROJECT_LIB + ":")})},
+                "usage": "按 components[].kicad.symbol 放置；Footprint 使用 kicad.footprint；pinmap 为功能引脚到符号引脚号；网络名沿用 nets"},
         "components": parts, "generic_passives": passives,
         "mcu_pin_plan": pin_plan,
         "sensing": s, "protection": prot, "control": control, "cc_range": calc["cc_range"],
@@ -177,6 +192,7 @@ def run(req, ch, calc, sel, loss, loop, chk, db):
             "MCU、采样 RC 远离 SW 节点与电感；驱动器 U2 紧靠 Q1，栅极回路短",
             "预留测试点：SW、GATE、VOUT、IOUT_SENSE_RAW、IOUT_SENSE、VOUT_SENSE、PWM_SW、GND 钩",
             "输入/输出端子封装按已选器件库与数据手册核对（不可用其他节距封装代换）；预留 SWD 与 UART",
+            "KiCad 封装取 components[].kicad.footprint；端子等 equivalent 封装须对照实物核对外形",
         ],
         "verification_plan": tests,
         "traceability": trace,
@@ -191,6 +207,23 @@ def run(req, ch, calc, sel, loss, loop, chk, db):
         "acceptance_load_modes": {"CV": "CC", "CC": "CR"},
     }
     return spec, parts, passives
+
+
+def write_kicad_lib(out, spec):
+    """Write project-derived symbols and a project-relative KiCad library table."""
+    out.mkdir(parents=True, exist_ok=True)
+    names = [s.split(":", 1)[1] for s in spec["eda"]["project_symbol_lib"]["symbols"]]
+    blocks, version = [], "20250114"
+    for name in names:
+        text = (DERIVED_DIR / f"{name}.kicad_sym").read_text(encoding="utf-8")
+        version = re.search(r"\(version (\d+)\)", text).group(1)
+        blocks.append(block_text(text, "symbol", name))
+    write_lib(out / f"{PROJECT_LIB}.kicad_sym", blocks, version)
+    descr = f"Module A derived symbols, revision {spec['revision']}"
+    (out / "sym-lib-table").write_text(
+        "(sym_lib_table\n\t(version 7)\n"
+        f'\t(lib (name "{PROJECT_LIB}")(type "KiCad")(uri "${{KIPRJMOD}}/{PROJECT_LIB}.kicad_sym")(options "")(descr "{descr}"))\n)\n',
+        encoding="utf-8")
 
 
 def md_table(head, rows):
@@ -222,6 +255,14 @@ def write_tables(path, spec, calc, sel, loss, loop, chk):
             rows.append((cat, c["mpn"], c["package"], c["lcsc"] or "待核实", "✔ 入选" if c["id"] == v["selected"] else ("通过" if c["pass"] else "淘汰"),
                          c["score"], "；".join(fails) if fails else c["score_note"]))
     T += ["## 表 E 器件候选与选型结果", md_table(["类别", "型号", "封装", "立创编号", "结论", "评分", "淘汰原因/评分依据"], rows), ""]
+    snap = spec["eda"]["library_snapshot"] or {}
+    T += ["## 表 E2 入选器件 KiCad 符号/封装映射", "",
+          f"> KiCad library snapshot: {snap.get('source')} ({snap.get('fetched')})", "",
+          md_table(["位号", "型号", "KiCad 符号", "KiCad 封装", "引脚映射", "说明"],
+                   [(x["designator"], x["mpn"], x["kicad"]["symbol"], x["kicad"]["footprint"],
+                     " ".join(f"{a}={b}" for a, b in (x["kicad"]["pinmap"] or {}).items()) or "—",
+                     (x["kicad"]["status"] or "") + ("：" + x["kicad"]["note"] if x["kicad"]["note"] else ""))
+                    for x in spec["components"]]), ""]
     for m in ("CV", "CC"):
         r = loop[m]
         T += [f"## 表 F-{m} {m} 环路各工况角（Kp={r.get('Kp')}, Ki={r.get('Ki')}）",
@@ -258,7 +299,8 @@ def prepare_handoff(J, db):
         raise ValueError('交接禁止：版本不一致、SDRC 有 FAIL、关键证据缺失或状态需返工')
     if not all(J['loop'][mode]['ok'] for mode in ('CV', 'CC')):
         raise ValueError('交接禁止：环路初值复核未通过')
-    spec, _, _ = run(J["requirements"], J["choices"], J["calc"], J["selection"], J["losses"], J["loop"], J["check"], db)
+    kidx = load_json(KICAD_INDEX) if KICAD_INDEX.exists() else None
+    spec, _, _ = run(J["requirements"], J["choices"], J["calc"], J["selection"], J["losses"], J["loop"], J["check"], db, kidx)
     simulation = J["sim"]
     if simulation is not None:
         if simulation.get("revision") != spec["revision"]:
@@ -279,10 +321,15 @@ def prepare_handoff(J, db):
 def write_bom(path, spec):
     with open(path, "w", newline="", encoding="utf-8-sig") as f:
         wr = csv.writer(f)
-        wr.writerow(["位号", "名称/值", "封装", "数量", "制造商料号", "制造商", "立创编号", "功能块", "连接说明", "设计版本", "清单范围", "状态"])
+        wr.writerow(["位号", "名称/值", "封装", "数量", "制造商料号", "制造商", "立创编号", "功能块", "连接说明", "设计版本", "清单范围", "状态",
+                     "KiCad 符号", "KiCad 封装", "引脚映射(功能=符号引脚号)", "KiCad 映射说明"])
         for x in spec["components"]:
+            k = x["kicad"]
             wr.writerow([x["designator"], x["value"], x["package"], x["qty"], x["mpn"], x["manufacturer"], x["lcsc"] or "待核实",
-                         x["block"], x["connection"], spec['revision'], '主要器件，配套物料待补齐', spec['status']])
+                         x["block"], x["connection"], spec['revision'], '主要器件，配套物料待补齐', spec['status'],
+                         k["symbol"], k["footprint"], " ".join(f"{a}={b}" for a, b in (k["pinmap"] or {}).items()),
+                         (k["status"] or "") + ("：" + k["note"] if k["note"] else "")])
+    write_kicad_lib(Path(path).parent / "kicad", spec)
 
 
 def main():

@@ -20,8 +20,8 @@
   "project_constraints": {
     "build_physical": true,
     "assembly": "hand-soldered",
-    "eda": "嘉立创EDA",
+    "eda": "KiCad",
     "sourcing": "立创商城 (LCSC)",
-    "origin": "小组确认（2026-11-09）：要做实物，原理图用嘉立创 EDA，芯片无现成，由智能体选型"
+    "origin": "小组确认（2026-11-09）：要做实物，原理图用嘉立创 EDA（2026-11-11 全组改用 KiCad，原理图 + PCB），芯片无现成，由智能体选型"
   }
 }

@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "boost_module1")(type "KiCad")(uri "${KIPRJMOD}/boost_module1.kicad_sym")(options "")(descr "模块一派生符号（LM5114B），revision r7"))
+)

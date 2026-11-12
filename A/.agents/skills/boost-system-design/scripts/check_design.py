@@ -12,6 +12,7 @@ import json
 import sys
 
 from _common import KNOWLEDGE_DIR, Checks, load_json, param, save_json, workdir_paths
+from kicad_lib import INDEX as KICAD_INDEX, verify_mcu_pins, verify_part
 
 RULES_PATH = KNOWLEDGE_DIR / "sdrc_rules.json"
 
@@ -97,6 +98,19 @@ def run(req, ch, calc, sel, loss, loop, db, sim=None):
         K.add(f"SR11-{cat}", f"{cat} 立创商城编号已核实", None if part is None else bool(part.get("lcsc")),
               f"{part.get('mpn')} → {part.get('lcsc')}" if part else "未选器件或数据库中没有对应条目",
               warn_only=True, ref="SOURCING")
+
+    # Validate selected mappings against the pinned official-library snapshot.
+    kidx = load_json(KICAD_INDEX) if KICAD_INDEX.exists() else None
+    for cat in sel["categories"]:
+        part, _ = selected(sel, db, cat)
+        if part:
+            verdict, detail = verify_part(part, kidx) if kidx else ("FAIL", "KiCad library snapshot is missing")
+            K.add(f"SR12-{cat}", f"{cat} KiCad symbol/footprint/pins are valid", verdict == "PASS", detail,
+                  warn_only=(verdict == "WARN"), ref="REQ-EDA")
+    mcu, _ = selected(sel, db, "mcu")
+    if mcu and kidx:
+        ok, detail = verify_mcu_pins(mcu, kidx)
+        K.add("SR13", "MCU pin plan agrees with KiCad symbol pins", ok, detail, ref="REQ-EDA")
 
     # --- 占空比 / 增益峰 ---
     gp = loss["gain_peak"]

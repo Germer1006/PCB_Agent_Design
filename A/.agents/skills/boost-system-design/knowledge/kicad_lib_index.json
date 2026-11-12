@@ -1,0 +1,1692 @@
+{
+  "schema": "kicad-lib-index/1",
+  "source": "gitlab.com/kicad/libraries tag 10.0.8",
+  "fetched": "2026-11-11",
+  "note": "由 kicad_lib.py snapshot 生成，勿手改；换 KiCad 版本后重新 snapshot",
+  "symbols": {
+    "Amplifier_Current:INA180A1": {
+      "exists": true,
+      "extends": null,
+      "pins": {
+        "1": {
+          "name": "",
+          "type": "output"
+        },
+        "2": {
+          "name": "GND",
+          "type": "power_in"
+        },
+        "3": {
+          "name": "+",
+          "type": "input"
+        },
+        "4": {
+          "name": "-",
+          "type": "input"
+        },
+        "5": {
+          "name": "V+",
+          "type": "power_in"
+        }
+      },
+      "default_footprint": "Package_TO_SOT_SMD:SOT-23-5",
+      "description": "Current Sense Amplifier, 1 Circuit, Rail-to-Rail, 26V, Gain 20 V/V, SOT-23-5",
+      "datasheet": "http://www.ti.com/lit/ds/symlink/ina180.pdf"
+    },
+    "Amplifier_Current:INA180A2": {
+      "exists": true,
+      "extends": "INA180A1",
+      "pins": {
+        "1": {
+          "name": "",
+          "type": "output"
+        },
+        "2": {
+          "name": "GND",
+          "type": "power_in"
+        },
+        "3": {
+          "name": "+",
+          "type": "input"
+        },
+        "4": {
+          "name": "-",
+          "type": "input"
+        },
+        "5": {
+          "name": "V+",
+          "type": "power_in"
+        }
+      },
+      "default_footprint": "Package_TO_SOT_SMD:SOT-23-5",
+      "description": "Current Sense Amplifier, 1 Circuit, Rail-to-Rail, 26V, Gain 50 V/V, SOT-23-5",
+      "datasheet": "http://www.ti.com/lit/ds/symlink/ina180.pdf"
+    },
+    "Amplifier_Current:INA180A3": {
+      "exists": true,
+      "extends": "INA180A1",
+      "pins": {
+        "1": {
+          "name": "",
+          "type": "output"
+        },
+        "2": {
+          "name": "GND",
+          "type": "power_in"
+        },
+        "3": {
+          "name": "+",
+          "type": "input"
+        },
+        "4": {
+          "name": "-",
+          "type": "input"
+        },
+        "5": {
+          "name": "V+",
+          "type": "power_in"
+        }
+      },
+      "default_footprint": "Package_TO_SOT_SMD:SOT-23-5",
+      "description": "Current Sense Amplifier, 1 Circuit, Rail-to-Rail, 26V, Gain 100 V/V, SOT-23-5",
+      "datasheet": "http://www.ti.com/lit/ds/symlink/ina180.pdf"
+    },
+    "Amplifier_Current:INA199xxDCK": {
+      "exists": true,
+      "extends": null,
+      "pins": {
+        "1": {
+          "name": "REF",
+          "type": "input"
+        },
+        "2": {
+          "name": "GND",
+          "type": "power_in"
+        },
+        "3": {
+          "name": "V+",
+          "type": "power_in"
+        },
+        "4": {
+          "name": "+",
+          "type": "input"
+        },
+        "5": {
+          "name": "-",
+          "type": "input"
+        },
+        "6": {
+          "name": "",
+          "type": "output"
+        }
+      },
+      "default_footprint": "Package_TO_SOT_SMD:SOT-363_SC-70-6",
+      "description": "INA199 26-V, Bidirectional, Zero-Drift, Low- or High-Side, Voltage-Output, Current-Shunt Monitor, SOT-363, SC-70",
+      "datasheet": "http://www.ti.com/lit/ds/symlink/ina199.pdf"
+    },
+    "Connector:Screw_Terminal_01x02": {
+      "exists": true,
+      "extends": null,
+      "pins": {
+        "1": {
+          "name": "Pin_1",
+          "type": "passive"
+        },
+        "2": {
+          "name": "Pin_2",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "",
+      "description": "Generic screw terminal, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)",
+      "datasheet": ""
+    },
+    "Connector_Generic:Conn_01x04": {
+      "exists": true,
+      "extends": null,
+      "pins": {
+        "1": {
+          "name": "Pin_1",
+          "type": "passive"
+        },
+        "2": {
+          "name": "Pin_2",
+          "type": "passive"
+        },
+        "3": {
+          "name": "Pin_3",
+          "type": "passive"
+        },
+        "4": {
+          "name": "Pin_4",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "",
+      "description": "Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)",
+      "datasheet": ""
+    },
+    "Connector_Generic:Conn_01x05": {
+      "exists": true,
+      "extends": null,
+      "pins": {
+        "1": {
+          "name": "Pin_1",
+          "type": "passive"
+        },
+        "2": {
+          "name": "Pin_2",
+          "type": "passive"
+        },
+        "3": {
+          "name": "Pin_3",
+          "type": "passive"
+        },
+        "4": {
+          "name": "Pin_4",
+          "type": "passive"
+        },
+        "5": {
+          "name": "Pin_5",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "",
+      "description": "Generic connector, single row, 01x05, script generated (kicad-library-utils/schlib/autogen/connector/)",
+      "datasheet": ""
+    },
+    "Device:C": {
+      "exists": true,
+      "extends": null,
+      "pins": {
+        "1": {
+          "name": "",
+          "type": "passive"
+        },
+        "2": {
+          "name": "",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "",
+      "description": "Unpolarized capacitor",
+      "datasheet": ""
+    },
+    "Device:C_Polarized": {
+      "exists": true,
+      "extends": null,
+      "pins": {
+        "1": {
+          "name": "",
+          "type": "passive"
+        },
+        "2": {
+          "name": "",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "",
+      "description": "Polarized capacitor",
+      "datasheet": ""
+    },
+    "Device:D_Schottky": {
+      "exists": true,
+      "extends": null,
+      "pins": {
+        "1": {
+          "name": "K",
+          "type": "passive"
+        },
+        "2": {
+          "name": "A",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "",
+      "description": "Schottky diode",
+      "datasheet": ""
+    },
+    "Device:Fuse": {
+      "exists": true,
+      "extends": null,
+      "pins": {
+        "1": {
+          "name": "",
+          "type": "passive"
+        },
+        "2": {
+          "name": "",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "",
+      "description": "Fuse",
+      "datasheet": ""
+    },
+    "Device:L": {
+      "exists": true,
+      "extends": null,
+      "pins": {
+        "1": {
+          "name": "1",
+          "type": "passive"
+        },
+        "2": {
+          "name": "2",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "",
+      "description": "Inductor",
+      "datasheet": ""
+    },
+    "Device:R": {
+      "exists": true,
+      "extends": null,
+      "pins": {
+        "1": {
+          "name": "",
+          "type": "passive"
+        },
+        "2": {
+          "name": "",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "",
+      "description": "Resistor",
+      "datasheet": ""
+    },
+    "Diode:SMAJ15A": {
+      "exists": true,
+      "extends": "SM6T6V8A",
+      "pins": {
+        "1": {
+          "name": "A1",
+          "type": "passive"
+        },
+        "2": {
+          "name": "A2",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "Diode_SMD:D_SMA",
+      "description": "400W unidirectional Transient Voltage Suppressor, 15.0Vr, SMA(DO-214AC)",
+      "datasheet": "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
+    },
+    "Diode:SMAJ16A": {
+      "exists": true,
+      "extends": "SM6T6V8A",
+      "pins": {
+        "1": {
+          "name": "A1",
+          "type": "passive"
+        },
+        "2": {
+          "name": "A2",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "Diode_SMD:D_SMA",
+      "description": "400W unidirectional Transient Voltage Suppressor, 16.0Vr, SMA(DO-214AC)",
+      "datasheet": "https://www.littelfuse.com/media?resourcetype=datasheets&itemid=75e32973-b177-4ee3-a0ff-cedaf1abdb93&filename=smaj-datasheet"
+    },
+    "Diode:SS14": {
+      "exists": true,
+      "extends": "SB120",
+      "pins": {
+        "1": {
+          "name": "K",
+          "type": "passive"
+        },
+        "2": {
+          "name": "A",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "Diode_SMD:D_SMA",
+      "description": "40V 1A Schottky Diode, SMA",
+      "datasheet": "https://www.vishay.com/docs/88746/ss12.pdf"
+    },
+    "Diode:SS34": {
+      "exists": true,
+      "extends": "SB120",
+      "pins": {
+        "1": {
+          "name": "K",
+          "type": "passive"
+        },
+        "2": {
+          "name": "A",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "Diode_SMD:D_SMA",
+      "description": "40V 3A Schottky Diode, SMA",
+      "datasheet": "https://www.vishay.com/docs/88751/ss32.pdf"
+    },
+    "Driver_FET:UCC27511ADBV": {
+      "exists": true,
+      "extends": null,
+      "pins": {
+        "1": {
+          "name": "V_{DD}",
+          "type": "power_in"
+        },
+        "2": {
+          "name": "OUTH",
+          "type": "output"
+        },
+        "3": {
+          "name": "OUTL",
+          "type": "output"
+        },
+        "4": {
+          "name": "GND",
+          "type": "power_in"
+        },
+        "5": {
+          "name": "IN-",
+          "type": "input"
+        },
+        "6": {
+          "name": "IN+",
+          "type": "input"
+        }
+      },
+      "default_footprint": "Package_TO_SOT_SMD:SOT-23-6",
+      "description": "Single-Channel High-Speed Low-Side Gate Driver With 4-A Peak Source and 8-A Peak Sink, SOT-23-6",
+      "datasheet": "https://www.ti.com/lit/ds/symlink/ucc27511a.pdf"
+    },
+    "MCU_ST_STM32F1:STM32F103C8Tx": {
+      "exists": true,
+      "extends": "STM32F103C_8-B_Tx",
+      "pins": {
+        "1": {
+          "name": "VBAT",
+          "type": "power_in"
+        },
+        "2": {
+          "name": "PC13",
+          "type": "bidirectional"
+        },
+        "3": {
+          "name": "PC14",
+          "type": "bidirectional"
+        },
+        "4": {
+          "name": "PC15",
+          "type": "bidirectional"
+        },
+        "5": {
+          "name": "PD0",
+          "type": "bidirectional"
+        },
+        "6": {
+          "name": "PD1",
+          "type": "bidirectional"
+        },
+        "7": {
+          "name": "NRST",
+          "type": "input"
+        },
+        "8": {
+          "name": "VSSA",
+          "type": "power_in"
+        },
+        "9": {
+          "name": "VDDA",
+          "type": "power_in"
+        },
+        "10": {
+          "name": "PA0",
+          "type": "bidirectional"
+        },
+        "11": {
+          "name": "PA1",
+          "type": "bidirectional"
+        },
+        "12": {
+          "name": "PA2",
+          "type": "bidirectional"
+        },
+        "13": {
+          "name": "PA3",
+          "type": "bidirectional"
+        },
+        "14": {
+          "name": "PA4",
+          "type": "bidirectional"
+        },
+        "15": {
+          "name": "PA5",
+          "type": "bidirectional"
+        },
+        "16": {
+          "name": "PA6",
+          "type": "bidirectional"
+        },
+        "17": {
+          "name": "PA7",
+          "type": "bidirectional"
+        },
+        "18": {
+          "name": "PB0",
+          "type": "bidirectional"
+        },
+        "19": {
+          "name": "PB1",
+          "type": "bidirectional"
+        },
+        "20": {
+          "name": "PB2",
+          "type": "bidirectional"
+        },
+        "21": {
+          "name": "PB10",
+          "type": "bidirectional"
+        },
+        "22": {
+          "name": "PB11",
+          "type": "bidirectional"
+        },
+        "23": {
+          "name": "VSS",
+          "type": "power_in"
+        },
+        "24": {
+          "name": "VDD",
+          "type": "power_in"
+        },
+        "25": {
+          "name": "PB12",
+          "type": "bidirectional"
+        },
+        "26": {
+          "name": "PB13",
+          "type": "bidirectional"
+        },
+        "27": {
+          "name": "PB14",
+          "type": "bidirectional"
+        },
+        "28": {
+          "name": "PB15",
+          "type": "bidirectional"
+        },
+        "29": {
+          "name": "PA8",
+          "type": "bidirectional"
+        },
+        "30": {
+          "name": "PA9",
+          "type": "bidirectional"
+        },
+        "31": {
+          "name": "PA10",
+          "type": "bidirectional"
+        },
+        "32": {
+          "name": "PA11",
+          "type": "bidirectional"
+        },
+        "33": {
+          "name": "PA12",
+          "type": "bidirectional"
+        },
+        "34": {
+          "name": "PA13",
+          "type": "bidirectional"
+        },
+        "35": {
+          "name": "VSS",
+          "type": "passive"
+        },
+        "36": {
+          "name": "VDD",
+          "type": "power_in"
+        },
+        "37": {
+          "name": "PA14",
+          "type": "bidirectional"
+        },
+        "38": {
+          "name": "PA15",
+          "type": "bidirectional"
+        },
+        "39": {
+          "name": "PB3",
+          "type": "bidirectional"
+        },
+        "40": {
+          "name": "PB4",
+          "type": "bidirectional"
+        },
+        "41": {
+          "name": "PB5",
+          "type": "bidirectional"
+        },
+        "42": {
+          "name": "PB6",
+          "type": "bidirectional"
+        },
+        "43": {
+          "name": "PB7",
+          "type": "bidirectional"
+        },
+        "44": {
+          "name": "BOOT0",
+          "type": "input"
+        },
+        "45": {
+          "name": "PB8",
+          "type": "bidirectional"
+        },
+        "46": {
+          "name": "PB9",
+          "type": "bidirectional"
+        },
+        "47": {
+          "name": "VSS",
+          "type": "passive"
+        },
+        "48": {
+          "name": "VDD",
+          "type": "power_in"
+        }
+      },
+      "default_footprint": "Package_QFP:LQFP-48_7x7mm_P0.5mm",
+      "description": "STMicroelectronics Arm Cortex-M3 MCU, 64KB flash, 20KB RAM, 72 MHz, 2.0-3.6V, 37 GPIO, LQFP48",
+      "datasheet": "https://www.st.com/resource/en/datasheet/stm32f103c8.pdf"
+    },
+    "MCU_ST_STM32F3:STM32F334K8Tx": {
+      "exists": true,
+      "extends": "STM32F334K_4-6-8_Tx",
+      "pins": {
+        "1": {
+          "name": "VDD",
+          "type": "power_in"
+        },
+        "2": {
+          "name": "PF0",
+          "type": "bidirectional"
+        },
+        "3": {
+          "name": "PF1",
+          "type": "bidirectional"
+        },
+        "4": {
+          "name": "NRST",
+          "type": "input"
+        },
+        "5": {
+          "name": "VDDA",
+          "type": "power_in"
+        },
+        "6": {
+          "name": "PA0",
+          "type": "bidirectional"
+        },
+        "7": {
+          "name": "PA1",
+          "type": "bidirectional"
+        },
+        "8": {
+          "name": "PA2",
+          "type": "bidirectional"
+        },
+        "9": {
+          "name": "PA3",
+          "type": "bidirectional"
+        },
+        "10": {
+          "name": "PA4",
+          "type": "bidirectional"
+        },
+        "11": {
+          "name": "PA5",
+          "type": "bidirectional"
+        },
+        "12": {
+          "name": "PA6",
+          "type": "bidirectional"
+        },
+        "13": {
+          "name": "PA7",
+          "type": "bidirectional"
+        },
+        "14": {
+          "name": "PB0",
+          "type": "bidirectional"
+        },
+        "15": {
+          "name": "PB1",
+          "type": "bidirectional"
+        },
+        "16": {
+          "name": "VSS",
+          "type": "power_in"
+        },
+        "17": {
+          "name": "VDD",
+          "type": "power_in"
+        },
+        "18": {
+          "name": "PA8",
+          "type": "bidirectional"
+        },
+        "19": {
+          "name": "PA9",
+          "type": "bidirectional"
+        },
+        "20": {
+          "name": "PA10",
+          "type": "bidirectional"
+        },
+        "21": {
+          "name": "PA11",
+          "type": "bidirectional"
+        },
+        "22": {
+          "name": "PA12",
+          "type": "bidirectional"
+        },
+        "23": {
+          "name": "PA13",
+          "type": "bidirectional"
+        },
+        "24": {
+          "name": "PA14",
+          "type": "bidirectional"
+        },
+        "25": {
+          "name": "PA15",
+          "type": "bidirectional"
+        },
+        "26": {
+          "name": "PB3",
+          "type": "bidirectional"
+        },
+        "27": {
+          "name": "PB4",
+          "type": "bidirectional"
+        },
+        "28": {
+          "name": "PB5",
+          "type": "bidirectional"
+        },
+        "29": {
+          "name": "PB6",
+          "type": "bidirectional"
+        },
+        "30": {
+          "name": "PB7",
+          "type": "bidirectional"
+        },
+        "31": {
+          "name": "BOOT0",
+          "type": "input"
+        },
+        "32": {
+          "name": "VSS",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "Package_QFP:LQFP-32_7x7mm_P0.8mm",
+      "description": "STMicroelectronics Arm Cortex-M4 MCU, 64KB flash, 16KB RAM, 72 MHz, 2.0-3.6V, 25 GPIO, LQFP32",
+      "datasheet": "https://www.st.com/resource/en/datasheet/stm32f334k8.pdf"
+    },
+    "MCU_ST_STM32G4:STM32G431CBTx": {
+      "exists": true,
+      "extends": "STM32G431C_6-8-B_Tx",
+      "pins": {
+        "1": {
+          "name": "VBAT",
+          "type": "power_in"
+        },
+        "2": {
+          "name": "PC13",
+          "type": "bidirectional"
+        },
+        "3": {
+          "name": "PC14",
+          "type": "bidirectional"
+        },
+        "4": {
+          "name": "PC15",
+          "type": "bidirectional"
+        },
+        "5": {
+          "name": "PF0",
+          "type": "bidirectional"
+        },
+        "6": {
+          "name": "PF1",
+          "type": "bidirectional"
+        },
+        "7": {
+          "name": "PG10",
+          "type": "bidirectional"
+        },
+        "8": {
+          "name": "PA0",
+          "type": "bidirectional"
+        },
+        "9": {
+          "name": "PA1",
+          "type": "bidirectional"
+        },
+        "10": {
+          "name": "PA2",
+          "type": "bidirectional"
+        },
+        "11": {
+          "name": "PA3",
+          "type": "bidirectional"
+        },
+        "12": {
+          "name": "PA4",
+          "type": "bidirectional"
+        },
+        "13": {
+          "name": "PA5",
+          "type": "bidirectional"
+        },
+        "14": {
+          "name": "PA6",
+          "type": "bidirectional"
+        },
+        "15": {
+          "name": "PA7",
+          "type": "bidirectional"
+        },
+        "16": {
+          "name": "PB0",
+          "type": "bidirectional"
+        },
+        "17": {
+          "name": "PB1",
+          "type": "bidirectional"
+        },
+        "18": {
+          "name": "PB2",
+          "type": "bidirectional"
+        },
+        "19": {
+          "name": "VSSA",
+          "type": "power_in"
+        },
+        "20": {
+          "name": "VREF+",
+          "type": "input"
+        },
+        "21": {
+          "name": "VDDA",
+          "type": "power_in"
+        },
+        "22": {
+          "name": "PB10",
+          "type": "bidirectional"
+        },
+        "23": {
+          "name": "VSS",
+          "type": "power_in"
+        },
+        "24": {
+          "name": "VDD",
+          "type": "power_in"
+        },
+        "25": {
+          "name": "PB11",
+          "type": "bidirectional"
+        },
+        "26": {
+          "name": "PB12",
+          "type": "bidirectional"
+        },
+        "27": {
+          "name": "PB13",
+          "type": "bidirectional"
+        },
+        "28": {
+          "name": "PB14",
+          "type": "bidirectional"
+        },
+        "29": {
+          "name": "PB15",
+          "type": "bidirectional"
+        },
+        "30": {
+          "name": "PA8",
+          "type": "bidirectional"
+        },
+        "31": {
+          "name": "PA9",
+          "type": "bidirectional"
+        },
+        "32": {
+          "name": "PA10",
+          "type": "bidirectional"
+        },
+        "33": {
+          "name": "PA11",
+          "type": "bidirectional"
+        },
+        "34": {
+          "name": "PA12",
+          "type": "bidirectional"
+        },
+        "35": {
+          "name": "VSS",
+          "type": "passive"
+        },
+        "36": {
+          "name": "VDD",
+          "type": "power_in"
+        },
+        "37": {
+          "name": "PA13",
+          "type": "bidirectional"
+        },
+        "38": {
+          "name": "PA14",
+          "type": "bidirectional"
+        },
+        "39": {
+          "name": "PA15",
+          "type": "bidirectional"
+        },
+        "40": {
+          "name": "PB3",
+          "type": "bidirectional"
+        },
+        "41": {
+          "name": "PB4",
+          "type": "bidirectional"
+        },
+        "42": {
+          "name": "PB5",
+          "type": "bidirectional"
+        },
+        "43": {
+          "name": "PB6",
+          "type": "bidirectional"
+        },
+        "44": {
+          "name": "PB7",
+          "type": "bidirectional"
+        },
+        "45": {
+          "name": "PB8",
+          "type": "bidirectional"
+        },
+        "46": {
+          "name": "PB9",
+          "type": "bidirectional"
+        },
+        "47": {
+          "name": "VSS",
+          "type": "passive"
+        },
+        "48": {
+          "name": "VDD",
+          "type": "power_in"
+        }
+      },
+      "default_footprint": "Package_QFP:LQFP-48_7x7mm_P0.5mm",
+      "description": "STMicroelectronics Arm Cortex-M4 MCU, 128KB flash, 32KB RAM, 170 MHz, 1.71-3.6V, 38 GPIO, LQFP48",
+      "datasheet": "https://www.st.com/resource/en/datasheet/stm32g431cb.pdf"
+    },
+    "MCU_ST_STM32G4:STM32G431KBTx": {
+      "exists": true,
+      "extends": "STM32G431K_6-8-B_Tx",
+      "pins": {
+        "1": {
+          "name": "VDD",
+          "type": "power_in"
+        },
+        "2": {
+          "name": "PF0",
+          "type": "bidirectional"
+        },
+        "3": {
+          "name": "PF1",
+          "type": "bidirectional"
+        },
+        "4": {
+          "name": "PG10",
+          "type": "bidirectional"
+        },
+        "5": {
+          "name": "PA0",
+          "type": "bidirectional"
+        },
+        "6": {
+          "name": "PA1",
+          "type": "bidirectional"
+        },
+        "7": {
+          "name": "PA2",
+          "type": "bidirectional"
+        },
+        "8": {
+          "name": "PA3",
+          "type": "bidirectional"
+        },
+        "9": {
+          "name": "PA4",
+          "type": "bidirectional"
+        },
+        "10": {
+          "name": "PA5",
+          "type": "bidirectional"
+        },
+        "11": {
+          "name": "PA6",
+          "type": "bidirectional"
+        },
+        "12": {
+          "name": "PA7",
+          "type": "bidirectional"
+        },
+        "13": {
+          "name": "PB0",
+          "type": "bidirectional"
+        },
+        "14": {
+          "name": "VSSA",
+          "type": "power_in"
+        },
+        "15": {
+          "name": "VDDA",
+          "type": "power_in"
+        },
+        "16": {
+          "name": "VSS",
+          "type": "power_in"
+        },
+        "17": {
+          "name": "VDD",
+          "type": "power_in"
+        },
+        "18": {
+          "name": "PA8",
+          "type": "bidirectional"
+        },
+        "19": {
+          "name": "PA9",
+          "type": "bidirectional"
+        },
+        "20": {
+          "name": "PA10",
+          "type": "bidirectional"
+        },
+        "21": {
+          "name": "PA11",
+          "type": "bidirectional"
+        },
+        "22": {
+          "name": "PA12",
+          "type": "bidirectional"
+        },
+        "23": {
+          "name": "PA13",
+          "type": "bidirectional"
+        },
+        "24": {
+          "name": "PA14",
+          "type": "bidirectional"
+        },
+        "25": {
+          "name": "PA15",
+          "type": "bidirectional"
+        },
+        "26": {
+          "name": "PB3",
+          "type": "bidirectional"
+        },
+        "27": {
+          "name": "PB4",
+          "type": "bidirectional"
+        },
+        "28": {
+          "name": "PB5",
+          "type": "bidirectional"
+        },
+        "29": {
+          "name": "PB6",
+          "type": "bidirectional"
+        },
+        "30": {
+          "name": "PB7",
+          "type": "bidirectional"
+        },
+        "31": {
+          "name": "PB8",
+          "type": "bidirectional"
+        },
+        "32": {
+          "name": "VSS",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "Package_QFP:LQFP-32_7x7mm_P0.8mm",
+      "description": "STMicroelectronics Arm Cortex-M4 MCU, 128KB flash, 32KB RAM, 170 MHz, 1.71-3.6V, 26 GPIO, LQFP32",
+      "datasheet": "https://www.st.com/resource/en/datasheet/stm32g431kb.pdf"
+    },
+    "Regulator_Linear:AMS1117-3.3": {
+      "exists": true,
+      "extends": "AP1117-15",
+      "pins": {
+        "1": {
+          "name": "GND",
+          "type": "power_in"
+        },
+        "2": {
+          "name": "VO",
+          "type": "power_out"
+        },
+        "3": {
+          "name": "VI",
+          "type": "power_in"
+        }
+      },
+      "default_footprint": "Package_TO_SOT_SMD:SOT-223-3_TabPin2",
+      "description": "1A Low Dropout regulator, positive, 3.3V fixed output, SOT-223",
+      "datasheet": "http://www.advanced-monolithic.com/pdf/ds1117.pdf"
+    },
+    "Regulator_Linear:ME6211C33M5": {
+      "exists": true,
+      "extends": null,
+      "pins": {
+        "1": {
+          "name": "V_{IN}",
+          "type": "power_in"
+        },
+        "2": {
+          "name": "V_{SS}",
+          "type": "power_in"
+        },
+        "3": {
+          "name": "CE",
+          "type": "input"
+        },
+        "4": {
+          "name": "NC",
+          "type": "no_connect"
+        },
+        "5": {
+          "name": "V_{OUT}",
+          "type": "power_out"
+        }
+      },
+      "default_footprint": "Package_TO_SOT_SMD:SOT-23-5",
+      "description": "500mA low dropout linear regulator, shutdown pin, 6.5V max input voltage, 3.3V fixed positive output, SOT-23-5",
+      "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_MICRONE-Nanjing-Micro-One-Elec-ME6211C33R5G_C235316.pdf"
+    },
+    "Regulator_Linear:XC6206PxxxMR": {
+      "exists": true,
+      "extends": "APE8865N-12-HF-3",
+      "pins": {
+        "1": {
+          "name": "GND",
+          "type": "power_in"
+        },
+        "2": {
+          "name": "VO",
+          "type": "power_out"
+        },
+        "3": {
+          "name": "VI",
+          "type": "power_in"
+        }
+      },
+      "default_footprint": "Package_TO_SOT_SMD:SOT-23-3",
+      "description": "Positive 60-250mA Low Dropout Regulator, Fixed Output, SOT-23",
+      "datasheet": "https://www.torexsemi.com/file/xc6206/XC6206.pdf"
+    },
+    "Transistor_FET:AO3400A": {
+      "exists": true,
+      "extends": "Q_NMOS_GSD",
+      "pins": {
+        "1": {
+          "name": "G",
+          "type": "input"
+        },
+        "2": {
+          "name": "S",
+          "type": "passive"
+        },
+        "3": {
+          "name": "D",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "Package_TO_SOT_SMD:SOT-23",
+      "description": "30V Vds, 5.7A Id, N-Channel MOSFET, SOT-23",
+      "datasheet": "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf"
+    },
+    "Transistor_FET:AO3401A": {
+      "exists": true,
+      "extends": "TP0610T",
+      "pins": {
+        "1": {
+          "name": "G",
+          "type": "input"
+        },
+        "2": {
+          "name": "S",
+          "type": "passive"
+        },
+        "3": {
+          "name": "D",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "Package_TO_SOT_SMD:SOT-23",
+      "description": "-4.0A Id, -30V Vds, P-Channel MOSFET, SOT-23",
+      "datasheet": "http://www.aosmd.com/pdfs/datasheet/AO3401A.pdf"
+    },
+    "Transistor_FET:IRLML0030": {
+      "exists": true,
+      "extends": "Q_NMOS_GSD",
+      "pins": {
+        "1": {
+          "name": "G",
+          "type": "input"
+        },
+        "2": {
+          "name": "S",
+          "type": "passive"
+        },
+        "3": {
+          "name": "D",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "Package_TO_SOT_SMD:SOT-23",
+      "description": "5.3A Id, 30V Vds, 27mOhm Rds, N-Channel HEXFET Power MOSFET, SOT-23",
+      "datasheet": "https://www.infineon.com/dgdl/irlml0030pbf.pdf?fileId=5546d462533600a401535664773825df"
+    },
+    "Transistor_FET:Q_NMOS_GSD": {
+      "exists": true,
+      "extends": null,
+      "pins": {
+        "1": {
+          "name": "G",
+          "type": "input"
+        },
+        "2": {
+          "name": "S",
+          "type": "passive"
+        },
+        "3": {
+          "name": "D",
+          "type": "passive"
+        }
+      },
+      "default_footprint": "",
+      "description": "N-MOSFET transistor, gate/source/drain",
+      "datasheet": ""
+    },
+    "boost_module1:LM5114B": {
+      "exists": true,
+      "pins": {
+        "1": {
+          "name": "V_{DD}",
+          "type": "power_in"
+        },
+        "2": {
+          "name": "P_OUT",
+          "type": "output"
+        },
+        "3": {
+          "name": "N_OUT",
+          "type": "output"
+        },
+        "4": {
+          "name": "VSS",
+          "type": "power_in"
+        },
+        "5": {
+          "name": "INB",
+          "type": "input"
+        },
+        "6": {
+          "name": "IN",
+          "type": "input"
+        }
+      },
+      "derived_from": "Driver_FET:UCC27511ADBV",
+      "default_footprint": "Package_TO_SOT_SMD:SOT-23-6"
+    }
+  },
+  "footprints": {
+    "Capacitor_SMD:CP_Elec_6.3x5.8": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "SMD capacitor, aluminum electrolytic, Nichicon, 6.3x5.8mm",
+      "smd_only": true
+    },
+    "Capacitor_SMD:CP_Elec_8x10": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "SMD capacitor, aluminum electrolytic, Nichicon, 8.0x10mm",
+      "smd_only": true
+    },
+    "Capacitor_SMD:CP_Elec_8x6.2": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "SMD capacitor, aluminum electrolytic, Nichicon, 8.0x6.2mm",
+      "smd_only": true
+    },
+    "Capacitor_SMD:CP_Elec_8x6.9": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "SMD capacitor, aluminum electrolytic, Panasonic E7, 8.0x6.9mm",
+      "smd_only": true
+    },
+    "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)",
+      "smd_only": true
+    },
+    "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Capacitor SMD 1206 (3216 Metric), square (rectangular) end terminal, IPC-7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)",
+      "smd_only": true
+    },
+    "Capacitor_SMD:C_1210_3225Metric_Pad1.33x2.70mm_HandSolder": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Capacitor SMD 1210 (3225 Metric), square (rectangular) end terminal, IPC-7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)",
+      "smd_only": true
+    },
+    "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "descr": "Through hole straight pin header, 1x04, 2.54mm pitch, single row",
+      "smd_only": false
+    },
+    "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "descr": "Through hole straight pin header, 1x05, 2.54mm pitch, single row",
+      "smd_only": false
+    },
+    "Diode_SMD:D_SMA_Handsoldering": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Diode SMA (DO-214AC) Handsoldering",
+      "smd_only": true
+    },
+    "Diode_SMD:D_SMC_Handsoldering": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Diode SMC (DO-214AB) Handsoldering",
+      "smd_only": true
+    },
+    "Diode_SMD:D_SOD-123": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "SOD-123",
+      "smd_only": true
+    },
+    "Fuse:Fuse_1206_3216Metric_Pad1.42x1.75mm_HandSolder": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Fuse SMD 1206 (3216 Metric), square (rectangular) end terminal, IPC-7351 nominal with elongated pad for handsoldering. (Body size source: http://www.tortai-tech.com/upload/download/2011102023233369053.pdf)",
+      "smd_only": true
+    },
+    "Fuse:Fuse_1812_4532Metric_Pad1.30x3.40mm_HandSolder": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Fuse SMD 1812 (4532 Metric), square (rectangular) end terminal, IPC-7351 nominal with elongated pad for handsoldering. (Body size source: https://www.nikhef.nl/pub/departments/mt/projects/detectorR_D/dtddice/ERJ2G.pdf)",
+      "smd_only": true
+    },
+    "Inductor_SMD:L_Bourns-SRN1060": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Bourns SRN1060 series SMD inductor https://www.bourns.com/docs/Product-Datasheets/SRN1060.pdf",
+      "smd_only": true
+    },
+    "Inductor_SMD:L_Bourns_SRN8040TA": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "https://www.bourns.com/docs/product-datasheets/srn8040ta.pdf",
+      "smd_only": true
+    },
+    "Inductor_SMD:L_Bourns_SRR1260": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Bourns SRR1260 series SMD inductor http://www.bourns.com/docs/Product-Datasheets/SRR1260.pdf",
+      "smd_only": true
+    },
+    "Inductor_SMD:L_Sunlord_MWSA1206S-101": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Inductor, Sunlord, MWSA1206S-101, 13.45x12.6x5.8mm, (https://sunlordinc.com/Download.aspx?file=L1VwbG9hZEZpbGVzL1BERl9DYXQvMjAyMjExMTUxNDQ4MDU0NTQucGRm&lan=en)",
+      "smd_only": true
+    },
+    "Inductor_SMD:L_Sunlord_MWSA1206S-470": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Inductor, Sunlord, MWSA1206S-470, 13.45x12.6x5.8mm, (https://sunlordinc.com/Download.aspx?file=L1VwbG9hZEZpbGVzL1BERl9DYXQvMjAyMjExMTUxNDQ4MDU0NTQucGRm&lan=en)",
+      "smd_only": true
+    },
+    "Inductor_SMD:L_Sunlord_MWSA1206S-680": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Inductor, Sunlord, MWSA1206S-680, 13.45x12.6x5.8mm, (https://sunlordinc.com/Download.aspx?file=L1VwbG9hZEZpbGVzL1BERl9DYXQvMjAyMjExMTUxNDQ4MDU0NTQucGRm&lan=en)",
+      "smd_only": true
+    },
+    "Package_QFP:LQFP-32_7x7mm_P0.8mm": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31",
+        "32"
+      ],
+      "descr": "LQFP, 32 Pin (https://www.nxp.com/docs/en/package-information/SOT358-1.pdf)",
+      "smd_only": true
+    },
+    "Package_QFP:LQFP-48_7x7mm_P0.5mm": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43",
+        "44",
+        "45",
+        "46",
+        "47",
+        "48"
+      ],
+      "descr": "LQFP, 48 Pin (JEDEC MS-026 variation BBC, 1.40mm body thickness, https://www.jedec.org/document_search?search_api_views_fulltext=MS-026, https://www.analog.com/media/en/package-pcb-resources/package/pkg_pdf/ltc-legacy-lqfp/05081760_a_lx48.pdf)",
+      "smd_only": true
+    },
+    "Package_TO_SOT_SMD:SOT-223-3_TabPin2": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2",
+        "3"
+      ],
+      "descr": "module CMS SOT223 4 pins",
+      "smd_only": true
+    },
+    "Package_TO_SOT_SMD:SOT-23": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2",
+        "3"
+      ],
+      "descr": "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)",
+      "smd_only": true
+    },
+    "Package_TO_SOT_SMD:SOT-23-3": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2",
+        "3"
+      ],
+      "descr": "SOT, 3 Pin (JEDEC MO-178 inferred 3-pin variant https://www.jedec.org/document_search?search_api_views_fulltext=MO-178)",
+      "smd_only": true
+    },
+    "Package_TO_SOT_SMD:SOT-23-5": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "descr": "SOT, 5 Pin (JEDEC MO-178 Var AA https://www.jedec.org/document_search?search_api_views_fulltext=MO-178)",
+      "smd_only": true
+    },
+    "Package_TO_SOT_SMD:SOT-23-6": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "descr": "SOT, 6 Pin (JEDEC MO-178 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=MO-178)",
+      "smd_only": true
+    },
+    "Package_TO_SOT_SMD:SOT-363_SC-70-6": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "descr": "SOT, 6 Pin (https://home.jeita.or.jp/tsc/std-pdf/ED-7500A.pdf#page=170, JEDEC MO-203, variant AB, https://www.jedec.org/document_search?search_api_views_fulltext=MO-203)",
+      "smd_only": true
+    },
+    "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)",
+      "smd_only": true
+    },
+    "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Resistor SMD 1206 (3216 Metric), square (rectangular) end terminal, IPC-7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)",
+      "smd_only": true
+    },
+    "Resistor_SMD:R_2512_6332Metric_Pad1.40x3.35mm_HandSolder": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Resistor SMD 2512 (6332 Metric), square (rectangular) end terminal, IPC-7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)",
+      "smd_only": true
+    },
+    "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Terminal Block Phoenix MKDS-1,5-2-5.08, 2 pins, pitch 5.08mm, size 10.2x9.8mm, drill diameter 1.3mm, pad diameter 2.6mm, http://www.farnell.com/datasheets/100425.pdf",
+      "smd_only": false
+    },
+    "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2_1x02_P5.00mm_Horizontal": {
+      "exists": true,
+      "pads": [
+        "1",
+        "2"
+      ],
+      "descr": "Terminal Block Phoenix MKDS-1,5-2, 2 pins, pitch 5mm, size 10x9.8mm, drill diameter 1.3mm, pad diameter 2.6mm, http://www.farnell.com/datasheets/100425.pdf",
+      "smd_only": false
+    }
+  },
+  "derived": {
+    "boost_module1:LM5114B": {
+      "exists": true,
+      "from": "Driver_FET:UCC27511ADBV",
+      "file": "kicad_symbols/LM5114B.kicad_sym",
+      "pins": {
+        "1": {
+          "name": "V_{DD}",
+          "type": "power_in"
+        },
+        "2": {
+          "name": "P_OUT",
+          "type": "output"
+        },
+        "3": {
+          "name": "N_OUT",
+          "type": "output"
+        },
+        "4": {
+          "name": "VSS",
+          "type": "power_in"
+        },
+        "5": {
+          "name": "INB",
+          "type": "input"
+        },
+        "6": {
+          "name": "IN",
+          "type": "input"
+        }
+      },
+      "format_version": "20251024"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 ---
 name: boost-system-design
-description: 模块一·系统总体设计智能体。把“MCU 控制的 Boost 恒流恒压电源”课程需求转化为可实施的工程方案：需求解析、功能划分、拓扑选择、CC/CV 控制方案、关键参数计算、器件选型（立创可购、可手焊）、效率/环路复核、系统设计规则检查，并输出给原理图/PCB/程序模块的交接文件（design_spec.json、BOM、boost_params.h）。当用户提到模块一、系统设计、总体方案、Boost 参数计算、器件选型、CC/CV、design_spec 时使用。
+description: 模块一·系统总体设计智能体。把“MCU 控制的 Boost 恒流恒压电源”课程需求转化为可实施的工程方案：需求解析、功能划分、拓扑选择、CC/CV 控制方案、关键参数计算、器件选型（立创可购、可手焊、KiCad 官方库有可用符号/封装）、效率/环路复核、系统设计规则检查，并输出给 KiCad 原理图/PCB 与程序模块的交接文件（design_spec.json、带 KiCad 映射的 BOM、项目符号库、boost_params.h）。当用户提到模块一、系统设计、总体方案、Boost 参数计算、器件选型、CC/CV、design_spec 时使用。
 ---
 
 # 模块一 · 系统总体设计智能体
@@ -9,7 +9,8 @@ description: 模块一·系统总体设计智能体。把“MCU 控制的 Boost 
 
 输入一份设计需求（`inputs/course_requirements.json`），输出一套**有依据、可复算、可交接**的系统方案。
 四个课程智能体的流水线：**模块一（本 skill）→ 模块二 原理图 → 模块三 PCB → 模块四 程序**；
-本 skill 的 `design_spec.json` / `bom_module1.csv` / `boost_params.h` 就是下游的输入。
+本 skill 的 `design_spec.json` / `bom_module1.csv` / `kicad/` / `boost_params.h` 就是下游的输入。
+**EDA 为 KiCad**；符号/封装只使用 `knowledge/kicad_lib_index.json` 快照中的 lib_id。
 
 ## 三条铁律
 
@@ -48,10 +49,10 @@ Windows 下建议设置 `PYTHONIOENCODING=utf-8`。只用 Python 标准库。
 | S3 拓扑选择 📋 | 比较非同步/同步 Boost、SEPIC、专用 IC；确定开关频率 | `design_rules.md §2` | `design_choices.json`(topology, fsw) + rationale | 结论写明排除理由与适用边界 |
 | S4 控制方案 📋 | 确定 CC/CV 结构、采样位置、控制频率、ADC 触发、Dmax/Dmin 策略、保护分层与阈值百分比、软启动 | `design_rules.md §4,§5,§6` | `design_choices.json`(control/sensing/protection) + rationale | 每个参数有理由 |
 | S5 参数计算 | `python calc_boost.py <wd>` | 工具 | `calc.json` | 无异常；检查 notes 中的提示 |
-| S6 器件选型 📋 | `python select_parts.py <wd>`；逐类阅读淘汰原因；某类无候选 → 扩充器件库或回 S3/S4 | `parts_db.json` | `selection.json` | 每类有入选器件 |
+| S6 器件选型 📋 | `python select_parts.py <wd>`；逐类阅读淘汰原因；某类无候选 → 扩充器件库或回 S3/S4 | `parts_db.json` + `kicad_lib_index.json` | `selection.json` | 每类有入选器件 |
 | S7 复核 | `python loss_thermal.py <wd>` 复核损耗和容差，η 偏差过大则回 S5；`python loop_design.py <wd>` 设计 PI；`python validate_loop.py <wd>` 独立复核 CCM 环路；`python sim_switching.py <wd>` 执行 T1 场景及额定点交叉验证 | 工具 | `losses.json`, `loop.json`, `loop_validation.json`, `bode_*.csv`, `bode_loops.svg`, `sim.json`, `sim_*.csv`, `sim_waveforms.svg` | η 一致；环路复核 PASS；T1 失败回溯对应阶段 |
 | S8 设计规则检查 | `python check_design.py <wd>` | `sdrc_rules.json` | `check.json` | 所有规则含依据与严重度；FAIL = 0 且关键 NOT_ASSESSED = 0。`conditional_review` 的仿真/实测 WARN 逐条交接，不得宣称“已实测合格” |
-| S9 交接与报告 ⏸ | `python ledger.py <wd>`；`python export_handoff.py <wd>`；按模板写报告。数字可在 `system_design_report.template.md` 中用占位符引用，执行 `python render_report.py <wd>`；最后 `python check_consistency.py <wd>` | 工具 + 模板 | `ledger.json`, `ledger.md`, `design_spec.json`, `bom_module1.csv`, `boost_params.h`, `report_tables.md`, `system_design_report.md` | 来源可解析、记录未过期、交接关键值与版本一致 |
+| S9 交接与报告 ⏸ | `python ledger.py <wd>`；`python export_handoff.py <wd>`；按模板写报告。数字可在 `system_design_report.template.md` 中用占位符引用，执行 `python render_report.py <wd>`；最后 `python check_consistency.py <wd>` | 工具 + 模板 | `ledger.json`, `ledger.md`, `design_spec.json`, `bom_module1.csv`, `kicad/`, `boost_params.h`, `report_tables.md`, `system_design_report.md` | 来源可解析、记录未过期、交接关键值与版本一致 |
 
 ⏸ = 必须停下等用户确认；📋 = 用白话汇报后继续（若本阶段出现 A 类问题或无法消除的 FAIL，则升级为 ⏸）。详见下一节。
 
@@ -68,6 +69,8 @@ SDRC 结果状态为 `PASS / WARN / FAIL / NOT_ASSESSED / N/A`。缺少证据不
 
 T1 默认执行完整工况矩阵。排查时可用 `python sim_switching.py <wd> --duty <D> --load-ohm <R>` 查看开环波形，或用 `--closed-loop` 替换 `--duty <D>` 查看单工况恒阻闭环波形。SR86 交叉验证失败先回 S7 核对模型、仿真参数和指标口径；SR80/81/83/84 失败回 S4/S7 检查控制与采样；SR82 失败回 S5/S6 复核电容和纹波预算；SR85 失败回 S4/S6 检查保护。线性浪涌估算超过 Isat 时保留实测验证项。
 
+SR12/SR13 使用 KiCad 官方库快照核对入选器件映射及 MCU 引脚规划。器件库新增映射后运行 `python kicad_lib.py snapshot` 和 `python kicad_lib.py check`。
+
 SR87 分别检查输出过流的误触发、软件延时和硬件关断。SR88 核对独立硬件输入缓升下的电感及输入电流预算。缓升配置属于拟实施要求，保留 SR34/SR53 的实物关闭条件和直插对照。
 
 ## 与用户沟通（默认：新手模式）
@@ -76,7 +79,7 @@ SR87 分别检查输出过流的误触发、软件延时和硬件关断。SR88 �
 
 | 类别 | 例子 | 谁来把关 |
 |---|---|---|
-| **A 类：只有用户能回答** | 需求怎么理解（如“不要求短路恒流”是否可接受）；做不做实物；手焊能力（能否焊 0.5 mm 引脚、带裸焊盘器件）；预算；缺货/停产器件是否接受；时间安排；工具与平台（嘉立创 EDA 等） | **问用户** |
+| **A 类：只有用户能回答** | 需求怎么理解（如“不要求短路恒流”是否可接受）；做不做实物；手焊能力（能否焊 0.5 mm 引脚、带裸焊盘器件）；预算；缺货/停产器件是否接受；时间安排；工具与平台（KiCad 等） | **问用户** |
 | **B 类：工程判断** | 电感取多少、PI 参数、裕量、阈值百分比、器件评分取舍 | **工具计算 + SDRC + 选型规则**，不让用户拍板 |
 
 - 不要把 B 类问题包装成选择题让用户决定（例如“相位裕度 45° 还是 60°？”）。B 类按模板默认值与规则执行，在汇报中说明结果即可。
@@ -169,7 +172,8 @@ SDRC / 工具报错时按下表回溯，只改相关决策并重跑其下游：
 3. 按 `parts_db.json` 中同类器件的字段名写入，参数按 `{"typ","max","min","condition","page"}` 填写，查不到的写 `null`；
 4. `confidence` 如实填写：`high` = 读过原厂手册；`medium` = 读过镜像/规格书或部分数据来自商城列表；
    `low` = 未读到任何手册（**low 的器件不会被选中**）。缺货写 `stock_risk: true`，停产风险写 `lifecycle_risk: true`；
-5. 重跑 S6 起的工具。
+5. 写入 `kicad` 映射：符号/封装必须取自 KiCad 官方库快照，pinmap 依据数据手册；无专用符号时使用经核对的通用符号或派生符号。
+6. 重跑 `kicad_lib.py check` 与 S6 起的工具。
 
 选型规则摘要（`select_parts.py`）：硬性规则不满足或数据缺失 → 淘汰；评分最优者入选，但评分相差 ≤10% 时视为等价，
 按“无缺货风险 → 价格低/价格可查”优先。陶瓷电容数量会扣除 ESR 足够低的储能电容所计入的有效容量，且至少保留 2 只作高频去耦。

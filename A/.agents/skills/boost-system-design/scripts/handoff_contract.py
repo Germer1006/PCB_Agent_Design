@@ -49,7 +49,7 @@ def requirement_rows(req):
         ('REQ-LOAD', '电子负载支持 CC/CR；CV 用 CC，CC 用 CR', 'must', 'test_load'),
         ('REQ-PCB', '两层 PCB，功率级与控制级布局合理', 'must', 'pcb'),
         ('REQ-BUILD', '制作实物并手工焊接', 'project_constraint', 'project_constraints.build_physical'),
-        ('REQ-EDA', '使用嘉立创 EDA', 'project_constraint', 'project_constraints.eda'),
+        ('REQ-EDA', '使用 KiCad（原理图 + PCB）', 'project_constraint', 'project_constraints.eda'),
         ('REQ-SOURCE', '立创采购且可追溯', 'project_constraint', 'project_constraints.sourcing'),
     ]
     result = []
@@ -114,7 +114,7 @@ def verification_plan(req, calc):
           '核对 MCU 手册和工程；测 PWM/SW 频率、ADC 窗口/帧新鲜度/截止时间、控制中断与最坏执行时间',
           f'采用所选 32 位 STM32 和数字 PI；频率在 {req["fsw"]["range_hz"]} Hz，设计值 {calc["inputs"]["fsw_hz"]} Hz；实现延迟与复核模型一致'),
         t('T13', ['REQ-PCB', 'REQ-EDA', 'REQ-BUILD', 'REQ-SOURCE'], '工程与装配审查',
-          '嘉立创 EDA 工程/ERC；两层 PCB/DRC、功率环路/Kelvin/热铜审查；采购证据和手工焊接装配检查',
+          'KiCad 工程/ERC（符号/封装按 components[].kicad）；两层 PCB/DRC、功率环路/Kelvin/热铜审查；采购证据和手工焊接装配检查',
           '工程可打开、连接和布局规则通过；完整装配 BOM 的每个器件均有可追溯选型依据；当前主要器件 BOM 不能代替完整装配 BOM'),
         t('T14', ['REQ-CC', 'REQ-PROT'], '不可控区识别',
           '在独立输入限流及保护条件关闭后受控接近 CC 下限，记录越界识别和故障处理，不直接短接输出',
@@ -142,7 +142,7 @@ def traceability(reqs, blocks, tests, check):
         'REQ-MCU': ['REQ-MCU'], 'TGT-MCU': ['REQ-MCU'],
         'REQ-CTRL': ['CTRL', 'FW', 'CTRL-DUTY'], 'REQ-PROT': ['REQ-PROT', 'PROT', 'CTRL-DUTY', 'IF-ADC'],
         'TGT-START': ['PROT'], 'REQ-ETA-MEAS': [], 'TGT-ETA': ['REQ-EFF', 'DEC-EFF'],
-        'REQ-LOAD': [], 'REQ-PCB': [], 'REQ-BUILD': ['SEL'], 'REQ-EDA': [], 'REQ-SOURCE': ['SOURCING'],
+        'REQ-LOAD': [], 'REQ-PCB': [], 'REQ-BUILD': ['SEL'], 'REQ-EDA': ['REQ-EDA'], 'REQ-SOURCE': ['SOURCING'],
     }
     return [dict(req=r['id'], text=r['text'], level=r['level'], source_field=r['source_field'],
                  blocks=[b['id'] for b in blocks if r['id'] in b['requirements']],

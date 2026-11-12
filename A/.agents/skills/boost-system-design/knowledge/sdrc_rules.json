@@ -515,5 +515,27 @@
     "verify": "simulation",
     "applies_when": "input_ramp configured",
     "closure_if_fail": "Validate ramp slope, source energy and PWM inhibit on hardware."
+  },
+  {
+    "id": "SR12-*",
+    "layer": "sourcing",
+    "severity": "minor",
+    "title": "Selected part has a valid KiCad symbol, footprint and pin mapping",
+    "rationale": "The schematic handoff must map each selected component to verified library data.",
+    "source": "KiCad official-library snapshot and parts_db.json kicad mapping",
+    "verify": "automatic",
+    "applies_when": "component is selected",
+    "closure_if_fail": "Correct the mapping from verified KiCad library data or select a compatible component."
+  },
+  {
+    "id": "SR13",
+    "layer": "sourcing",
+    "severity": "major",
+    "title": "MCU pin plan agrees with KiCad symbol pins",
+    "rationale": "The MCU pin assignment must match the symbol and package pin numbering.",
+    "source": "KiCad official-library snapshot and MCU datasheet pin plan",
+    "verify": "automatic",
+    "applies_when": "MCU is selected",
+    "closure_if_fail": "Correct the MCU pin plan using the datasheet and verified KiCad symbol."
   }
 ]

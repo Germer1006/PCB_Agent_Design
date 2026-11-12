@@ -31,15 +31,15 @@ A 的交付物是系统设计智能体的技能、知识库和工具链，输出
 | S3 拓扑选择 | 非同步/同步 Boost、SEPIC、专用 IC 对比 | `design_rules.md` |
 | S4 控制方案 | CC/CV 双 PI 最小值选择、采样时序、分层保护 | `design_choices.json` |
 | S5 参数计算 | 占空比、电感、电容、应力、采样网络、保护阈值、PWM/资源预算 | `calc_boost.py` |
-| S6 器件选型 | 规则筛选 + 评分，器件只来自带数据手册出处的库 | `select_parts.py` + `parts_db.json` |
+| S6 器件选型 | 规则筛选 + 评分，器件来自有数据手册出处的库，并通过 KiCad 映射检查 | `select_parts.py` + `parts_db.json` + `kicad_lib.py` |
 | S7 复核 | 平均模型、容差扫描、PI 设计及独立复核；T1 开关级仿真验证启动、负载阶跃、轻载和保护 | `loss_thermal.py`、`loop_design.py`、`validate_loop.py`、`sim_switching.py` |
 | S8 规则检查 | 系统设计规则检查（SDRC），类似 PCB 的 DRC | `check_design.py` |
-| S9 交接 | 设计基线 JSON、BOM（立创编号）、固件参数头文件、报告数据表 | `export_handoff.py` |
+| S9 交接 | 设计基线 JSON、含 KiCad 映射的 BOM、KiCad 项目符号库、固件参数头文件、报告数据表 | `export_handoff.py` |
 
 设计原则：**数值全部由脚本计算；器件只从知识库选取（缺数据则淘汰）；关键阶段向用户确认**。
 对应参考论文《基于大语言模型的 PCB 自动化设计智能体》的分层编排、检索增强抑制幻觉和结构化输出。
 
-## 工具链 v2 回归基线（计算值，未实测）
+## 当前设计结果（r7，工具链 v2 计算值，未实测）
 
 | 项目 | 结果 |
 |---|---|
@@ -50,17 +50,21 @@ A 的交付物是系统设计智能体的技能、知识库和工具链，输出
 | 纹波 | 容差场景最大 0.77 %（上限 5 %，建议 ≤ 3 %） |
 | 环路 | CV 489 个 CCM 工况、CC 225 个工况全部 PM ≥ 60°、GM ≥ 6 dB；36 个 DCM 点单列，待仿真/实测 |
 | CC 范围 | 6.25–12 V，对应 CR 12.5–24 Ω；低于下限为不可控区 |
-| SDRC | 2026-11-12 审计后 r6：85 PASS / 8 WARN / 0 FAIL / 2 NOT_ASSESSED / 1 N/A → `needs_rework`；SR70/SR71 缺供电保证值，详见下方 T4 说明 |
+| SDRC | r6 审计结果：85 PASS / 8 WARN / 0 FAIL / 2 NOT_ASSESSED / 1 N/A → `needs_rework`；SR70/SR71 缺供电保证值，详见下方 T4 说明 |
+| EDA | KiCad 官方库 10.0.8 快照；器件符号、封装和引脚映射由 SR12/SR13 核验 |
 
 > 注：`outputs/module1/` 目前仍是 r1 旧版（工具链 v1），将用 v2 重新生成；数值以上表为准。
+
+> 当前交接版为 `outputs/r7/`；`outputs/r6/` 保留作数值对照，`outputs/module1/` 为旧版参考。
 
 ## 交接给其他模块
 
 | 文件 | 给谁 | 内容 |
 |---|---|---|
-| `outputs/module1/design_spec.json` | B / C / D | 设计基线：功能块、网络名、接口、器件与连接、MCU 引脚规划、保护与控制参数、PCB 布局要点、测试计划 |
-| `outputs/module1/bom_module1.csv` | B | 位号、值、封装、**立创编号**、连接说明 |
-| `outputs/module1/boost_params.h` | D | PWM、采样换算系数、PI 参数、Dmax、保护阈值 |
+| `outputs/r7/design_spec.json` | B / C / D | 设计基线：功能块、网络名、接口、器件与连接、MCU 引脚规划、保护与控制参数、PCB 布局要点、测试计划 |
+| `outputs/r7/bom_module1.csv` | B | 位号、值、封装、**立创编号**、连接说明 |
+| `outputs/r7/kicad/` | B / C | KiCad 项目符号库与 `sym-lib-table` |
+| `outputs/r7/boost_params.h` | D | PWM、采样换算系数、PI 参数、Dmax、保护阈值 |
 | `outputs/module1/system_block.png` 等 | 全组 | 系统框图、控制框图、状态机、工作区图、Bode 图 |
 
 上游文件由工具生成，请不要手改；需要修改时提出，由 A 修改设计决策后重新生成并升级 `revision`。

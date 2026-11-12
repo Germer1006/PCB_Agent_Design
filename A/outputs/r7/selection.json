@@ -1,0 +1,3642 @@
+{
+  "schema": "boost-selection/1",
+  "revision": "r7",
+  "categories": {
+    "mcu": {
+      "candidates": [
+        {
+          "id": "stm32g431cbt6",
+          "mpn": "STM32G431CBT6",
+          "manufacturer": "STMicroelectronics",
+          "package": "LQFP-48 7x7 0.5mm",
+          "lcsc": "C529355",
+          "price_cny_approx": 20.8,
+          "pass": true,
+          "score": 22.8,
+          "score_note": "价格(¥) + 惩罚：无可触发刹车的比较器 +15，无 FPU +5，PWM<1500 计数 +3，0.5 mm 引脚 +2，需外部晶振 +2，缺货风险 +5",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "定时器时钟有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "170 MHz"
+            },
+            {
+              "rule": "PWM 计数 ≥ 1024（≥10 bit @fsw）",
+              "ok": true,
+              "hard": false,
+              "detail": "1700.0 counts（不足时输出电压步长变粗，仍可用）"
+            },
+            {
+              "rule": "MCU 为 STM32（课程推荐）",
+              "ok": true,
+              "hard": true,
+              "detail": "STM32G431CBT6"
+            },
+            {
+              "rule": "ADC 外设 ≥ 1",
+              "ok": true,
+              "hard": true,
+              "detail": "2"
+            },
+            {
+              "rule": "ADC 可用通道 ≥ 3",
+              "ok": true,
+              "hard": true,
+              "detail": "17"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "LQFP-48 7x7 0.5mm"
+            },
+            {
+              "rule": "片内比较器可触发 TIM1 刹车（硬件 OVP/OCP）",
+              "ok": true,
+              "hard": false,
+              "detail": "COMP×4"
+            },
+            {
+              "rule": "FPU（浮点 PI 实现简单）",
+              "ok": true,
+              "hard": false,
+              "detail": "True"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C529355"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "MCU_ST_STM32G4:STM32G431CBTx / Package_QFP:LQFP-48_7x7mm_P0.5mm（48 引脚 ↔ 48 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32g431cb.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "stm32g431kbt6",
+          "mpn": "STM32G431KBT6",
+          "manufacturer": "STMicroelectronics",
+          "package": "LQFP-32 7x7 0.8mm",
+          "lcsc": "C529357",
+          "price_cny_approx": 30.18,
+          "pass": true,
+          "score": 35.18,
+          "score_note": "价格(¥) + 惩罚：无可触发刹车的比较器 +15，无 FPU +5，PWM<1500 计数 +3，0.5 mm 引脚 +2，需外部晶振 +2，缺货风险 +5",
+          "qty": 1,
+          "stock_risk": true,
+          "rules": [
+            {
+              "rule": "定时器时钟有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "170 MHz"
+            },
+            {
+              "rule": "PWM 计数 ≥ 1024（≥10 bit @fsw）",
+              "ok": true,
+              "hard": false,
+              "detail": "1700.0 counts（不足时输出电压步长变粗，仍可用）"
+            },
+            {
+              "rule": "MCU 为 STM32（课程推荐）",
+              "ok": true,
+              "hard": true,
+              "detail": "STM32G431KBT6"
+            },
+            {
+              "rule": "ADC 外设 ≥ 1",
+              "ok": true,
+              "hard": true,
+              "detail": "2"
+            },
+            {
+              "rule": "ADC 可用通道 ≥ 3",
+              "ok": true,
+              "hard": true,
+              "detail": "11"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "LQFP-32 7x7 0.8mm"
+            },
+            {
+              "rule": "片内比较器可触发 TIM1 刹车（硬件 OVP/OCP）",
+              "ok": true,
+              "hard": false,
+              "detail": "COMP×4"
+            },
+            {
+              "rule": "FPU（浮点 PI 实现简单）",
+              "ok": true,
+              "hard": false,
+              "detail": "True"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C529357"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "MCU_ST_STM32G4:STM32G431KBTx / Package_QFP:LQFP-32_7x7mm_P0.8mm（32 引脚 ↔ 32 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32g431cb.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "stm32f334k8t6",
+          "mpn": "STM32F334K8T6",
+          "manufacturer": "STMicroelectronics",
+          "package": "LQFP-32 7x7 0.8mm",
+          "lcsc": "C106758",
+          "price_cny_approx": 22.27,
+          "pass": true,
+          "score": 27.27,
+          "score_note": "价格(¥) + 惩罚：无可触发刹车的比较器 +15，无 FPU +5，PWM<1500 计数 +3，0.5 mm 引脚 +2，需外部晶振 +2，缺货风险 +5",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "定时器时钟有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "144 MHz"
+            },
+            {
+              "rule": "PWM 计数 ≥ 1024（≥10 bit @fsw）",
+              "ok": true,
+              "hard": false,
+              "detail": "1440.0 counts（不足时输出电压步长变粗，仍可用）"
+            },
+            {
+              "rule": "MCU 为 STM32（课程推荐）",
+              "ok": true,
+              "hard": true,
+              "detail": "STM32F334K8T6"
+            },
+            {
+              "rule": "ADC 外设 ≥ 1",
+              "ok": true,
+              "hard": true,
+              "detail": "2"
+            },
+            {
+              "rule": "ADC 可用通道 ≥ 3",
+              "ok": true,
+              "hard": true,
+              "detail": "10"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "LQFP-32 7x7 0.8mm"
+            },
+            {
+              "rule": "片内比较器可触发 TIM1 刹车（硬件 OVP/OCP）",
+              "ok": true,
+              "hard": false,
+              "detail": "COMP×2"
+            },
+            {
+              "rule": "FPU（浮点 PI 实现简单）",
+              "ok": true,
+              "hard": false,
+              "detail": "True"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C106758"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "MCU_ST_STM32F3:STM32F334K8Tx / Package_QFP:LQFP-32_7x7mm_P0.8mm（32 引脚 ↔ 32 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32f334k8.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "stm32f103c8t6",
+          "mpn": "STM32F103C8T6",
+          "manufacturer": "STMicroelectronics",
+          "package": "LQFP-48 7x7 0.5mm",
+          "lcsc": "C8734",
+          "price_cny_approx": 5.61,
+          "pass": true,
+          "score": 32.61,
+          "score_note": "价格(¥) + 惩罚：无可触发刹车的比较器 +15，无 FPU +5，PWM<1500 计数 +3，0.5 mm 引脚 +2，需外部晶振 +2，缺货风险 +5",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "定时器时钟有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "72 MHz"
+            },
+            {
+              "rule": "PWM 计数 ≥ 1024（≥10 bit @fsw）",
+              "ok": false,
+              "hard": false,
+              "detail": "720.0 counts（不足时输出电压步长变粗，仍可用）"
+            },
+            {
+              "rule": "MCU 为 STM32（课程推荐）",
+              "ok": true,
+              "hard": true,
+              "detail": "STM32F103C8T6"
+            },
+            {
+              "rule": "ADC 外设 ≥ 1",
+              "ok": true,
+              "hard": true,
+              "detail": "2"
+            },
+            {
+              "rule": "ADC 可用通道 ≥ 3",
+              "ok": true,
+              "hard": true,
+              "detail": "10"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "LQFP-48 7x7 0.5mm"
+            },
+            {
+              "rule": "片内比较器可触发 TIM1 刹车（硬件 OVP/OCP）",
+              "ok": false,
+              "hard": false,
+              "detail": "COMP×0"
+            },
+            {
+              "rule": "FPU（浮点 PI 实现简单）",
+              "ok": false,
+              "hard": false,
+              "detail": "False"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C8734"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "MCU_ST_STM32F1:STM32F103C8Tx / Package_QFP:LQFP-48_7x7mm_P0.5mm（48 引脚 ↔ 48 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32f103c8.pdf",
+          "confidence": "high"
+        }
+      ],
+      "selected": "stm32g431cbt6",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（22.8，价格(¥) + 惩罚：无可触发刹车的比较器 +15，无 FPU +5，PWM<1500 计数 +3，0.5 mm 引脚 +2，需外部晶振 +2，缺货风险 +5）"
+    },
+    "mosfet": {
+      "candidates": [
+        {
+          "id": "ao3400a",
+          "mpn": "AO3400A",
+          "manufacturer": "Alpha & Omega Semiconductor (AOS)",
+          "package": "SOT-23",
+          "lcsc": "C20917",
+          "price_cny_approx": 0.37,
+          "pass": true,
+          "score": 0.07642,
+          "score_note": "估算损耗 W（导通×1.3 热系数 + 开关）",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "Vds 额定 ≥ 应力需求",
+              "ok": true,
+              "hard": true,
+              "detail": "30 V vs ≥21.45 V"
+            },
+            {
+              "rule": "Rds(on)@Vgs=4.5V 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "32 mΩ (max 优先)"
+            },
+            {
+              "rule": "Id ≥ 2×IL,pk",
+              "ok": true,
+              "hard": true,
+              "detail": "5.7 A vs ≥3.55 A"
+            },
+            {
+              "rule": "Vgs 额定 ≥ 1.4×驱动电压",
+              "ok": true,
+              "hard": true,
+              "detail": "12 V vs ≥7.3 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C20917"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Transistor_FET:AO3400A / Package_TO_SOT_SMD:SOT-23（3 引脚 ↔ 3 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.aosmd.com/res/datasheets/AO3400A.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "irlml6344",
+          "mpn": "IRLML6344TRPBF",
+          "manufacturer": "Infineon (International Rectifier)",
+          "package": "SOT-23 (Micro3)",
+          "lcsc": "C53550",
+          "price_cny_approx": null,
+          "pass": true,
+          "score": 0.07259,
+          "score_note": "估算损耗 W（导通×1.3 热系数 + 开关）",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "Vds 额定 ≥ 应力需求",
+              "ok": true,
+              "hard": true,
+              "detail": "30 V vs ≥21.45 V"
+            },
+            {
+              "rule": "Rds(on)@Vgs=4.5V 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "29 mΩ (max 优先)"
+            },
+            {
+              "rule": "Id ≥ 2×IL,pk",
+              "ok": true,
+              "hard": true,
+              "detail": "5.0 A vs ≥3.55 A"
+            },
+            {
+              "rule": "Vgs 额定 ≥ 1.4×驱动电压",
+              "ok": true,
+              "hard": true,
+              "detail": "12 V vs ≥7.3 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23 (Micro3)"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C53550"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Transistor_FET:Q_NMOS_GSD / Package_TO_SOT_SMD:SOT-23（3 引脚 ↔ 3 焊盘）；generic：官方库无 IRLML6344 专用符号，用通用 GSD 符号，Value 填料号"
+            }
+          ],
+          "price_status": "价格缺失；评分含缺省估值，不是报价",
+          "datasheet_url": "https://www.infineon.com/dgdl/irlml6344pbf.pdf?fileId=5546d462533600a4015356686fed261f",
+          "confidence": "high"
+        },
+        {
+          "id": "si2302cds",
+          "mpn": "Si2302CDS-T1-GE3",
+          "manufacturer": "Vishay Siliconix",
+          "package": "SOT-23 (TO-236)",
+          "lcsc": "C10488",
+          "price_cny_approx": 0.35,
+          "pass": false,
+          "score": 0.1185,
+          "score_note": "估算损耗 W（导通×1.3 热系数 + 开关）",
+          "qty": 1,
+          "stock_risk": true,
+          "rules": [
+            {
+              "rule": "Vds 额定 ≥ 应力需求",
+              "ok": false,
+              "hard": true,
+              "detail": "20 V vs ≥21.45 V"
+            },
+            {
+              "rule": "Rds(on)@Vgs=4.5V 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "57 mΩ (max 优先)"
+            },
+            {
+              "rule": "Id ≥ 2×IL,pk",
+              "ok": false,
+              "hard": true,
+              "detail": "2.6 A vs ≥3.55 A"
+            },
+            {
+              "rule": "Vgs 额定 ≥ 1.4×驱动电压",
+              "ok": true,
+              "hard": true,
+              "detail": "8 V vs ≥7.3 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23 (TO-236)"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C10488"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Transistor_FET:Q_NMOS_GSD / Package_TO_SOT_SMD:SOT-23（3 引脚 ↔ 3 焊盘）；generic：官方库无 Si2302 专用符号，用通用 GSD 符号，Value 填料号"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.vishay.com/docs/68645/si2302cds.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "irlml0030",
+          "mpn": "IRLML0030TRPBF",
+          "manufacturer": "Infineon (International Rectifier)",
+          "package": "SOT-23 (Micro3)",
+          "lcsc": "C67272",
+          "price_cny_approx": 0.49,
+          "pass": true,
+          "score": 0.08352,
+          "score_note": "估算损耗 W（导通×1.3 热系数 + 开关）",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "Vds 额定 ≥ 应力需求",
+              "ok": true,
+              "hard": true,
+              "detail": "30 V vs ≥21.45 V"
+            },
+            {
+              "rule": "Rds(on)@Vgs=4.5V 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "40 mΩ (max 优先)"
+            },
+            {
+              "rule": "Id ≥ 2×IL,pk",
+              "ok": true,
+              "hard": true,
+              "detail": "5.3 A vs ≥3.55 A"
+            },
+            {
+              "rule": "Vgs 额定 ≥ 1.4×驱动电压",
+              "ok": true,
+              "hard": true,
+              "detail": "20 V vs ≥7.3 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23 (Micro3)"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C67272"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Transistor_FET:IRLML0030 / Package_TO_SOT_SMD:SOT-23（3 引脚 ↔ 3 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.infineon.com/dgdl/irlml0030pbf.pdf?fileId=5546d462533600a401535664773825df",
+          "confidence": "high"
+        }
+      ],
+      "selected": "ao3400a",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（0.07642，估算损耗 W（导通×1.3 热系数 + 开关））；评分与最优 IRLML6344TRPBF（0.07259）相差 ≤10%，视为无显著差异，先无缺货风险，再价格低/价格可查优先"
+    },
+    "pmos": {
+      "candidates": [
+        {
+          "id": "ao3401a",
+          "mpn": "AO3401A",
+          "manufacturer": "Alpha & Omega Semiconductor (AOS)",
+          "package": "SOT-23",
+          "lcsc": "C15127",
+          "price_cny_approx": 0.42,
+          "pass": true,
+          "score": 0.1722,
+          "score_note": "导通损耗 W",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "|Vds| ≥ 2×Vin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "30 V"
+            },
+            {
+              "rule": "|Id| ≥ 2×Iin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "4.0 A vs ≥2.97 A"
+            },
+            {
+              "rule": "|Vgs| 额定 ≥ 1.4×Vin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "12 V"
+            },
+            {
+              "rule": "Rds(on)@|Vgs|=4.5V 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "60 mΩ"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C15127"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Transistor_FET:AO3401A / Package_TO_SOT_SMD:SOT-23（3 引脚 ↔ 3 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.aosmd.com/res/datasheets/AO3401A.pdf",
+          "confidence": "high"
+        }
+      ],
+      "selected": "ao3401a",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（0.1722，导通损耗 W）"
+    },
+    "diode": {
+      "candidates": [
+        {
+          "id": "ss34_vishay",
+          "mpn": "SS34-E3/57T",
+          "manufacturer": "Vishay General Semiconductor",
+          "package": "SMC (DO-214AB)",
+          "lcsc": "C13354",
+          "price_cny_approx": 0.97,
+          "pass": true,
+          "score": 0.225,
+          "score_note": "导通损耗 W ≈ VF@1A×Io",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "VRRM ≥ 反压需求",
+              "ok": true,
+              "hard": true,
+              "detail": "40 V vs ≥20.7 V"
+            },
+            {
+              "rule": "IF(AV) ≥ IL,pk（脉冲峰值按平均额定保守校核）",
+              "ok": true,
+              "hard": true,
+              "detail": "3.0 A vs ≥1.78 A"
+            },
+            {
+              "rule": "VF 曲线数据可用",
+              "ok": true,
+              "hard": true,
+              "detail": "VF@1A≈0.45 V（由手册 VF 点线性插值）"
+            },
+            {
+              "rule": "肖特基（无反向恢复）",
+              "ok": true,
+              "hard": true,
+              "detail": "schottky"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SMC (DO-214AB)"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C13354"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:D_Schottky / Diode_SMD:D_SMC_Handsoldering（2 引脚 ↔ 2 焊盘）；generic：Vishay SS34 为 SMC 封装；不要用 Diode:SS34（其默认封装为 SMA）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.vishay.com/docs/88751/ss32.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "ss34_mdd",
+          "mpn": "SS34",
+          "manufacturer": "MDD (Microdiode Semiconductor)",
+          "package": "SMA (DO-214AC)",
+          "lcsc": "C8678",
+          "price_cny_approx": 0.11,
+          "pass": false,
+          "score": 0.2475,
+          "score_note": "导通损耗 W ≈ VF@1A×Io",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "VRRM ≥ 反压需求",
+              "ok": true,
+              "hard": true,
+              "detail": "40 V vs ≥20.7 V"
+            },
+            {
+              "rule": "IF(AV) ≥ IL,pk（脉冲峰值按平均额定保守校核）",
+              "ok": true,
+              "hard": true,
+              "detail": "3.0 A vs ≥1.78 A"
+            },
+            {
+              "rule": "VF 曲线数据可用",
+              "ok": true,
+              "hard": true,
+              "detail": "VF@1A≈0.495 V（由手册 VF 点线性插值）"
+            },
+            {
+              "rule": "肖特基（无反向恢复）",
+              "ok": true,
+              "hard": true,
+              "detail": "schottky"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SMA (DO-214AC)"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": false,
+              "hard": true,
+              "detail": "confidence=low，datasheet=True，LCSC=C8678"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Diode:SS34 / Diode_SMD:D_SMA_Handsoldering（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/789/3372_SS34A00000S040.pdf",
+          "confidence": "low"
+        },
+        {
+          "id": "ss54_mdd",
+          "mpn": "SS54",
+          "manufacturer": "MDD (Microdiode Semiconductor)",
+          "package": "SMA (DO-214AC)",
+          "lcsc": "C22452",
+          "price_cny_approx": 0.17,
+          "pass": true,
+          "score": 0.242,
+          "score_note": "导通损耗 W ≈ VF@1A×Io",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "VRRM ≥ 反压需求",
+              "ok": true,
+              "hard": true,
+              "detail": "40 V vs ≥20.7 V"
+            },
+            {
+              "rule": "IF(AV) ≥ IL,pk（脉冲峰值按平均额定保守校核）",
+              "ok": true,
+              "hard": true,
+              "detail": "5.0 A vs ≥1.78 A"
+            },
+            {
+              "rule": "VF 曲线数据可用",
+              "ok": true,
+              "hard": true,
+              "detail": "VF@1A≈0.484 V（由手册 VF 点线性插值）"
+            },
+            {
+              "rule": "肖特基（无反向恢复）",
+              "ok": true,
+              "hard": true,
+              "detail": "schottky"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SMA (DO-214AC)"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C22452"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:D_Schottky / Diode_SMD:D_SMA_Handsoldering（2 引脚 ↔ 2 焊盘）；generic：官方库无 SS54 专用符号，用通用肖特基符号，Value 填料号"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://pdf.digi-electronics.com/pdf/5541/SS54-datasheet.pdf",
+          "confidence": "medium"
+        },
+        {
+          "id": "ss14_vishay",
+          "mpn": "SS14-E3/61T",
+          "manufacturer": "Vishay General Semiconductor",
+          "package": "SMA (DO-214AC)",
+          "lcsc": "C47460",
+          "price_cny_approx": 0.38,
+          "pass": false,
+          "score": 0.25,
+          "score_note": "导通损耗 W ≈ VF@1A×Io",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "VRRM ≥ 反压需求",
+              "ok": true,
+              "hard": true,
+              "detail": "40 V vs ≥20.7 V"
+            },
+            {
+              "rule": "IF(AV) ≥ IL,pk（脉冲峰值按平均额定保守校核）",
+              "ok": false,
+              "hard": true,
+              "detail": "1.0 A vs ≥1.78 A"
+            },
+            {
+              "rule": "VF 曲线数据可用",
+              "ok": true,
+              "hard": true,
+              "detail": "VF@1A≈0.5 V（由手册 VF 点线性插值）"
+            },
+            {
+              "rule": "肖特基（无反向恢复）",
+              "ok": true,
+              "hard": true,
+              "detail": "schottky"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SMA (DO-214AC)"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C47460"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Diode:SS14 / Diode_SMD:D_SMA_Handsoldering（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.vishay.com/docs/88746/ss12.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "b5819w_jscj",
+          "mpn": "B5819W SL",
+          "manufacturer": "JSCJ (Jiangsu Changjing Electronics)",
+          "package": "SOD-123",
+          "lcsc": "C8598",
+          "price_cny_approx": 0.11,
+          "pass": false,
+          "score": 0.3,
+          "score_note": "导通损耗 W ≈ VF@1A×Io",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "VRRM ≥ 反压需求",
+              "ok": true,
+              "hard": true,
+              "detail": "40 V vs ≥20.7 V"
+            },
+            {
+              "rule": "IF(AV) ≥ IL,pk（脉冲峰值按平均额定保守校核）",
+              "ok": false,
+              "hard": true,
+              "detail": "1.0 A vs ≥1.78 A"
+            },
+            {
+              "rule": "VF 曲线数据可用",
+              "ok": true,
+              "hard": true,
+              "detail": "VF@1A≈0.6 V（由手册 VF 点线性插值）"
+            },
+            {
+              "rule": "肖特基（无反向恢复）",
+              "ok": true,
+              "hard": true,
+              "detail": "schottky"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOD-123"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C8598"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:D_Schottky / Diode_SMD:D_SOD-123（2 引脚 ↔ 2 焊盘）；generic："
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.jscj-elec.com/gallery/file/B5817W%205819W%205819W%20SOD-123.pdf",
+          "confidence": "high"
+        }
+      ],
+      "selected": "ss54_mdd",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（0.242，导通损耗 W ≈ VF@1A×Io）；评分与最优 SS34-E3/57T（0.225）相差 ≤10%，视为无显著差异，先无缺货风险，再价格低/价格可查优先"
+    },
+    "inductor": {
+      "candidates": [
+        {
+          "id": "L_SRR1260_470M",
+          "mpn": "SRR1260-470M",
+          "manufacturer": "Bourns",
+          "package": "SMD 12.5x12.5x6.0 mm",
+          "lcsc": "C1329363",
+          "price_cny_approx": 6.37,
+          "pass": false,
+          "score": 0.1922,
+          "score_note": "铜损 W = IL,rms²·DCR(max)",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "L 在 [(1−rounding_allowance)×L_req, 1.6×L_sel] 内",
+              "ok": false,
+              "hard": true,
+              "detail": "47.0 µH；需求 70.1 µH，向下取整允许 3%；上限 109 µH"
+            },
+            {
+              "rule": "Isat ≥ 需求",
+              "ok": true,
+              "hard": true,
+              "detail": "2.5 A vs ≥2.22 A"
+            },
+            {
+              "rule": "Irms(温升) ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "None A vs ≥1.795 A"
+            },
+            {
+              "rule": "DCR 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "86.0 mΩ"
+            },
+            {
+              "rule": "屏蔽结构（EMI/采样干扰）",
+              "ok": true,
+              "hard": false,
+              "detail": "shielded"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C1329363"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:L / Inductor_SMD:L_Bourns_SRR1260（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.bourns.com/docs/Product-Datasheets/SRR1260.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "L_SWRB1207S_470MT",
+          "mpn": "SWRB1207S-470MT",
+          "manufacturer": "Sunlord",
+          "package": "SMD 12.5x12.5x8.0 mm max",
+          "lcsc": "C169376",
+          "price_cny_approx": 2.25,
+          "pass": false,
+          "score": 0.2235,
+          "score_note": "铜损 W = IL,rms²·DCR(max)",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "L 在 [(1−rounding_allowance)×L_req, 1.6×L_sel] 内",
+              "ok": false,
+              "hard": true,
+              "detail": "47 µH；需求 70.1 µH，向下取整允许 3%；上限 109 µH"
+            },
+            {
+              "rule": "Isat ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "None A vs ≥2.22 A"
+            },
+            {
+              "rule": "Irms(温升) ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "None A vs ≥1.795 A"
+            },
+            {
+              "rule": "DCR 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "100 mΩ"
+            },
+            {
+              "rule": "屏蔽结构（EMI/采样干扰）",
+              "ok": true,
+              "hard": false,
+              "detail": "shielded"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C169376"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": false,
+              "hard": true,
+              "detail": "封装 None 不在 KiCad 库快照中（官方库无 SWRB1207S 封装，需按规格书自建）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.alfatec.de/fileadmin/productfiles/datasheets/sunlord_swrb_s_series.pdf",
+          "confidence": "medium"
+        },
+        {
+          "id": "L_MWSA1206S_470MT",
+          "mpn": "MWSA1206S-470MT",
+          "manufacturer": "Sunlord",
+          "package": "SMD molded 12.6x13.45x5.8 mm",
+          "lcsc": "C408531",
+          "price_cny_approx": null,
+          "pass": false,
+          "score": 0.2012,
+          "score_note": "铜损 W = IL,rms²·DCR(max)",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "L 在 [(1−rounding_allowance)×L_req, 1.6×L_sel] 内",
+              "ok": false,
+              "hard": true,
+              "detail": "47 µH；需求 70.1 µH，向下取整允许 3%；上限 109 µH"
+            },
+            {
+              "rule": "Isat ≥ 需求",
+              "ok": true,
+              "hard": true,
+              "detail": "4.4 A vs ≥2.22 A"
+            },
+            {
+              "rule": "Irms(温升) ≥ 需求",
+              "ok": true,
+              "hard": true,
+              "detail": "4.2 A vs ≥1.795 A"
+            },
+            {
+              "rule": "DCR 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "90 mΩ"
+            },
+            {
+              "rule": "屏蔽结构（EMI/采样干扰）",
+              "ok": true,
+              "hard": false,
+              "detail": "shielded"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C408531"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:L / Inductor_SMD:L_Sunlord_MWSA1206S-470（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "价格缺失；评分含缺省估值，不是报价",
+          "datasheet_url": "https://media.digikey.com/pdf/Data%20Sheets/Shenzhen%20Sunlord/MWSA-S_Series_DS.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "L_SRR1260_680M",
+          "mpn": "SRR1260-680M",
+          "manufacturer": "Bourns",
+          "package": "SMD 12.5x12.5x6.0 mm",
+          "lcsc": "C2041353",
+          "price_cny_approx": 4.51,
+          "pass": false,
+          "score": 0.2459,
+          "score_note": "铜损 W = IL,rms²·DCR(max)",
+          "qty": 1,
+          "stock_risk": true,
+          "rules": [
+            {
+              "rule": "L 在 [(1−rounding_allowance)×L_req, 1.6×L_sel] 内",
+              "ok": true,
+              "hard": true,
+              "detail": "68.0 µH；需求 70.1 µH，向下取整允许 3%；上限 109 µH"
+            },
+            {
+              "rule": "Isat ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "2.1 A vs ≥2.22 A"
+            },
+            {
+              "rule": "Irms(温升) ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "None A vs ≥1.795 A"
+            },
+            {
+              "rule": "DCR 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "110.0 mΩ"
+            },
+            {
+              "rule": "屏蔽结构（EMI/采样干扰）",
+              "ok": true,
+              "hard": false,
+              "detail": "shielded"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C2041353"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:L / Inductor_SMD:L_Bourns_SRR1260（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.bourns.com/docs/Product-Datasheets/SRR1260.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "L_SWRB1207S_680MT",
+          "mpn": "SWRB1207S-680MT",
+          "manufacturer": "Sunlord",
+          "package": "SMD 12.5x12.5x8.0 mm max",
+          "lcsc": "C169377",
+          "price_cny_approx": null,
+          "pass": false,
+          "score": 0.3129,
+          "score_note": "铜损 W = IL,rms²·DCR(max)",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "L 在 [(1−rounding_allowance)×L_req, 1.6×L_sel] 内",
+              "ok": true,
+              "hard": true,
+              "detail": "68 µH；需求 70.1 µH，向下取整允许 3%；上限 109 µH"
+            },
+            {
+              "rule": "Isat ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "None A vs ≥2.22 A"
+            },
+            {
+              "rule": "Irms(温升) ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "None A vs ≥1.795 A"
+            },
+            {
+              "rule": "DCR 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "140 mΩ"
+            },
+            {
+              "rule": "屏蔽结构（EMI/采样干扰）",
+              "ok": true,
+              "hard": false,
+              "detail": "shielded"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C169377"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": false,
+              "hard": true,
+              "detail": "封装 None 不在 KiCad 库快照中（官方库无 SWRB1207S 封装，需按规格书自建）"
+            }
+          ],
+          "price_status": "价格缺失；评分含缺省估值，不是报价",
+          "datasheet_url": "https://www.alfatec.de/fileadmin/productfiles/datasheets/sunlord_swrb_s_series.pdf",
+          "confidence": "medium"
+        },
+        {
+          "id": "L_MWSA1206S_680MT",
+          "mpn": "MWSA1206S-680MT",
+          "manufacturer": "Sunlord",
+          "package": "SMD molded 12.6x13.45x5.8 mm",
+          "lcsc": "C408532",
+          "price_cny_approx": 7.5,
+          "pass": true,
+          "score": 0.3129,
+          "score_note": "铜损 W = IL,rms²·DCR(max)",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "L 在 [(1−rounding_allowance)×L_req, 1.6×L_sel] 内",
+              "ok": true,
+              "hard": true,
+              "detail": "68 µH；需求 70.1 µH，向下取整允许 3%；上限 109 µH"
+            },
+            {
+              "rule": "Isat ≥ 需求",
+              "ok": true,
+              "hard": true,
+              "detail": "3.6 A vs ≥2.22 A"
+            },
+            {
+              "rule": "Irms(温升) ≥ 需求",
+              "ok": true,
+              "hard": true,
+              "detail": "3.2 A vs ≥1.795 A"
+            },
+            {
+              "rule": "DCR 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "140 mΩ"
+            },
+            {
+              "rule": "屏蔽结构（EMI/采样干扰）",
+              "ok": true,
+              "hard": false,
+              "detail": "shielded"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C408532"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:L / Inductor_SMD:L_Sunlord_MWSA1206S-680（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://media.digikey.com/pdf/Data%20Sheets/Shenzhen%20Sunlord/MWSA-S_Series_DS.pdf",
+          "confidence": "medium"
+        },
+        {
+          "id": "L_SRN8040TA_680M",
+          "mpn": "SRN8040TA-680M",
+          "manufacturer": "Bourns",
+          "package": "SMD 8.0x8.0 mm, ~3.7 mm high",
+          "lcsc": "C2047059",
+          "price_cny_approx": null,
+          "pass": false,
+          "score": 0.4582,
+          "score_note": "铜损 W = IL,rms²·DCR(max)",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "L 在 [(1−rounding_allowance)×L_req, 1.6×L_sel] 内",
+              "ok": true,
+              "hard": true,
+              "detail": "68 µH；需求 70.1 µH，向下取整允许 3%；上限 109 µH"
+            },
+            {
+              "rule": "Isat ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "1.75 A vs ≥2.22 A"
+            },
+            {
+              "rule": "Irms(温升) ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "1.65 A vs ≥1.795 A"
+            },
+            {
+              "rule": "DCR 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "205 mΩ"
+            },
+            {
+              "rule": "屏蔽结构（EMI/采样干扰）",
+              "ok": false,
+              "hard": false,
+              "detail": "非屏蔽"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C2047059"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:L / Inductor_SMD:L_Bourns_SRN8040TA（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "价格缺失；评分含缺省估值，不是报价",
+          "datasheet_url": "https://www.bourns.com/docs/Product-Datasheets/SRN8040TA.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "L_SRR1260_101M",
+          "mpn": "SRR1260-101M",
+          "manufacturer": "Bourns",
+          "package": "SMD 12.5x12.5x6.0 mm",
+          "lcsc": "C2041335",
+          "price_cny_approx": 4.6,
+          "pass": false,
+          "score": 0.4023,
+          "score_note": "铜损 W = IL,rms²·DCR(max)",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "L 在 [(1−rounding_allowance)×L_req, 1.6×L_sel] 内",
+              "ok": true,
+              "hard": true,
+              "detail": "100.0 µH；需求 70.1 µH，向下取整允许 3%；上限 109 µH"
+            },
+            {
+              "rule": "Isat ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "1.7 A vs ≥2.22 A"
+            },
+            {
+              "rule": "Irms(温升) ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "None A vs ≥1.795 A"
+            },
+            {
+              "rule": "DCR 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "180.0 mΩ"
+            },
+            {
+              "rule": "屏蔽结构（EMI/采样干扰）",
+              "ok": true,
+              "hard": false,
+              "detail": "shielded"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C2041335"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:L / Inductor_SMD:L_Bourns_SRR1260（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.bourns.com/docs/Product-Datasheets/SRR1260.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "L_MWSA1206S_101MT",
+          "mpn": "MWSA1206S-101MT",
+          "manufacturer": "Sunlord",
+          "package": "SMD molded 12.6x13.45x5.8 mm",
+          "lcsc": "C408533",
+          "price_cny_approx": 4.36,
+          "pass": true,
+          "score": 0.447,
+          "score_note": "铜损 W = IL,rms²·DCR(max)",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "L 在 [(1−rounding_allowance)×L_req, 1.6×L_sel] 内",
+              "ok": true,
+              "hard": true,
+              "detail": "100 µH；需求 70.1 µH，向下取整允许 3%；上限 109 µH"
+            },
+            {
+              "rule": "Isat ≥ 需求",
+              "ok": true,
+              "hard": true,
+              "detail": "2.8 A vs ≥2.22 A"
+            },
+            {
+              "rule": "Irms(温升) ≥ 需求",
+              "ok": true,
+              "hard": true,
+              "detail": "2.5 A vs ≥1.795 A"
+            },
+            {
+              "rule": "DCR 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "200 mΩ"
+            },
+            {
+              "rule": "屏蔽结构（EMI/采样干扰）",
+              "ok": true,
+              "hard": false,
+              "detail": "shielded"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C408533"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:L / Inductor_SMD:L_Sunlord_MWSA1206S-101（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://media.digikey.com/pdf/Data%20Sheets/Shenzhen%20Sunlord/MWSA-S_Series_DS.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "L_SRN1060_101M",
+          "mpn": "SRN1060-101M",
+          "manufacturer": "Bourns",
+          "package": "SMD 10.0x9.8x6.0 mm",
+          "lcsc": "C2050993",
+          "price_cny_approx": null,
+          "pass": false,
+          "score": 0.4694,
+          "score_note": "铜损 W = IL,rms²·DCR(max)",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "L 在 [(1−rounding_allowance)×L_req, 1.6×L_sel] 内",
+              "ok": true,
+              "hard": true,
+              "detail": "100 µH；需求 70.1 µH，向下取整允许 3%；上限 109 µH"
+            },
+            {
+              "rule": "Isat ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "1.7 A vs ≥2.22 A"
+            },
+            {
+              "rule": "Irms(温升) ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "1.7 A vs ≥1.795 A"
+            },
+            {
+              "rule": "DCR 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "210 mΩ"
+            },
+            {
+              "rule": "屏蔽结构（EMI/采样干扰）",
+              "ok": false,
+              "hard": false,
+              "detail": "非屏蔽"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C2050993"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:L / Inductor_SMD:L_Bourns-SRN1060（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "价格缺失；评分含缺省估值，不是报价",
+          "datasheet_url": "https://www.bourns.com/docs/Product-Datasheets/SRN1060.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "L_CD54_680M_HanElec",
+          "mpn": "CD54-680M",
+          "manufacturer": "HanElectricity",
+          "package": "SMD 5.8x5.2 mm (CD54 class)",
+          "lcsc": "C42931109",
+          "price_cny_approx": 0.13,
+          "pass": false,
+          "score": 0.8717,
+          "score_note": "铜损 W = IL,rms²·DCR(max)",
+          "qty": 1,
+          "stock_risk": true,
+          "rules": [
+            {
+              "rule": "L 在 [(1−rounding_allowance)×L_req, 1.6×L_sel] 内",
+              "ok": true,
+              "hard": true,
+              "detail": "68 µH；需求 70.1 µH，向下取整允许 3%；上限 109 µH"
+            },
+            {
+              "rule": "Isat ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "0.6 A vs ≥2.22 A"
+            },
+            {
+              "rule": "Irms(温升) ≥ 需求",
+              "ok": false,
+              "hard": true,
+              "detail": "0.6 A vs ≥1.795 A"
+            },
+            {
+              "rule": "DCR 有规格",
+              "ok": true,
+              "hard": true,
+              "detail": "390 mΩ"
+            },
+            {
+              "rule": "屏蔽结构（EMI/采样干扰）",
+              "ok": false,
+              "hard": false,
+              "detail": "非屏蔽"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": false,
+              "hard": true,
+              "detail": "confidence=low，datasheet=True，LCSC=C42931109"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": false,
+              "hard": true,
+              "detail": "封装 None 不在 KiCad 库快照中（CD54 类封装需自建）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://products.sumida.com/products/pdf/CD54.pdf",
+          "confidence": "low"
+        }
+      ],
+      "selected": "L_MWSA1206S_680MT",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（0.3129，铜损 W = IL,rms²·DCR(max)）"
+    },
+    "cout_bulk": {
+      "candidates": [
+        {
+          "id": "C_out_EEEFK1E221P",
+          "mpn": "EEE-FK1E221P",
+          "manufacturer": "Panasonic",
+          "package": "SMD can 8x10.2 mm (size code F)",
+          "lcsc": "C128511",
+          "price_cny_approx": 1.22,
+          "pass": true,
+          "score": 9.16,
+          "score_note": "ESR 160.0 mΩ > 33.79 mΩ → 不计入纹波有效容量；评分=所需 22µF 陶瓷只数（越少越好）",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "耐压 ≥ 需求",
+              "ok": true,
+              "hard": true,
+              "detail": "25.0 V vs ≥20.7 V"
+            },
+            {
+              "rule": "容量 ≥ 100 µF（储能/环路）",
+              "ok": true,
+              "hard": true,
+              "detail": "220 µF"
+            },
+            {
+              "rule": "ESR 有规格（用于纹波与环路阻尼计算）",
+              "ok": true,
+              "hard": true,
+              "detail": "160.0 mΩ"
+            },
+            {
+              "rule": "纹波电流额定 ≥ IC,rms（单独承担时）",
+              "ok": false,
+              "hard": false,
+              "detail": "600 mA vs 702 mA（与陶瓷并联时实际分担更少）"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C128511"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:C_Polarized / Capacitor_SMD:CP_Elec_8x10（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://na.industrial.panasonic.com/products/capacitors/lineup/aluminum-electrolytic-capacitors/series/88994/model/89501",
+          "confidence": "high"
+        },
+        {
+          "id": "C_out_EEEFK1E101P",
+          "mpn": "EEE-FK1E101P",
+          "manufacturer": "Panasonic",
+          "package": "SMD can 8x6.2 mm (size code E)",
+          "lcsc": "C178539",
+          "price_cny_approx": 1.06,
+          "pass": true,
+          "score": 9.26,
+          "score_note": "ESR 260.0 mΩ > 33.79 mΩ → 不计入纹波有效容量；评分=所需 22µF 陶瓷只数（越少越好）",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "耐压 ≥ 需求",
+              "ok": true,
+              "hard": true,
+              "detail": "25.0 V vs ≥20.7 V"
+            },
+            {
+              "rule": "容量 ≥ 100 µF（储能/环路）",
+              "ok": true,
+              "hard": true,
+              "detail": "100 µF"
+            },
+            {
+              "rule": "ESR 有规格（用于纹波与环路阻尼计算）",
+              "ok": true,
+              "hard": true,
+              "detail": "260.0 mΩ"
+            },
+            {
+              "rule": "纹波电流额定 ≥ IC,rms（单独承担时）",
+              "ok": false,
+              "hard": false,
+              "detail": "300 mA vs 702 mA（与陶瓷并联时实际分担更少）"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C178539"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:C_Polarized / Capacitor_SMD:CP_Elec_8x6.2（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://datasheet.octopart.com/EEE-FK1H221P-Panasonic-datasheet-8188412.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "C_out_polymer_25SVPF100M",
+          "mpn": "25SVPF100M",
+          "manufacturer": "Panasonic (OS-CON SVPF)",
+          "package": "SMD can 8x6.9 mm (size code E7, 7.0 max)",
+          "lcsc": "C136279",
+          "price_cny_approx": 3.44,
+          "pass": true,
+          "score": 2.024,
+          "score_note": "ESR 24 mΩ ≤ 33.79 mΩ → 计入纹波有效容量；评分=所需 22µF 陶瓷只数（越少越好）",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "耐压 ≥ 需求",
+              "ok": true,
+              "hard": true,
+              "detail": "25.0 V vs ≥20.7 V"
+            },
+            {
+              "rule": "容量 ≥ 100 µF（储能/环路）",
+              "ok": true,
+              "hard": true,
+              "detail": "100 µF"
+            },
+            {
+              "rule": "ESR 有规格（用于纹波与环路阻尼计算）",
+              "ok": true,
+              "hard": true,
+              "detail": "24 mΩ"
+            },
+            {
+              "rule": "纹波电流额定 ≥ IC,rms（单独承担时）",
+              "ok": true,
+              "hard": false,
+              "detail": "3200 mA vs 702 mA（与陶瓷并联时实际分担更少）"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C136279"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:C_Polarized / Capacitor_SMD:CP_Elec_8x6.9（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://na.industrial.panasonic.com/products/capacitors/polymer-capacitors/os-con-aluminum-polymer/series/91057/model/91093",
+          "confidence": "high"
+        }
+      ],
+      "selected": "C_out_polymer_25SVPF100M",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（2.024，ESR 24 mΩ ≤ 33.79 mΩ → 计入纹波有效容量；评分=所需 22µF 陶瓷只数（越少越好））"
+    },
+    "cout_ceramic": {
+      "candidates": [
+        {
+          "id": "C_out_CL31A226KAHNNNE",
+          "mpn": "CL31A226KAHNNNE",
+          "manufacturer": "Samsung Electro-Mechanics",
+          "package": "1206 (3216)",
+          "lcsc": "C12891",
+          "price_cny_approx": 0.62,
+          "pass": true,
+          "score": 1.26,
+          "score_note": "需 2 只：(Ceff 需求 55.3 − 低 ESR 储能电容计入 100) µF / (22 µF × 12 V 保持率 0.3，设计假设（同尺寸同介质类比）)，且至少 2 只作高频去耦；评分=总价",
+          "qty": 2,
+          "stock_risk": true,
+          "rules": [
+            {
+              "rule": "耐压 ≥ 需求",
+              "ok": true,
+              "hard": true,
+              "detail": "25.0 V vs ≥20.7 V"
+            },
+            {
+              "rule": "介质 X5R/X7R",
+              "ok": true,
+              "hard": true,
+              "detail": "X5R"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "1206 (3216)"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C12891"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:C / Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://datasheet.octopart.com/CL31A226KAHNNNE-Samsung-Electro-Mechanics-datasheet-136322594.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "C_out_GRM31CR61E226KE15L",
+          "mpn": "GRM31CR61E226KE15L",
+          "manufacturer": "Murata",
+          "package": "1206 (3216)",
+          "lcsc": "C77091",
+          "price_cny_approx": 1.15,
+          "pass": true,
+          "score": 2.32,
+          "score_note": "需 2 只：(Ceff 需求 55.3 − 低 ESR 储能电容计入 100) µF / (22 µF × 12 V 保持率 0.27，手册曲线)，且至少 2 只作高频去耦；评分=总价",
+          "qty": 2,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "耐压 ≥ 需求",
+              "ok": true,
+              "hard": true,
+              "detail": "25.0 V vs ≥20.7 V"
+            },
+            {
+              "rule": "介质 X5R/X7R",
+              "ok": true,
+              "hard": true,
+              "detail": "X5R"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "1206 (3216)"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C77091"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:C / Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://datasheet.octopart.com/GRM31CR61E226KE15L-Murata-datasheet-14713244.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "C_out_CL32B226KAJNNNE",
+          "mpn": "CL32B226KAJNNNE",
+          "manufacturer": "Samsung Electro-Mechanics",
+          "package": "1210 (3225)",
+          "lcsc": "C309062",
+          "price_cny_approx": 1.13,
+          "pass": true,
+          "score": 2.28,
+          "score_note": "需 2 只：(Ceff 需求 55.3 − 低 ESR 储能电容计入 100) µF / (22 µF × 12 V 保持率 0.3，设计假设（同尺寸同介质类比）)，且至少 2 只作高频去耦；评分=总价",
+          "qty": 2,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "耐压 ≥ 需求",
+              "ok": true,
+              "hard": true,
+              "detail": "25.0 V vs ≥20.7 V"
+            },
+            {
+              "rule": "介质 X5R/X7R",
+              "ok": true,
+              "hard": true,
+              "detail": "X7R"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "1210 (3225)"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C309062"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:C / Capacitor_SMD:C_1210_3225Metric_Pad1.33x2.70mm_HandSolder（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/797/CL32B226KAJNNNE_Spec.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "C_out_CL31B106KAHNNNE",
+          "mpn": "CL31B106KAHNNNE",
+          "manufacturer": "Samsung Electro-Mechanics",
+          "package": "1206 (3216)",
+          "lcsc": "C14860",
+          "price_cny_approx": 0.68,
+          "pass": true,
+          "score": 1.38,
+          "score_note": "需 2 只：(Ceff 需求 55.3 − 低 ESR 储能电容计入 100) µF / (10 µF × 12 V 保持率 0.3，设计假设（同尺寸同介质类比）)，且至少 2 只作高频去耦；评分=总价",
+          "qty": 2,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "耐压 ≥ 需求",
+              "ok": true,
+              "hard": true,
+              "detail": "25.0 V vs ≥20.7 V"
+            },
+            {
+              "rule": "介质 X5R/X7R",
+              "ok": true,
+              "hard": true,
+              "detail": "X7R"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "1206 (3216)"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C14860"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:C / Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://media.digikey.com/pdf/Data%20Sheets/Samsung%20PDFs/CL31B106KAHNNNE_Spec.pdf",
+          "confidence": "high"
+        }
+      ],
+      "selected": "C_out_CL31B106KAHNNNE",
+      "selected_qty": 2,
+      "reason": "通过全部硬性规则；评分（1.38，需 2 只：(Ceff 需求 55.3 − 低 ESR 储能电容计入 100) µF / (10 µF × 12 V 保持率 0.3，设计假设（同尺寸同介质类比）)，且至少 2 只作高频去耦；评分=总价）；评分与最优 CL31A226KAHNNNE（1.26）相差 ≤10%，视为无显著差异，先无缺货风险，再价格低/价格可查优先"
+    },
+    "cin_ceramic": {
+      "candidates": [
+        {
+          "id": "C_in_CL31A226KOHNNNE",
+          "mpn": "CL31A226KOHNNNE",
+          "manufacturer": "Samsung Electro-Mechanics",
+          "package": "1206 (3216)",
+          "lcsc": "C90146",
+          "price_cny_approx": 0.38,
+          "pass": true,
+          "score": 0.76,
+          "score_note": "需 2 只",
+          "qty": 2,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "耐压 ≥ 1.5×Vin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "16.0 V"
+            },
+            {
+              "rule": "介质 X5R/X7R",
+              "ok": true,
+              "hard": true,
+              "detail": "X5R"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C90146"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:C / Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/015e8892be1d4004ad7b0cd1139329c7.pdf?productCode=C90146",
+          "confidence": "medium"
+        }
+      ],
+      "selected": "C_in_CL31A226KOHNNNE",
+      "selected_qty": 2,
+      "reason": "通过全部硬性规则；评分（0.76，需 2 只）"
+    },
+    "cin_bulk": {
+      "candidates": [
+        {
+          "id": "C_in_EEEFK1C101P",
+          "mpn": "EEE-FK1C101P",
+          "manufacturer": "Panasonic",
+          "package": "SMD can 6.3x5.8 mm (size code D)",
+          "lcsc": "C128532",
+          "price_cny_approx": 0.95,
+          "pass": true,
+          "score": 0.95,
+          "score_note": "评分=价格",
+          "qty": 1,
+          "stock_risk": true,
+          "rules": [
+            {
+              "rule": "耐压 ≥ 1.5×Vin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "16.0 V"
+            },
+            {
+              "rule": "容量 ≥ 47 µF（抵消电源线电感）",
+              "ok": true,
+              "hard": true,
+              "detail": "100 µF"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C128532"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:C_Polarized / Capacitor_SMD:CP_Elec_6.3x5.8（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://datasheet.octopart.com/EEE-FK1H221P-Panasonic-datasheet-8188412.pdf",
+          "confidence": "high"
+        }
+      ],
+      "selected": "C_in_EEEFK1C101P",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（0.95，评分=价格）"
+    },
+    "gate_driver": {
+      "candidates": [
+        {
+          "id": "ucc27517",
+          "mpn": "UCC27517DBVR",
+          "manufacturer": "Texas Instruments",
+          "package": "SOT-23-5 (DBV)",
+          "lcsc": "C99395",
+          "price_cny_approx": 1.11,
+          "pass": false,
+          "score": 6.61,
+          "score_note": "价格 + 10×max(0, 0.5−电压余量 -0.05 V) + 停产风险 5 + 裸露焊盘手焊难度 3",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "保证工作电压下限 ≤ 驱动器最低供电 4.60 V（Vin,min − 输入通路压降）",
+              "ok": true,
+              "hard": true,
+              "detail": "VDD,min=4.5 V"
+            },
+            {
+              "rule": "VDD 上限 ≥ Vin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "VDD,max=18 V"
+            },
+            {
+              "rule": "UVLO 开启最大值 ≤ 4.60 − 0.1 V",
+              "ok": false,
+              "hard": true,
+              "detail": "UVLO,max=4.65 V"
+            },
+            {
+              "rule": "输入兼容 3.3 V 逻辑 (VIH ≤ 2.6 V)",
+              "ok": true,
+              "hard": true,
+              "detail": "VIH=2.4 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23-5 (DBV)"
+            },
+            {
+              "rule": "立创商城可购（项目约束）",
+              "ok": true,
+              "hard": true,
+              "detail": "C99395"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C99395"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": false,
+              "hard": true,
+              "detail": "符号 None 不在 KiCad 库快照中（status=custom：官方库无 UCC27517 符号，需按数据手册自建）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.ti.com/lit/ds/symlink/ucc27517.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "eg27517",
+          "mpn": "EG27517",
+          "manufacturer": "EGmicro (屹晶微电子)",
+          "package": "SOT-23-5",
+          "lcsc": "C2987449",
+          "price_cny_approx": 0.75,
+          "pass": false,
+          "score": null,
+          "score_note": "",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "保证工作电压下限 ≤ 驱动器最低供电 4.60 V（Vin,min − 输入通路压降）",
+              "ok": true,
+              "hard": true,
+              "detail": "VDD,min=4 V"
+            },
+            {
+              "rule": "VDD 上限 ≥ Vin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "VDD,max=20 V"
+            },
+            {
+              "rule": "UVLO 开启最大值 ≤ 4.60 − 0.1 V",
+              "ok": false,
+              "hard": true,
+              "detail": "UVLO,max=None V"
+            },
+            {
+              "rule": "输入兼容 3.3 V 逻辑 (VIH ≤ 2.6 V)",
+              "ok": true,
+              "hard": true,
+              "detail": "VIH=2.5 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23-5"
+            },
+            {
+              "rule": "立创商城可购（项目约束）",
+              "ok": true,
+              "hard": true,
+              "detail": "C2987449"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C2987449"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": false,
+              "hard": true,
+              "detail": "符号 None 不在 KiCad 库快照中（status=custom：官方库无 EG27517 符号，需自建）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://egmicro.com/static/upload/drive/%E7%BD%91%E7%AB%99%E5%85%AC%E5%BC%80%E8%8A%AF%E7%89%87%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C/%E4%BD%8E%E4%BE%A7%E9%A9%B1%E5%8A%A8/EG27517%E9%AB%98%E9%80%9F%E4%BD%8E%E4%BE%A7%E5%8D%95%E9%80%9A%E9%81%93%E9%A9%B1%E5%8A%A8%E8%8A%AF%E7%89%87%E6%95%B0%E6%8D%AE%E6%89%8B%E5%86%8C.pdf",
+          "confidence": "medium"
+        },
+        {
+          "id": "lm5114b",
+          "mpn": "LM5114BMFX/S7003094",
+          "manufacturer": "Texas Instruments",
+          "package": "SOT-23-6",
+          "lcsc": "C2676979",
+          "price_cny_approx": 12.6,
+          "pass": true,
+          "score": 12.6,
+          "score_note": "价格 + 10×max(0, 0.5−电压余量 0.60 V) + 停产风险 5 + 裸露焊盘手焊难度 3",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "保证工作电压下限 ≤ 驱动器最低供电 4.60 V（Vin,min − 输入通路压降）",
+              "ok": true,
+              "hard": true,
+              "detail": "VDD,min=4.0 V"
+            },
+            {
+              "rule": "VDD 上限 ≥ Vin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "VDD,max=12.6 V"
+            },
+            {
+              "rule": "UVLO 开启最大值 ≤ 4.60 − 0.1 V",
+              "ok": true,
+              "hard": true,
+              "detail": "UVLO,max=4.0 V"
+            },
+            {
+              "rule": "输入兼容 3.3 V 逻辑 (VIH ≤ 2.6 V)",
+              "ok": true,
+              "hard": true,
+              "detail": "VIH=2.4 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23-6"
+            },
+            {
+              "rule": "立创商城可购（项目约束）",
+              "ok": true,
+              "hard": true,
+              "detail": "C2676979"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C2676979"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "boost_module1:LM5114B / Package_TO_SOT_SMD:SOT-23-6（6 引脚 ↔ 6 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.ti.com/lit/ds/symlink/lm5114.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "lm5112",
+          "mpn": "LM5112MY/NOPB",
+          "manufacturer": "Texas Instruments",
+          "package": "MSOP-8 PowerPAD (EP)",
+          "lcsc": "C115281",
+          "price_cny_approx": 13.5,
+          "pass": false,
+          "score": 16.5,
+          "score_note": "价格 + 10×max(0, 0.5−电压余量 1.10 V) + 停产风险 5 + 裸露焊盘手焊难度 3",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "保证工作电压下限 ≤ 驱动器最低供电 4.60 V（Vin,min − 输入通路压降）",
+              "ok": true,
+              "hard": true,
+              "detail": "VDD,min=3.5 V"
+            },
+            {
+              "rule": "VDD 上限 ≥ Vin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "VDD,max=14 V"
+            },
+            {
+              "rule": "UVLO 开启最大值 ≤ 4.60 − 0.1 V",
+              "ok": true,
+              "hard": true,
+              "detail": "UVLO,max=3.5 V"
+            },
+            {
+              "rule": "输入兼容 3.3 V 逻辑 (VIH ≤ 2.6 V)",
+              "ok": true,
+              "hard": true,
+              "detail": "VIH=2.3 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "MSOP-8 PowerPAD (EP)"
+            },
+            {
+              "rule": "立创商城可购（项目约束）",
+              "ok": true,
+              "hard": true,
+              "detail": "C115281"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C115281"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": false,
+              "hard": true,
+              "detail": "符号 None 不在 KiCad 库快照中（status=custom：MSOP-8 PowerPAD，需自建符号与裸焊盘封装）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.ti.com/lit/ds/symlink/lm5112.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "fan3100t",
+          "mpn": "FAN3100TSX",
+          "manufacturer": "onsemi",
+          "package": "SOT-23-5",
+          "lcsc": "C603194",
+          "price_cny_approx": 6.3,
+          "pass": false,
+          "score": 15.3,
+          "score_note": "价格 + 10×max(0, 0.5−电压余量 0.10 V) + 停产风险 5 + 裸露焊盘手焊难度 3",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "保证工作电压下限 ≤ 驱动器最低供电 4.60 V（Vin,min − 输入通路压降）",
+              "ok": true,
+              "hard": true,
+              "detail": "VDD,min=4.5 V"
+            },
+            {
+              "rule": "VDD 上限 ≥ Vin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "VDD,max=18 V"
+            },
+            {
+              "rule": "UVLO 开启最大值 ≤ 4.60 − 0.1 V",
+              "ok": true,
+              "hard": true,
+              "detail": "UVLO,max=4.3 V"
+            },
+            {
+              "rule": "输入兼容 3.3 V 逻辑 (VIH ≤ 2.6 V)",
+              "ok": true,
+              "hard": true,
+              "detail": "VIH=2.0 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23-5"
+            },
+            {
+              "rule": "立创商城可购（项目约束）",
+              "ok": true,
+              "hard": true,
+              "detail": "C603194"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C603194"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": false,
+              "hard": true,
+              "detail": "符号 None 不在 KiCad 库快照中（status=custom：官方库无 FAN3100 符号，需自建）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.onsemi.com/pdf/datasheet/fan3100t-d.pdf",
+          "confidence": "medium"
+        },
+        {
+          "id": "max15070a",
+          "mpn": "MAX15070AAUT+T",
+          "manufacturer": "Analog Devices (Maxim)",
+          "package": "SOT-23-6",
+          "lcsc": null,
+          "price_cny_approx": null,
+          "pass": false,
+          "score": 15.0,
+          "score_note": "价格 + 10×max(0, 0.5−电压余量 0.60 V) + 停产风险 5 + 裸露焊盘手焊难度 3",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "保证工作电压下限 ≤ 驱动器最低供电 4.60 V（Vin,min − 输入通路压降）",
+              "ok": true,
+              "hard": true,
+              "detail": "VDD,min=4.0 V"
+            },
+            {
+              "rule": "VDD 上限 ≥ Vin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "VDD,max=14 V"
+            },
+            {
+              "rule": "UVLO 开启最大值 ≤ 4.60 − 0.1 V",
+              "ok": true,
+              "hard": true,
+              "detail": "UVLO,max=3.6 V"
+            },
+            {
+              "rule": "输入兼容 3.3 V 逻辑 (VIH ≤ 2.6 V)",
+              "ok": true,
+              "hard": true,
+              "detail": "VIH=2.0 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23-6"
+            },
+            {
+              "rule": "立创商城可购（项目约束）",
+              "ok": false,
+              "hard": true,
+              "detail": "None"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": false,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=None"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": false,
+              "hard": true,
+              "detail": "符号 None 不在 KiCad 库快照中（status=custom：官方库无 MAX15070 符号，需自建）"
+            }
+          ],
+          "price_status": "价格缺失；评分含缺省估值，不是报价",
+          "datasheet_url": "https://www.analog.com/media/en/technical-documentation/data-sheets/MAX15070A-MAX15070B.pdf",
+          "confidence": "high"
+        }
+      ],
+      "selected": "lm5114b",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（12.6，价格 + 10×max(0, 0.5−电压余量 0.60 V) + 停产风险 5 + 裸露焊盘手焊难度 3）"
+    },
+    "csa": {
+      "candidates": [
+        {
+          "id": "ina180a1",
+          "mpn": "INA180A1IDBVR",
+          "manufacturer": "Texas Instruments",
+          "package": "SOT-23-5 (DBV)",
+          "lcsc": "C122228",
+          "price_cny_approx": 1.21,
+          "pass": false,
+          "score": 2.0,
+          "score_note": "失调误差 %@0.5A（最大值）+ SC70 封装手焊难度 2",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "增益 = 计算值",
+              "ok": false,
+              "hard": true,
+              "detail": "20.0 vs 50"
+            },
+            {
+              "rule": "共模上限 ≥ 1.2×Vovp,hw",
+              "ok": true,
+              "hard": true,
+              "detail": "26 V"
+            },
+            {
+              "rule": "可由 3.3 V 供电（输出不超 ADC 量程）",
+              "ok": true,
+              "hard": true,
+              "detail": "2.7–5.5 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23-5 (DBV)"
+            },
+            {
+              "rule": "失调误差 ≤ 稳态精度要求的一半（2.5%）",
+              "ok": true,
+              "hard": true,
+              "detail": "2.0 %（+/-, VIN+=12V, RTI（取共模 12 V 规格：分流电阻位于 12 V 母线），最大值）"
+            },
+            {
+              "rule": "失调误差 ≤ 1%（否则需实际高边共模条件下标定）",
+              "ok": false,
+              "hard": false,
+              "detail": "2.0 %"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C122228"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Amplifier_Current:INA180A1 / Package_TO_SOT_SMD:SOT-23-5（5 引脚 ↔ 5 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.ti.com/lit/ds/symlink/ina180.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "ina180a2",
+          "mpn": "INA180A2IDBVR",
+          "manufacturer": "Texas Instruments",
+          "package": "SOT-23-5 (DBV)",
+          "lcsc": "C192764",
+          "price_cny_approx": 0.69,
+          "pass": true,
+          "score": 2.0,
+          "score_note": "失调误差 %@0.5A（最大值）+ SC70 封装手焊难度 2",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "增益 = 计算值",
+              "ok": true,
+              "hard": true,
+              "detail": "50.0 vs 50"
+            },
+            {
+              "rule": "共模上限 ≥ 1.2×Vovp,hw",
+              "ok": true,
+              "hard": true,
+              "detail": "26 V"
+            },
+            {
+              "rule": "可由 3.3 V 供电（输出不超 ADC 量程）",
+              "ok": true,
+              "hard": true,
+              "detail": "2.7–5.5 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23-5 (DBV)"
+            },
+            {
+              "rule": "失调误差 ≤ 稳态精度要求的一半（2.5%）",
+              "ok": true,
+              "hard": true,
+              "detail": "2.0 %（+/-, VIN+=12V, RTI（取共模 12 V 规格：分流电阻位于 12 V 母线），最大值）"
+            },
+            {
+              "rule": "失调误差 ≤ 1%（否则需实际高边共模条件下标定）",
+              "ok": false,
+              "hard": false,
+              "detail": "2.0 %"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C192764"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Amplifier_Current:INA180A2 / Package_TO_SOT_SMD:SOT-23-5（5 引脚 ↔ 5 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.ti.com/lit/ds/symlink/ina180.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "ina180a3",
+          "mpn": "INA180A3IDBVR",
+          "manufacturer": "Texas Instruments",
+          "package": "SOT-23-5 (DBV)",
+          "lcsc": "C122882",
+          "price_cny_approx": 0.95,
+          "pass": false,
+          "score": 2.0,
+          "score_note": "失调误差 %@0.5A（最大值）+ SC70 封装手焊难度 2",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "增益 = 计算值",
+              "ok": false,
+              "hard": true,
+              "detail": "100.0 vs 50"
+            },
+            {
+              "rule": "共模上限 ≥ 1.2×Vovp,hw",
+              "ok": true,
+              "hard": true,
+              "detail": "26 V"
+            },
+            {
+              "rule": "可由 3.3 V 供电（输出不超 ADC 量程）",
+              "ok": true,
+              "hard": true,
+              "detail": "2.7–5.5 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23-5 (DBV)"
+            },
+            {
+              "rule": "失调误差 ≤ 稳态精度要求的一半（2.5%）",
+              "ok": true,
+              "hard": true,
+              "detail": "2.0 %（+/-, VIN+=12V, RTI（取共模 12 V 规格：分流电阻位于 12 V 母线），最大值）"
+            },
+            {
+              "rule": "失调误差 ≤ 1%（否则需实际高边共模条件下标定）",
+              "ok": false,
+              "hard": false,
+              "detail": "2.0 %"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C122882"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Amplifier_Current:INA180A3 / Package_TO_SOT_SMD:SOT-23-5（5 引脚 ↔ 5 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.ti.com/lit/ds/symlink/ina180.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "ina199a1",
+          "mpn": "INA199A1DCKR",
+          "manufacturer": "Texas Instruments",
+          "package": "SC70-6 (DCK)",
+          "lcsc": "C59135",
+          "price_cny_approx": 1.6,
+          "pass": true,
+          "score": 2.6,
+          "score_note": "失调误差 %@0.5A（最大值）+ SC70 封装手焊难度 2",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "增益 = 计算值",
+              "ok": true,
+              "hard": true,
+              "detail": "50.0 vs 50"
+            },
+            {
+              "rule": "共模上限 ≥ 1.2×Vovp,hw",
+              "ok": true,
+              "hard": true,
+              "detail": "26 V"
+            },
+            {
+              "rule": "可由 3.3 V 供电（输出不超 ADC 量程）",
+              "ok": true,
+              "hard": true,
+              "detail": "2.7–26 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SC70-6 (DCK)"
+            },
+            {
+              "rule": "失调误差 ≤ 稳态精度要求的一半（2.5%）",
+              "ok": true,
+              "hard": true,
+              "detail": "0.6 %（+/-, VSENSE=0, RTI，最大值）"
+            },
+            {
+              "rule": "失调误差 ≤ 1%（否则需实际高边共模条件下标定）",
+              "ok": true,
+              "hard": false,
+              "detail": "0.6 %"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C59135"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Amplifier_Current:INA199xxDCK / Package_TO_SOT_SMD:SOT-363_SC-70-6（6 引脚 ↔ 6 焊盘）；无 pinmap，原理图按符号引脚名连接"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.ti.com/lit/ds/symlink/ina199.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "ina199a2",
+          "mpn": "INA199A2DCKR",
+          "manufacturer": "Texas Instruments",
+          "package": "SC70-6 (DCK)",
+          "lcsc": "C131913",
+          "price_cny_approx": 0.95,
+          "pass": false,
+          "score": 2.6,
+          "score_note": "失调误差 %@0.5A（最大值）+ SC70 封装手焊难度 2",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "增益 = 计算值",
+              "ok": false,
+              "hard": true,
+              "detail": "100.0 vs 50"
+            },
+            {
+              "rule": "共模上限 ≥ 1.2×Vovp,hw",
+              "ok": true,
+              "hard": true,
+              "detail": "26 V"
+            },
+            {
+              "rule": "可由 3.3 V 供电（输出不超 ADC 量程）",
+              "ok": true,
+              "hard": true,
+              "detail": "2.7–26 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SC70-6 (DCK)"
+            },
+            {
+              "rule": "失调误差 ≤ 稳态精度要求的一半（2.5%）",
+              "ok": true,
+              "hard": true,
+              "detail": "0.6 %（+/-, VSENSE=0, RTI，最大值）"
+            },
+            {
+              "rule": "失调误差 ≤ 1%（否则需实际高边共模条件下标定）",
+              "ok": true,
+              "hard": false,
+              "detail": "0.6 %"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C131913"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Amplifier_Current:INA199xxDCK / Package_TO_SOT_SMD:SOT-363_SC-70-6（6 引脚 ↔ 6 焊盘）；无 pinmap，原理图按符号引脚名连接"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.ti.com/lit/ds/symlink/ina199.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "ina199a3",
+          "mpn": "INA199A3DCKR",
+          "manufacturer": "Texas Instruments",
+          "package": "SC70-6 (DCK)",
+          "lcsc": "C132098",
+          "price_cny_approx": 1.5,
+          "pass": false,
+          "score": 2.6,
+          "score_note": "失调误差 %@0.5A（最大值）+ SC70 封装手焊难度 2",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "增益 = 计算值",
+              "ok": false,
+              "hard": true,
+              "detail": "200.0 vs 50"
+            },
+            {
+              "rule": "共模上限 ≥ 1.2×Vovp,hw",
+              "ok": true,
+              "hard": true,
+              "detail": "26 V"
+            },
+            {
+              "rule": "可由 3.3 V 供电（输出不超 ADC 量程）",
+              "ok": true,
+              "hard": true,
+              "detail": "2.7–26 V"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SC70-6 (DCK)"
+            },
+            {
+              "rule": "失调误差 ≤ 稳态精度要求的一半（2.5%）",
+              "ok": true,
+              "hard": true,
+              "detail": "0.6 %（+/-, VSENSE=0, RTI，最大值）"
+            },
+            {
+              "rule": "失调误差 ≤ 1%（否则需实际高边共模条件下标定）",
+              "ok": true,
+              "hard": false,
+              "detail": "0.6 %"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C132098"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Amplifier_Current:INA199xxDCK / Package_TO_SOT_SMD:SOT-363_SC-70-6（6 引脚 ↔ 6 焊盘）；无 pinmap，原理图按符号引脚名连接"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.ti.com/lit/ds/symlink/ina199.pdf",
+          "confidence": "high"
+        }
+      ],
+      "selected": "ina180a2",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（2.0，失调误差 %@0.5A（最大值）+ SC70 封装手焊难度 2）"
+    },
+    "shunt": {
+      "candidates": [
+        {
+          "id": "R_shunt_PA1206FRF7W0R05L",
+          "mpn": "PA1206FRF7W0R05L",
+          "manufacturer": "Yageo",
+          "package": "1206",
+          "lcsc": "C7023639",
+          "price_cny_approx": 1.02,
+          "pass": true,
+          "score": 1.02,
+          "score_note": "评分=价格",
+          "qty": 1,
+          "stock_risk": true,
+          "rules": [
+            {
+              "rule": "阻值 = 计算值",
+              "ok": true,
+              "hard": true,
+              "detail": "50 mΩ vs 50 mΩ"
+            },
+            {
+              "rule": "功率 ≥ 2×P(Iocp,hw)",
+              "ok": true,
+              "hard": true,
+              "detail": "0.5 W vs ≥0.100 W"
+            },
+            {
+              "rule": "精度 ≤ 1%",
+              "ok": true,
+              "hard": true,
+              "detail": "1.0 %"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C7023639"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:R / Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://yageogroup.com/content/datasheet/asset/file/PYU-PA1206_L_51_ROHS",
+          "confidence": "high"
+        },
+        {
+          "id": "R_shunt_PA2512FKE7W0R05E",
+          "mpn": "PA2512FKE7W0R05E",
+          "manufacturer": "Yageo",
+          "package": "2512",
+          "lcsc": "C375690",
+          "price_cny_approx": null,
+          "pass": true,
+          "score": 0.5,
+          "score_note": "评分=价格",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "阻值 = 计算值",
+              "ok": true,
+              "hard": true,
+              "detail": "50 mΩ vs 50 mΩ"
+            },
+            {
+              "rule": "功率 ≥ 2×P(Iocp,hw)",
+              "ok": true,
+              "hard": true,
+              "detail": "2 W vs ≥0.100 W"
+            },
+            {
+              "rule": "精度 ≤ 1%",
+              "ok": true,
+              "hard": true,
+              "detail": "1.0 %"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C375690"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:R / Resistor_SMD:R_2512_6332Metric_Pad1.40x3.35mm_HandSolder（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "价格缺失；评分含缺省估值，不是报价",
+          "datasheet_url": "https://yageogroup.com/content/datasheet/asset/file/PYU-PA_E_51_ROHS",
+          "confidence": "high"
+        },
+        {
+          "id": "R_shunt_CRM2512_FX_R100ELF",
+          "mpn": "CRM2512-FX-R100ELF",
+          "manufacturer": "Bourns",
+          "package": "2512",
+          "lcsc": "C840603",
+          "price_cny_approx": 1.82,
+          "pass": false,
+          "score": 1.82,
+          "score_note": "评分=价格",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "阻值 = 计算值",
+              "ok": false,
+              "hard": true,
+              "detail": "100 mΩ vs 50 mΩ"
+            },
+            {
+              "rule": "功率 ≥ 2×P(Iocp,hw)",
+              "ok": true,
+              "hard": true,
+              "detail": "2 W vs ≥0.100 W"
+            },
+            {
+              "rule": "精度 ≤ 1%",
+              "ok": true,
+              "hard": true,
+              "detail": "1.0 %"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C840603"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:R / Resistor_SMD:R_2512_6332Metric_Pad1.40x3.35mm_HandSolder（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.bourns.com/docs/Product-Datasheets/CRM.pdf",
+          "confidence": "medium"
+        }
+      ],
+      "selected": "R_shunt_PA2512FKE7W0R05E",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（0.5，评分=价格）"
+    },
+    "ldo": {
+      "candidates": [
+        {
+          "id": "ams1117_33",
+          "mpn": "AMS1117-3.3",
+          "manufacturer": "Advanced Monolithic Systems",
+          "package": "SOT-223",
+          "lcsc": "C6186",
+          "price_cny_approx": 0.79,
+          "pass": false,
+          "score": 3.079,
+          "score_note": "输出精度 %（ADC 基准）+ 0.1×价格",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "Vin 额定 ≥ 1.2×Vin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "15 V"
+            },
+            {
+              "rule": "输出电流 ≥ 2×I3V3",
+              "ok": true,
+              "hard": true,
+              "detail": "1000.0 mA vs ≥79 mA"
+            },
+            {
+              "rule": "压差 ≤ (Vin,min−3.3) − 200 mV",
+              "ok": false,
+              "hard": true,
+              "detail": "1300.0 mV (IOUT=0.8A, the only point specified (text: 'decreasing at lower load currents')) vs ≤1250 mV"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-223"
+            },
+            {
+              "rule": "输出精度有规格（3.3 V 兼作 ADC 基准）",
+              "ok": true,
+              "hard": true,
+              "detail": "±3.0%"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C6186"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Regulator_Linear:AMS1117-3.3 / Package_TO_SOT_SMD:SOT-223-3_TabPin2（3 引脚 ↔ 3 焊盘）；无 pinmap，原理图按符号引脚名连接"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "http://www.advanced-monolithic.com/pdf/ds1117.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "me6211c33",
+          "mpn": "ME6211C33M5G-N",
+          "manufacturer": "MICRONE (南京微盟)",
+          "package": "SOT-23-5",
+          "lcsc": "C82942",
+          "price_cny_approx": null,
+          "pass": true,
+          "score": 1.1,
+          "score_note": "输出精度 %（ADC 基准）+ 0.1×价格",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "Vin 额定 ≥ 1.2×Vin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "6.5 V"
+            },
+            {
+              "rule": "输出电流 ≥ 2×I3V3",
+              "ok": true,
+              "hard": true,
+              "detail": "500.0 mA vs ≥79 mA"
+            },
+            {
+              "rule": "压差 ≤ (Vin,min−3.3) − 200 mV",
+              "ok": true,
+              "hard": true,
+              "detail": "120.0 mV (IOUT=100mA (no max given) @100 mA（本项目负载约 40 mA，偏保守）) vs ≤1250 mV"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23-5"
+            },
+            {
+              "rule": "输出精度有规格（3.3 V 兼作 ADC 基准）",
+              "ok": true,
+              "hard": true,
+              "detail": "±1.0%"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=C82942"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Regulator_Linear:ME6211C33M5 / Package_TO_SOT_SMD:SOT-23-5（5 引脚 ↔ 5 焊盘）"
+            }
+          ],
+          "price_status": "价格缺失；评分含缺省估值，不是报价",
+          "datasheet_url": "https://img.iceasy.com/product/product/files/202111/8a8a8a1a7d35bc8a017d4ba03ae500f5.pdf",
+          "confidence": "high"
+        },
+        {
+          "id": "xc6206p332mr",
+          "mpn": "XC6206P332MR-G",
+          "manufacturer": "Torex Semiconductor",
+          "package": "SOT-23 (SOT-23-3L)",
+          "lcsc": "C5446",
+          "price_cny_approx": 0.62,
+          "pass": true,
+          "score": 2.062,
+          "score_note": "输出精度 %（ADC 基准）+ 0.1×价格",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "Vin 额定 ≥ 1.2×Vin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "7.0 V"
+            },
+            {
+              "rule": "输出电流 ≥ 2×I3V3",
+              "ok": true,
+              "hard": true,
+              "detail": "200.0 mA vs ≥79 mA"
+            },
+            {
+              "rule": "压差 ≤ (Vin,min−3.3) − 200 mV",
+              "ok": true,
+              "hard": true,
+              "detail": "680.0 mV (Vdif2 at IOUT=100mA, 3.x V row group (680 max matches DigiKey's 0.68V@100mA) @100 mA（本项目负载约 40 mA，偏保守）) vs ≤1250 mV"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23 (SOT-23-3L)"
+            },
+            {
+              "rule": "输出精度有规格（3.3 V 兼作 ADC 基准）",
+              "ok": true,
+              "hard": true,
+              "detail": "±2.0%"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C5446"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Regulator_Linear:XC6206PxxxMR / Package_TO_SOT_SMD:SOT-23-3（3 引脚 ↔ 3 焊盘）；无 pinmap，原理图按符号引脚名连接"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://files.seeedstudio.com/wiki/Grove-Infrared_Temperature_Sensor_Array-AMG8833/res/XC6206.pdf",
+          "confidence": "medium"
+        },
+        {
+          "id": "rt9013_33",
+          "mpn": "RT9013-33GB",
+          "manufacturer": "Richtek",
+          "package": "SOT-23-5",
+          "lcsc": "C47773",
+          "price_cny_approx": 0.5,
+          "pass": false,
+          "score": 2.05,
+          "score_note": "输出精度 %（ADC 基准）+ 0.1×价格",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "Vin 额定 ≥ 1.2×Vin,max",
+              "ok": false,
+              "hard": true,
+              "detail": "6.0 V"
+            },
+            {
+              "rule": "输出电流 ≥ 2×I3V3",
+              "ok": true,
+              "hard": true,
+              "detail": "500.0 mA vs ≥79 mA"
+            },
+            {
+              "rule": "压差 ≤ (Vin,min−3.3) − 200 mV",
+              "ok": true,
+              "hard": true,
+              "detail": "400 mV (IOUT=500mA, 2.7<=VIN<=5.5V) vs ≤1250 mV"
+            },
+            {
+              "rule": "封装可手工焊接",
+              "ok": true,
+              "hard": true,
+              "detail": "SOT-23-5"
+            },
+            {
+              "rule": "输出精度有规格（3.3 V 兼作 ADC 基准）",
+              "ok": true,
+              "hard": true,
+              "detail": "±2.0%"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C47773"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": false,
+              "hard": true,
+              "detail": "符号 None 不在 KiCad 库快照中（status=custom：官方库无 RT9013 符号，需自建）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://www.unikeyic.com/media/datasheet/6f/1a/9c51/6f1a9c51c7e66d57c34f8b56aa094f36.pdf",
+          "confidence": "medium"
+        }
+      ],
+      "selected": "me6211c33",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（1.1，输出精度 %（ADC 基准）+ 0.1×价格）"
+    },
+    "tvs": {
+      "candidates": [
+        {
+          "id": "smaj15a",
+          "mpn": "SMAJ15A",
+          "manufacturer": "Littelfuse",
+          "package": "SMA (DO-214AC)",
+          "lcsc": "C148216",
+          "price_cny_approx": 0.55,
+          "pass": true,
+          "score": 24.4,
+          "score_note": "评分=钳位电压（越低越好，保护 25 V 电容/30 V MOSFET）",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "VRWM ≥ Vovp,hw（正常及软/硬过压动作前不导通）",
+              "ok": true,
+              "hard": true,
+              "detail": "15 V vs ≥13.8 V"
+            },
+            {
+              "rule": "VBR,min > Vovp,hw",
+              "ok": true,
+              "hard": true,
+              "detail": "16.7 V"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C148216"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Diode:SMAJ15A / Diode_SMD:D_SMA_Handsoldering（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/bf298e2c0542e0172af23908598fa548.pdf?productCode=C148216",
+          "confidence": "medium"
+        },
+        {
+          "id": "smaj16a",
+          "mpn": "SMAJ16A-E3/61",
+          "manufacturer": "Vishay General Semiconductor",
+          "package": "SMA (DO-214AC)",
+          "lcsc": null,
+          "price_cny_approx": null,
+          "pass": false,
+          "score": 26.0,
+          "score_note": "评分=钳位电压（越低越好，保护 25 V 电容/30 V MOSFET）",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "VRWM ≥ Vovp,hw（正常及软/硬过压动作前不导通）",
+              "ok": true,
+              "hard": true,
+              "detail": "16 V vs ≥13.8 V"
+            },
+            {
+              "rule": "VBR,min > Vovp,hw",
+              "ok": true,
+              "hard": true,
+              "detail": "17.8 V"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": false,
+              "hard": true,
+              "detail": "confidence=high，datasheet=True，LCSC=None"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Diode:SMAJ16A / Diode_SMD:D_SMA_Handsoldering（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "价格缺失；评分含缺省估值，不是报价",
+          "datasheet_url": "https://www.vishay.com/docs/88390/smaj50a.pdf",
+          "confidence": "high"
+        }
+      ],
+      "selected": "smaj15a",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（24.4，评分=钳位电压（越低越好，保护 25 V 电容/30 V MOSFET））"
+    },
+    "fuse": {
+      "candidates": [
+        {
+          "id": "F_in_0466003NRHF",
+          "mpn": "0466003.NRHF",
+          "manufacturer": "Littelfuse",
+          "package": "1206 thin-film fuse",
+          "lcsc": "C14165",
+          "price_cny_approx": 0.26,
+          "pass": true,
+          "score": 0.04196,
+          "score_note": "压降损耗 W",
+          "qty": 1,
+          "stock_risk": true,
+          "rules": [
+            {
+              "rule": "额定/保持电流 ≥ 1.25×Iin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "3.0 A vs ≥1.86 A"
+            },
+            {
+              "rule": "额定/保持电流 ≤ 3×Iin,max",
+              "ok": true,
+              "hard": false,
+              "detail": "3.0 A"
+            },
+            {
+              "rule": "额定电压 ≥ 6 V",
+              "ok": true,
+              "hard": true,
+              "detail": "32.0 V"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C14165"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:Fuse / Fuse:Fuse_1206_3216Metric_Pad1.42x1.75mm_HandSolder（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://static.chipdip.ru/lib/373/DOC018373187.pdf",
+          "confidence": "medium"
+        },
+        {
+          "id": "F_in_1812L200_12DR",
+          "mpn": "1812L200/12DR",
+          "manufacturer": "Littelfuse",
+          "package": "1812",
+          "lcsc": "C315901",
+          "price_cny_approx": 0.59,
+          "pass": true,
+          "score": 0.1546,
+          "score_note": "压降损耗 W",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "额定/保持电流 ≥ 1.25×Iin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "2.0 A vs ≥1.86 A"
+            },
+            {
+              "rule": "额定/保持电流 ≤ 3×Iin,max",
+              "ok": true,
+              "hard": false,
+              "detail": "2.0 A"
+            },
+            {
+              "rule": "额定电压 ≥ 6 V",
+              "ok": true,
+              "hard": true,
+              "detail": "12.0 V"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C315901"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Device:Fuse / Fuse:Fuse_1812_4532Metric_Pad1.30x3.40mm_HandSolder（2 引脚 ↔ 2 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://sy-dep-epc-lpc.web.cern.ch/components/datasheets/epc-lpc%20(converters)/1812LSeries_Polyswitch_(Littelfuse).pdf",
+          "confidence": "medium"
+        }
+      ],
+      "selected": "F_in_0466003NRHF",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（0.04196，压降损耗 W）"
+    },
+    "terminal": {
+      "candidates": [
+        {
+          "id": "J_KF301_5_0_2P",
+          "mpn": "KF301-5.0-2P",
+          "manufacturer": "Cixi Kefa Elec (KEFA)",
+          "package": "THT 2P, 5.0 mm pitch",
+          "lcsc": "C474881",
+          "price_cny_approx": 0.42,
+          "pass": true,
+          "score": 0.42,
+          "score_note": "评分=价格；输入/输出各 1 只",
+          "qty": 2,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "额定电流 ≥ 2×Iin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "10 A"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C474881"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Connector:Screw_Terminal_01x02 / TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2_1x02_P5.00mm_Horizontal（2 引脚 ↔ 2 焊盘）；equivalent：官方库无 KEFA KF301 封装；Phoenix MKDS-1,5-2 同为 5.00 mm 间距、1.3 mm 孔，焊盘可用，丝印外框须对照实物核对"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/dbe48a1bef5e997cc12dba31bc0ac67e.pdf?productCode=C474881",
+          "confidence": "medium"
+        },
+        {
+          "id": "J_KF128_5_08_2P",
+          "mpn": "KF128-5.08-2P-AA",
+          "manufacturer": "Cixi Kefa Elec (KEFA)",
+          "package": "THT 2P, 5.08 mm pitch",
+          "lcsc": "C474952",
+          "price_cny_approx": 0.71,
+          "pass": false,
+          "score": 0.71,
+          "score_note": "评分=价格；输入/输出各 1 只",
+          "qty": 2,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "额定电流 ≥ 2×Iin,max",
+              "ok": true,
+              "hard": true,
+              "detail": "24 A"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": false,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=False，LCSC=C474952"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Connector:Screw_Terminal_01x02 / TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal（2 引脚 ↔ 2 焊盘）；equivalent：官方库无 KF128 封装；用 5.08 mm 同类端子封装，外框须核对"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": null,
+          "confidence": "medium"
+        }
+      ],
+      "selected": "J_KF301_5_0_2P",
+      "selected_qty": 2,
+      "reason": "通过全部硬性规则；评分（0.42，评分=价格；输入/输出各 1 只）"
+    },
+    "header_swd": {
+      "candidates": [
+        {
+          "id": "J_hdr_1x5_B2100S05P",
+          "mpn": "B-2100S05P-A110",
+          "manufacturer": "Ckmtw (Shenzhen Cankemeng)",
+          "package": "THT 1x5 2.54 mm straight",
+          "lcsc": "C124379",
+          "price_cny_approx": 0.19,
+          "pass": true,
+          "score": 0.19,
+          "score_note": "评分=价格",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "2.54 mm 排针",
+              "ok": true,
+              "hard": true,
+              "detail": "2.54 mm"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C124379"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Connector_Generic:Conn_01x05 / Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical（5 引脚 ↔ 5 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/219f7e7eb5f34457895b2c164313179f.pdf?productCode=C124379",
+          "confidence": "medium"
+        }
+      ],
+      "selected": "J_hdr_1x5_B2100S05P",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（0.19，评分=价格）"
+    },
+    "header_uart": {
+      "candidates": [
+        {
+          "id": "J_hdr_1x4_B2100S04P",
+          "mpn": "B-2100S04P-A110",
+          "manufacturer": "Ckmtw (Shenzhen Cankemeng)",
+          "package": "THT 1x4 2.54 mm straight",
+          "lcsc": "C124378",
+          "price_cny_approx": 0.14,
+          "pass": true,
+          "score": 0.14,
+          "score_note": "评分=价格",
+          "qty": 1,
+          "stock_risk": false,
+          "rules": [
+            {
+              "rule": "2.54 mm 排针",
+              "ok": true,
+              "hard": true,
+              "detail": "2.54 mm"
+            },
+            {
+              "rule": "数据手册与立创编号证据齐全且 confidence 为 high/medium",
+              "ok": true,
+              "hard": true,
+              "detail": "confidence=medium，datasheet=True，LCSC=C124378"
+            },
+            {
+              "rule": "KiCad 库有可用符号与封装（引脚号一致）",
+              "ok": true,
+              "hard": true,
+              "detail": "Connector_Generic:Conn_01x04 / Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical（4 引脚 ↔ 4 焊盘）"
+            }
+          ],
+          "price_status": "知识库价格快照，采购前复核",
+          "datasheet_url": "https://datasheet.lcsc.com/datasheet/pdf/219f7e7eb5f34457895b2c164313179f.pdf?productCode=C124378",
+          "confidence": "medium"
+        }
+      ],
+      "selected": "J_hdr_1x4_B2100S04P",
+      "selected_qty": 1,
+      "reason": "通过全部硬性规则；评分（0.14，评分=价格）"
+    }
+  }
+}

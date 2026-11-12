@@ -192,7 +192,18 @@
       "price_evidence": "LCSC C20917 'From $0.0518' (volume tier, search snapshot); converted at an assumed 7.1 CNY/USD",
       "notes": "Datasheet Rev 3.1 July 2023. LCSC also lists same-name clones (UMW C347475, ElecSuper C5224194, FUXINSEMI C5380685) with different specs. Use C20917 for genuine AOS. Rds(on)@4.5V is specified at ID=5A.",
       "confidence": "high",
-      "role": "mosfet"
+      "role": "mosfet",
+      "kicad": {
+        "symbol": "Transistor_FET:AO3400A",
+        "footprint": "Package_TO_SOT_SMD:SOT-23",
+        "pinmap": {
+          "G": "1",
+          "S": "2",
+          "D": "3"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "irlml6344",
@@ -360,7 +371,18 @@
       "price_evidence": "No price in the LCSC search snippet I read",
       "notes": "Datasheet dated Dec 19, 2014. No 10V Rds(on) row. Coss is specified at VDS=25V (not 15V as for AOS).",
       "confidence": "high",
-      "role": "mosfet"
+      "role": "mosfet",
+      "kicad": {
+        "symbol": "Transistor_FET:Q_NMOS_GSD",
+        "footprint": "Package_TO_SOT_SMD:SOT-23",
+        "pinmap": {
+          "G": "1",
+          "S": "2",
+          "D": "3"
+        },
+        "status": "generic",
+        "note": "官方库无 IRLML6344 专用符号，用通用 GSD 符号，Value 填料号"
+      }
     },
     {
       "id": "si2302cds",
@@ -529,7 +551,18 @@
       "notes": "Datasheet S12-2336-Rev. D, 01-Oct-12. VDS 20 V and VGS +/-8 V max, so it should be rejected for a 12 V output with switching ringing. Many SI2302 clones on LCSC (MCC C77977, BORN C344009, YONGYUTAI C2891732, ...) have different specs.",
       "confidence": "high",
       "role": "mosfet",
-      "stock_risk": true
+      "stock_risk": true,
+      "kicad": {
+        "symbol": "Transistor_FET:Q_NMOS_GSD",
+        "footprint": "Package_TO_SOT_SMD:SOT-23",
+        "pinmap": {
+          "G": "1",
+          "S": "2",
+          "D": "3"
+        },
+        "status": "generic",
+        "note": "官方库无 Si2302 专用符号，用通用 GSD 符号，Value 填料号"
+      }
     },
     {
       "id": "irlml0030",
@@ -704,7 +737,18 @@
       "price_evidence": "LCSC C67272 'from $0.069' (snapshot); assumed 7.1 CNY/USD",
       "notes": "This is the extra 30-40 V candidate. Qg is low (2.6 nC), but Vgs(th) max is 2.3 V and Rds(on) is only rated at 4.5 V and 10 V, so it has less margin at 4.75 V drive than AO3400A or IRLML6344. Datasheet PD-96278B (02/29/12).",
       "confidence": "high",
-      "role": "mosfet"
+      "role": "mosfet",
+      "kicad": {
+        "symbol": "Transistor_FET:IRLML0030",
+        "footprint": "Package_TO_SOT_SMD:SOT-23",
+        "pinmap": {
+          "G": "1",
+          "S": "2",
+          "D": "3"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "ao3401a",
@@ -858,7 +902,18 @@
       "price_evidence": "LCSC C15127 10+ $0.0589 (9000+ $0.0338) per search snippet; assumed 7.1 CNY/USD",
       "notes": "Datasheet Rev 3.1 Dec 2023. Clones with different specs: UMW C347476, HUASHUO C700954, BORN C306862.",
       "confidence": "high",
-      "role": "pmos"
+      "role": "pmos",
+      "kicad": {
+        "symbol": "Transistor_FET:AO3401A",
+        "footprint": "Package_TO_SOT_SMD:SOT-23",
+        "pinmap": {
+          "G": "1",
+          "S": "2",
+          "D": "3"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "ss34_vishay",
@@ -969,7 +1024,17 @@
       "price_evidence": "LCSC C13354 'from $0.1369' (5100+ tier; 5+ $0.281); assumed 7.1 CNY/USD",
       "notes": "Vishay SS34 comes in SMC, not SMA. The LCSC listing says TJ -55..+125C, but the datasheet (Rev 23-Apr-2020) says -55..+150C.",
       "confidence": "high",
-      "role": "diode"
+      "role": "diode",
+      "kicad": {
+        "symbol": "Device:D_Schottky",
+        "footprint": "Diode_SMD:D_SMC_Handsoldering",
+        "pinmap": {
+          "K": "1",
+          "A": "2"
+        },
+        "status": "generic",
+        "note": "Vishay SS34 为 SMC 封装；不要用 Diode:SS34（其默认封装为 SMA）"
+      }
     },
     {
       "id": "ss34_mdd",
@@ -1059,7 +1124,17 @@
       "price_evidence": "LCSC C8678 'From $0.0156' (snapshot); assumed 7.1 CNY/USD",
       "notes": "I could NOT read an MDD datasheet: the LCSC, alldatasheet and DigiKey-media PDFs were blocked. All values come from distributor listings or search snippets. datasheet_url is the NextGen (MDD cross) sheet, seen only as a search snippet. Treat as unverified.",
       "confidence": "low",
-      "role": "diode"
+      "role": "diode",
+      "kicad": {
+        "symbol": "Diode:SS34",
+        "footprint": "Diode_SMD:D_SMA_Handsoldering",
+        "pinmap": {
+          "K": "1",
+          "A": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "ss54_mdd",
@@ -1156,7 +1231,17 @@
       "price_evidence": "LCSC C22452 'From $0.0237' (snapshot); assumed 7.1 CNY/USD",
       "notes": "Source is the NextGen Components spec sheet for 'MDD SS54' (No. N1230-SMASS540000S54, Rev A0, Dec 30 2021), embedded in a DiGi-Electronics PDF. It is not an MDD-branded document. IFSM 120 A conflicts with Elecfans' 125 A. A 5 A rating in an SMA package is thermally optimistic.",
       "confidence": "medium",
-      "role": "diode"
+      "role": "diode",
+      "kicad": {
+        "symbol": "Device:D_Schottky",
+        "footprint": "Diode_SMD:D_SMA_Handsoldering",
+        "pinmap": {
+          "K": "1",
+          "A": "2"
+        },
+        "status": "generic",
+        "note": "官方库无 SS54 专用符号，用通用肖特基符号，Value 填料号"
+      }
     },
     {
       "id": "ss14_vishay",
@@ -1260,7 +1345,17 @@
       "price_evidence": "LCSC C47460 'from $0.0539' (snapshot); assumed 7.1 CNY/USD",
       "notes": "Datasheet Rev 23-Apr-2020. IF(AV) of 1 A is marginal against 0.5 A average and about 1.8 A peak. The common cheap alternative is MDD SS14 C2480 (listing: 550mV@1A, 25A IFSM, 40V); I did not read its datasheet.",
       "confidence": "high",
-      "role": "diode"
+      "role": "diode",
+      "kicad": {
+        "symbol": "Diode:SS14",
+        "footprint": "Diode_SMD:D_SMA_Handsoldering",
+        "pinmap": {
+          "K": "1",
+          "A": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "b5819w_jscj",
@@ -1371,7 +1466,17 @@
       "price_evidence": "LCSC C8598 'from $0.016' (snapshot); assumed 7.1 CNY/USD",
       "notes": "JSCJ Rev 1.0. IFRM of 1.5 A is below the about 1.8 A peak and IFSM is only 9 A, so expect a reject. The Diodes Inc equivalent is 1N5819HW (DS30217 Rev.23-2: VF max 0.45V@1A, 0.75V@3A, IFSM 25A, RthJA 225 C/W).",
       "confidence": "high",
-      "role": "diode"
+      "role": "diode",
+      "kicad": {
+        "symbol": "Device:D_Schottky",
+        "footprint": "Diode_SMD:D_SOD-123",
+        "pinmap": {
+          "K": "1",
+          "A": "2"
+        },
+        "status": "generic",
+        "note": ""
+      }
     },
     {
       "id": "ucc27517",
@@ -1547,7 +1652,14 @@
       "price_evidence": "LCSC C99395 'From $0.156' (snapshot; another listing showed 5+ $0.1952); assumed 7.1 CNY/USD",
       "notes": "Datasheet SLUSAY4D (Dec 2014). Pinout: 1 VDD, 2 GND, 3 IN+, 4 IN-, 5 OUT. With VDD=4.75-5 V, the UVLO-on max of 4.65 V leaves little margin. Tie IN- to GND for non-inverting use.",
       "confidence": "high",
-      "role": "gate_driver"
+      "role": "gate_driver",
+      "kicad": {
+        "symbol": null,
+        "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+        "pinmap": null,
+        "status": "custom",
+        "note": "官方库无 UCC27517 符号，需按数据手册自建"
+      }
     },
     {
       "id": "eg27517",
@@ -1695,7 +1807,14 @@
       "price_evidence": "szlcsc (立创商城) item 3440336 quoted ¥0.7492 in search snippet (already CNY)",
       "notes": "Datasheet V1.0 (2020-11-10). Pin-compatible with UCC27517 (1 VDD, 2 GND, 3 IN+, 4 IN-, 5 OUT; 100k internal pull-down on IN+ and pull-up on IN-). It has NO UVLO spec, and timing is only typical at 10 nF, so behaviour at VDD=5V is not characterized. TC4420/MCP1407 were not verified.",
       "confidence": "medium",
-      "role": "gate_driver"
+      "role": "gate_driver",
+      "kicad": {
+        "symbol": null,
+        "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+        "pinmap": null,
+        "status": "custom",
+        "note": "官方库无 EG27517 符号，需自建"
+      }
     },
     {
       "id": "ina180a1",
@@ -1833,7 +1952,20 @@
       "price_evidence": "LCSC C122228 'from $0.171' (snapshot); assumed 7.1 CNY/USD",
       "notes": "SBOS741H (Jul 2022). Pinout: INA180Ax = pinout A (SOT-23-5): 1 OUT, 2 GND, 3 IN+, 4 IN-, 5 VS. INA180Bx = pinout B: 1 IN+, 2 GND, 3 IN-, 4 OUT, 5 VS. Unidirectional. VS max is 5.5 V, so power it from 3.3 V or 5 V; the shunt can sit on the 12 V rail (VCM up to 26 V).",
       "confidence": "high",
-      "role": "csa"
+      "role": "csa",
+      "kicad": {
+        "symbol": "Amplifier_Current:INA180A1",
+        "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+        "pinmap": {
+          "OUT": "1",
+          "GND": "2",
+          "IN+": "3",
+          "IN-": "4",
+          "VS": "5"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "ina180a2",
@@ -1971,7 +2103,20 @@
       "price_evidence": "LCSC C192764 'from $0.0978' (snapshot); assumed 7.1 CNY/USD",
       "notes": "SBOS741H (Jul 2022). Pinout: INA180Ax = pinout A (SOT-23-5): 1 OUT, 2 GND, 3 IN+, 4 IN-, 5 VS. INA180Bx = pinout B: 1 IN+, 2 GND, 3 IN-, 4 OUT, 5 VS. Unidirectional. VS max is 5.5 V, so power it from 3.3 V or 5 V; the shunt can sit on the 12 V rail (VCM up to 26 V).",
       "confidence": "high",
-      "role": "csa"
+      "role": "csa",
+      "kicad": {
+        "symbol": "Amplifier_Current:INA180A2",
+        "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+        "pinmap": {
+          "OUT": "1",
+          "GND": "2",
+          "IN+": "3",
+          "IN-": "4",
+          "VS": "5"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "ina180a3",
@@ -2109,7 +2254,20 @@
       "price_evidence": "LCSC C122882 'from $0.1342' (snapshot); assumed 7.1 CNY/USD",
       "notes": "SBOS741H (Jul 2022). Pinout: INA180Ax = pinout A (SOT-23-5): 1 OUT, 2 GND, 3 IN+, 4 IN-, 5 VS. INA180Bx = pinout B: 1 IN+, 2 GND, 3 IN-, 4 OUT, 5 VS. Unidirectional. VS max is 5.5 V, so power it from 3.3 V or 5 V; the shunt can sit on the 12 V rail (VCM up to 26 V).",
       "confidence": "high",
-      "role": "csa"
+      "role": "csa",
+      "kicad": {
+        "symbol": "Amplifier_Current:INA180A3",
+        "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+        "pinmap": {
+          "OUT": "1",
+          "GND": "2",
+          "IN+": "3",
+          "IN-": "4",
+          "VS": "5"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "ina199a1",
@@ -2232,7 +2390,14 @@
       "price_evidence": "LCSC C59135 'From $0.2256' (snapshot); assumed 7.1 CNY/USD",
       "notes": "SBOS469H (Oct 2023). NOT pin-compatible with INA180. SC70-6 pinout: 1 REF, 2 GND, 3 V+, 4 IN+, 5 IN-, 6 OUT. Tie REF to GND for unidirectional use. Lowest gain is 50 V/V (no 20 V/V). LCSC/JLC listing for A1 says 14 kHz BW, but the datasheet says 80 kHz for x1 (14 kHz is x3).",
       "confidence": "high",
-      "role": "csa"
+      "role": "csa",
+      "kicad": {
+        "symbol": "Amplifier_Current:INA199xxDCK",
+        "footprint": "Package_TO_SOT_SMD:SOT-363_SC-70-6",
+        "pinmap": null,
+        "status": "official",
+        "note": "通用 xx 符号，Value 改为具体料号"
+      }
     },
     {
       "id": "ina199a2",
@@ -2355,7 +2520,14 @@
       "price_evidence": "LCSC C131913 'From $0.1337' (snapshot); assumed 7.1 CNY/USD",
       "notes": "SBOS469H (Oct 2023). NOT pin-compatible with INA180. SC70-6 pinout: 1 REF, 2 GND, 3 V+, 4 IN+, 5 IN-, 6 OUT. Tie REF to GND for unidirectional use. Lowest gain is 50 V/V (no 20 V/V).",
       "confidence": "high",
-      "role": "csa"
+      "role": "csa",
+      "kicad": {
+        "symbol": "Amplifier_Current:INA199xxDCK",
+        "footprint": "Package_TO_SOT_SMD:SOT-363_SC-70-6",
+        "pinmap": null,
+        "status": "official",
+        "note": "通用 xx 符号，Value 改为具体料号"
+      }
     },
     {
       "id": "ina199a3",
@@ -2478,7 +2650,14 @@
       "price_evidence": "LCSC C132098 'From $0.2118' (snapshot); assumed 7.1 CNY/USD; A3 stock only 217 in snapshot",
       "notes": "SBOS469H (Oct 2023). NOT pin-compatible with INA180. SC70-6 pinout: 1 REF, 2 GND, 3 V+, 4 IN+, 5 IN-, 6 OUT. Tie REF to GND for unidirectional use. Lowest gain is 50 V/V (no 20 V/V).",
       "confidence": "high",
-      "role": "csa"
+      "role": "csa",
+      "kicad": {
+        "symbol": "Amplifier_Current:INA199xxDCK",
+        "footprint": "Package_TO_SOT_SMD:SOT-363_SC-70-6",
+        "pinmap": null,
+        "status": "official",
+        "note": "通用 xx 符号，Value 改为具体料号"
+      }
     },
     {
       "id": "ams1117_33",
@@ -2584,7 +2763,14 @@
       "price_evidence": "LCSC C6186 price $0.1109 (snapshot); assumed 7.1 CNY/USD",
       "notes": "At VIN 4.75 V there is 1.45 V of headroom against a 1.3 V max dropout specified at 0.8 A. That is marginal in general but OK at 60 mA. Iq is 5-11 mA. Many same-name clones exist on LCSC.",
       "confidence": "high",
-      "role": "ldo"
+      "role": "ldo",
+      "kicad": {
+        "symbol": "Regulator_Linear:AMS1117-3.3",
+        "footprint": "Package_TO_SOT_SMD:SOT-223-3_TabPin2",
+        "pinmap": null,
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "me6211c33",
@@ -2689,7 +2875,20 @@
       "price_evidence": "no price in the snippets I read",
       "notes": "Microne datasheet V22 (iceasy mirror; manufacturer document). The C version has an EN pin; tie it to VIN.",
       "confidence": "high",
-      "role": "ldo"
+      "role": "ldo",
+      "kicad": {
+        "symbol": "Regulator_Linear:ME6211C33M5",
+        "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+        "pinmap": {
+          "VIN": "1",
+          "VSS": "2",
+          "CE": "3",
+          "NC": "4",
+          "VOUT": "5"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "xc6206p332mr",
@@ -2780,7 +2979,14 @@
       "price_evidence": "LCSC C5446 'from $0.0877' (snapshot); assumed 7.1 CNY/USD",
       "notes": "The Torex site was blocked (Access Denied), so I read an older revision (ETR0305_004b) from a Seeed mirror. The current revision, ETR0305_006 (Mouser), could not be read. 200 mA is fine for 60 mA, but dropout is high.",
       "confidence": "medium",
-      "role": "ldo"
+      "role": "ldo",
+      "kicad": {
+        "symbol": "Regulator_Linear:XC6206PxxxMR",
+        "footprint": "Package_TO_SOT_SMD:SOT-23-3",
+        "pinmap": null,
+        "status": "official",
+        "note": "通用 xxx 符号，Value 改为 XC6206P332MR"
+      }
     },
     {
       "id": "rt9013_33",
@@ -2863,7 +3069,14 @@
       "price_evidence": "LCSC C47773 'from $0.0702' (snapshot); assumed 7.1 CNY/USD",
       "notes": "Datasheet DS9013-09 (Oct 2010) via a unikeyic mirror; the richtek.com link returned 404. DigiKey lists it as Last Time Buy (LTB date 12/1/2025), so it is a sourcing risk. VIN 5.25 V is within the 5.5 V recommended max.",
       "confidence": "medium",
-      "role": "ldo"
+      "role": "ldo",
+      "kicad": {
+        "symbol": null,
+        "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+        "pinmap": null,
+        "status": "custom",
+        "note": "官方库无 RT9013 符号，需自建"
+      }
     },
     {
       "id": "smaj15a",
@@ -2948,6 +3161,16 @@
         "pdf": "sources/C148216.pdf",
         "sha256": "3f987f8fc0988aae0f14259b9d1953f26bdfe2525bbc4fc636477f6b221fc38a",
         "retrieved_utc": "2026-11-09T11:24:36.058379+00:00"
+      },
+      "kicad": {
+        "symbol": "Diode:SMAJ15A",
+        "footprint": "Diode_SMD:D_SMA_Handsoldering",
+        "pinmap": {
+          "K": "1",
+          "A": "2"
+        },
+        "status": "official",
+        "note": "符号继承 SM6T6V8A：引脚 1（名 A1）为阴极端，2 为阳极；默认封装 D_SMA，改用手焊版"
       }
     },
     {
@@ -3027,7 +3250,17 @@
       "price_evidence": "no LCSC listing confirmed",
       "notes": "Vishay datasheet 88390 Rev 09-Jan-2024. Littelfuse SMAJ16A (DigiKey/Newark) lists the same 17.8-19.7 V / 26 V / 15.4 A.",
       "confidence": "high",
-      "role": "tvs"
+      "role": "tvs",
+      "kicad": {
+        "symbol": "Diode:SMAJ16A",
+        "footprint": "Diode_SMD:D_SMA_Handsoldering",
+        "pinmap": {
+          "K": "1",
+          "A": "2"
+        },
+        "status": "official",
+        "note": "引脚 1 为阴极端"
+      }
     },
     {
       "id": "lm5114b",
@@ -3101,7 +3334,37 @@
       "price_cny_approx": 12.6,
       "price_evidence": "立创无价格；DigiKey $1.77@1 ≈ ¥12.6",
       "notes": "务必订 B 版。分离输出：P_OUT/N_OUT 可各串栅极电阻（开通慢关断快）。",
-      "confidence": "high"
+      "confidence": "high",
+      "kicad": {
+        "symbol": "boost_module1:LM5114B",
+        "footprint": "Package_TO_SOT_SMD:SOT-23-6",
+        "pinmap": {
+          "VDD": "1",
+          "P_OUT": "2",
+          "N_OUT": "3",
+          "VSS": "4",
+          "INB": "5",
+          "IN": "6"
+        },
+        "status": "derived",
+        "note": "官方库无 LM5114 符号。由 Driver_FET:UCC27511ADBV 派生：两者 SOT-23-6 逐脚功能对应（LM5114 数据手册引脚表：1 VDD / 2 P_OUT 拉电流 / 3 N_OUT 灌电流 / 4 VSS / 5 INB 反相 / 6 IN 同相），只改名与属性",
+        "derive": {
+          "from": "Driver_FET:UCC27511ADBV",
+          "name": "LM5114B",
+          "pin_rename": {
+            "OUTH": "P_OUT",
+            "OUTL": "N_OUT",
+            "GND": "VSS",
+            "IN-": "INB",
+            "IN+": "IN"
+          },
+          "props": {
+            "Value": "LM5114B",
+            "Datasheet": "https://www.ti.com/lit/ds/symlink/lm5114.pdf",
+            "Description": "Single low-side gate driver, 1.3A source / 7.6A sink peak, split outputs, TTL input (B version), SOT-23-6 (derived from UCC27511ADBV, pin-compatible)"
+          }
+        }
+      }
     },
     {
       "id": "lm5112",
@@ -3168,7 +3431,14 @@
       "price_cny_approx": 13.5,
       "price_evidence": "LCSC 片段 $1.90@1 ≈ ¥13.5",
       "notes": "UVLO 余量最大；裸露焊盘需热风枪或背面过孔焊接。",
-      "confidence": "high"
+      "confidence": "high",
+      "kicad": {
+        "symbol": null,
+        "footprint": null,
+        "pinmap": null,
+        "status": "custom",
+        "note": "MSOP-8 PowerPAD，需自建符号与裸焊盘封装"
+      }
     },
     {
       "id": "fan3100t",
@@ -3234,7 +3504,14 @@
       "price_cny_approx": 6.3,
       "price_evidence": "LCSC 经 Findchips $0.8876@1 ≈ ¥6.3",
       "notes": "Mouser 标 EOL，生命周期不明。",
-      "confidence": "medium"
+      "confidence": "medium",
+      "kicad": {
+        "symbol": null,
+        "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+        "pinmap": null,
+        "status": "custom",
+        "note": "官方库无 FAN3100 符号，需自建"
+      }
     },
     {
       "id": "max15070a",
@@ -3294,7 +3571,14 @@
       "price_cny_approx": null,
       "price_evidence": "立创无货源",
       "notes": "电气上最优，但立创不可购。",
-      "confidence": "high"
+      "confidence": "high",
+      "kicad": {
+        "symbol": null,
+        "footprint": "Package_TO_SOT_SMD:SOT-23-6",
+        "pinmap": null,
+        "status": "custom",
+        "note": "官方库无 MAX15070 符号，需自建"
+      }
     },
     {
       "id": "stm32g431cbt6",
@@ -3449,7 +3733,14 @@
       "price_cny_approx": 20.8,
       "price_evidence": "szlcsc 搜索片段约 ¥20.8；lcsc.com 1+ $5.17，库存 3801（片段，日期不一）",
       "notes": "推荐：片内 COMP+DAC3→TIM1 刹车实现 L2 硬件保护；无需晶振；FPU；ADC 硬件过采样。",
-      "confidence": "high"
+      "confidence": "high",
+      "kicad": {
+        "symbol": "MCU_ST_STM32G4:STM32G431CBTx",
+        "footprint": "Package_QFP:LQFP-48_7x7mm_P0.5mm",
+        "pinmap": null,
+        "status": "official",
+        "note": "按 mcu_pin_plan 的 pin_no 连线"
+      }
     },
     {
       "id": "stm32g431kbt6",
@@ -3489,7 +3780,14 @@
       "price_cny_approx": 30.18,
       "price_evidence": "szlcsc 片段约 ¥30.18；lcsc.com 片段缺货",
       "notes": "0.8 mm 引脚更好焊；但价格高、缺货风险，且无独立 VREF+、无 PB1",
-      "confidence": "high"
+      "confidence": "high",
+      "kicad": {
+        "symbol": "MCU_ST_STM32G4:STM32G431KBTx",
+        "footprint": "Package_QFP:LQFP-32_7x7mm_P0.8mm",
+        "pinmap": null,
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "stm32f334k8t6",
@@ -3532,7 +3830,14 @@
       "price_cny_approx": 22.27,
       "price_evidence": "szlcsc 片段约 ¥22.27（lcsc.com 片段 $4.25/$5.98 冲突）",
       "notes": "HRTIM 对单管低边 PWM 属过度配置；72 MHz 需外部晶振",
-      "confidence": "high"
+      "confidence": "high",
+      "kicad": {
+        "symbol": "MCU_ST_STM32F3:STM32F334K8Tx",
+        "footprint": "Package_QFP:LQFP-32_7x7mm_P0.8mm",
+        "pinmap": null,
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "stm32f103c8t6",
@@ -3575,7 +3880,14 @@
       "price_cny_approx": 5.61,
       "price_evidence": "szlcsc 片段约 ¥5.61；JLC 阶梯 ¥6.88–4.07",
       "notes": "最便宜、资料最多，但无比较器/DAC/FPU",
-      "confidence": "high"
+      "confidence": "high",
+      "kicad": {
+        "symbol": "MCU_ST_STM32F1:STM32F103C8Tx",
+        "footprint": "Package_QFP:LQFP-48_7x7mm_P0.5mm",
+        "pinmap": null,
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "L_SRR1260_470M",
@@ -3651,7 +3963,17 @@
       "confidence": "high",
       "role": "inductor",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
-      "shielded": true
+      "shielded": true,
+      "kicad": {
+        "symbol": "Device:L",
+        "footprint": "Inductor_SMD:L_Bourns_SRR1260",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "L_SWRB1207S_470MT",
@@ -3729,7 +4051,17 @@
       "confidence": "medium",
       "role": "inductor",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
-      "shielded": true
+      "shielded": true,
+      "kicad": {
+        "symbol": "Device:L",
+        "footprint": null,
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "custom",
+        "note": "官方库无 SWRB1207S 封装，需按规格书自建"
+      }
     },
     {
       "id": "L_MWSA1206S_470MT",
@@ -3797,7 +4129,17 @@
       "notes": "Highest Isat margin of the 47 µH options. JLCPCB notes an assembly fixture is needed (irrelevant for hand solder). Mirror = DigiKey-hosted Sunlord spec.",
       "confidence": "high",
       "role": "inductor",
-      "shielded": true
+      "shielded": true,
+      "kicad": {
+        "symbol": "Device:L",
+        "footprint": "Inductor_SMD:L_Sunlord_MWSA1206S-470",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "L_SRR1260_680M",
@@ -3867,7 +4209,17 @@
       "role": "inductor",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
       "stock_risk": true,
-      "shielded": true
+      "shielded": true,
+      "kicad": {
+        "symbol": "Device:L",
+        "footprint": "Inductor_SMD:L_Bourns_SRR1260",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "L_SWRB1207S_680MT",
@@ -3944,7 +4296,17 @@
       "notes": "Same row-shift caveat as SWRB1207S-470MT; value 0.140 Ω/2.10 A also matches LCSC listing text.",
       "confidence": "medium",
       "role": "inductor",
-      "shielded": true
+      "shielded": true,
+      "kicad": {
+        "symbol": "Device:L",
+        "footprint": null,
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "custom",
+        "note": "官方库无 SWRB1207S 封装，需按规格书自建"
+      }
     },
     {
       "id": "L_MWSA1206S_680MT",
@@ -4006,7 +4368,17 @@
       "confidence": "medium",
       "role": "inductor",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
-      "shielded": true
+      "shielded": true,
+      "kicad": {
+        "symbol": "Device:L",
+        "footprint": "Inductor_SMD:L_Sunlord_MWSA1206S-680",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": "官方封装按此料号绘制（13.45x12.6x5.8 mm）"
+      }
     },
     {
       "id": "L_SRN8040TA_680M",
@@ -4081,7 +4453,17 @@
       "notes": "8x8 example that should be REJECTED/borderline: Isat 1.75 A < 1.8 A worst-case peak.",
       "confidence": "high",
       "role": "inductor",
-      "shielded": false
+      "shielded": false,
+      "kicad": {
+        "symbol": "Device:L",
+        "footprint": "Inductor_SMD:L_Bourns_SRN8040TA",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "L_SRR1260_101M",
@@ -4150,7 +4532,17 @@
       "confidence": "high",
       "role": "inductor",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
-      "shielded": true
+      "shielded": true,
+      "kicad": {
+        "symbol": "Device:L",
+        "footprint": "Inductor_SMD:L_Bourns_SRR1260",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "L_MWSA1206S_101MT",
@@ -4212,7 +4604,17 @@
       "confidence": "high",
       "role": "inductor",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
-      "shielded": true
+      "shielded": true,
+      "kicad": {
+        "symbol": "Device:L",
+        "footprint": "Inductor_SMD:L_Sunlord_MWSA1206S-101",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "L_SRN1060_101M",
@@ -4280,7 +4682,17 @@
       "notes": "10x10 example; Isat 1.7 A < 1.8 A -> reject at worst case. Same series SRN1060-470M (47 µH, 0.11 Ω max, Irms 2.50 A, Isat 2.30 A, p.1) would pass but no LCSC C-number was found.",
       "confidence": "high",
       "role": "inductor",
-      "shielded": false
+      "shielded": false,
+      "kicad": {
+        "symbol": "Device:L",
+        "footprint": "Inductor_SMD:L_Bourns-SRN1060",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "L_CD54_680M_HanElec",
@@ -4352,7 +4764,17 @@
       "role": "inductor",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
       "stock_risk": true,
-      "shielded": false
+      "shielded": false,
+      "kicad": {
+        "symbol": "Device:L",
+        "footprint": null,
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "custom",
+        "note": "CD54 类封装需自建"
+      }
     },
     {
       "id": "C_out_CL31A226KAHNNNE",
@@ -4416,7 +4838,17 @@
       "role": "cout_ceramic",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
       "stock_risk": true,
-      "dielectric": "X5R"
+      "dielectric": "X5R",
+      "kicad": {
+        "symbol": "Device:C",
+        "footprint": "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "C_out_GRM31CR61E226KE15L",
@@ -4487,7 +4919,17 @@
       "role": "cout_ceramic",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
       "dielectric": "X5R",
-      "bias_retention_12v": 0.27
+      "bias_retention_12v": 0.27,
+      "kicad": {
+        "symbol": "Device:C",
+        "footprint": "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "C_out_CL32B226KAJNNNE",
@@ -4550,7 +4992,17 @@
       "confidence": "high",
       "role": "cout_ceramic",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
-      "dielectric": "X7R"
+      "dielectric": "X7R",
+      "kicad": {
+        "symbol": "Device:C",
+        "footprint": "Capacitor_SMD:C_1210_3225Metric_Pad1.33x2.70mm_HandSolder",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "C_out_CL31B106KAHNNNE",
@@ -4613,7 +5065,17 @@
       "confidence": "high",
       "role": "cout_ceramic",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
-      "dielectric": "X7R"
+      "dielectric": "X7R",
+      "kicad": {
+        "symbol": "Device:C",
+        "footprint": "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "C_in_CL31A226KOHNNNE",
@@ -4681,6 +5143,16 @@
         "pdf": "sources/C90146.pdf",
         "sha256": "67e827dfbfe2e439605e1c7f719e6be87a8c5755ccb67aac577c4df45a3465a0",
         "retrieved_utc": "2026-11-09T11:24:36.179417+00:00"
+      },
+      "kicad": {
+        "symbol": "Device:C",
+        "footprint": "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
       }
     },
     {
@@ -4772,7 +5244,17 @@
       "notes": "LCSC listing says 5000 h; Panasonic says 2000 h -> trust Panasonic. Older FK datasheet (Octopart mirror EEE-FK1H221P, Apr 2005) row agrees: 8x10.2, F, 600 mA, 0.16 Ω, tanδ 0.14. FK flagged inactive on a Mouser page; DigiKey shows Active.",
       "confidence": "high",
       "role": "cout_bulk",
-      "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
+      "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+      "kicad": {
+        "symbol": "Device:C_Polarized",
+        "footprint": "Capacitor_SMD:CP_Elec_8x10",
+        "pinmap": {
+          "+": "1",
+          "-": "2"
+        },
+        "status": "official",
+        "note": "尺寸码 F（8x10.2 mm）"
+      }
     },
     {
       "id": "C_out_EEEFK1E101P",
@@ -4856,7 +5338,17 @@
       "notes": "Datasheet is Panasonic FK 'Standard Products' table, Apr 2005 revision (old). DigiKey lists same 300 mA@100 kHz / 260 mΩ. Ripple rating marginal vs expected Cout rms ≈0.6 A unless paralleled with ceramics.",
       "confidence": "high",
       "role": "cout_bulk",
-      "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
+      "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+      "kicad": {
+        "symbol": "Device:C_Polarized",
+        "footprint": "Capacitor_SMD:CP_Elec_8x6.2",
+        "pinmap": {
+          "+": "1",
+          "-": "2"
+        },
+        "status": "official",
+        "note": "尺寸码 E（8x6.2 mm）"
+      }
     },
     {
       "id": "C_out_polymer_25SVPF100M",
@@ -4932,7 +5424,17 @@
       "notes": "Do not confuse with 25SVF100M (1000 h). No 220 µF/25 V polymer with LCSC number was verified.",
       "confidence": "high",
       "role": "cout_bulk",
-      "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
+      "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+      "kicad": {
+        "symbol": "Device:C_Polarized",
+        "footprint": "Capacitor_SMD:CP_Elec_8x6.9",
+        "pinmap": {
+          "+": "1",
+          "-": "2"
+        },
+        "status": "official",
+        "note": "官方封装描述即 Panasonic E7 8.0x6.9 mm"
+      }
     },
     {
       "id": "C_in_EEEFK1C101P",
@@ -5017,7 +5519,17 @@
       "confidence": "high",
       "role": "cin_bulk",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
-      "stock_risk": true
+      "stock_risk": true,
+      "kicad": {
+        "symbol": "Device:C_Polarized",
+        "footprint": "Capacitor_SMD:CP_Elec_6.3x5.8",
+        "pinmap": {
+          "+": "1",
+          "-": "2"
+        },
+        "status": "official",
+        "note": "尺寸码 D（6.3x5.8 mm）"
+      }
     },
     {
       "id": "R_shunt_PA1206FRF7W0R05L",
@@ -5077,7 +5589,17 @@
       "confidence": "high",
       "role": "shunt",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
-      "stock_risk": true
+      "stock_risk": true,
+      "kicad": {
+        "symbol": "Device:R",
+        "footprint": "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": "两端子分流器：开尔文取样在 PCB 上从焊盘内侧引差分线实现"
+      }
     },
     {
       "id": "R_shunt_PA2512FKE7W0R05E",
@@ -5135,7 +5657,17 @@
       "price_evidence": "none seen",
       "notes": "PA_E datasheet V.10, 31-Jan-2018; range 0.5–100 mΩ, AEC-Q200, anti-sulfur. Stock not seen.",
       "confidence": "high",
-      "role": "shunt"
+      "role": "shunt",
+      "kicad": {
+        "symbol": "Device:R",
+        "footprint": "Resistor_SMD:R_2512_6332Metric_Pad1.40x3.35mm_HandSolder",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": "两端子分流器：开尔文取样在 PCB 上从焊盘内侧引差分线实现"
+      }
     },
     {
       "id": "R_shunt_CRM2512_FX_R100ELF",
@@ -5194,7 +5726,17 @@
       "notes": "Thick film (not metal element). The datasheet's own ordering example is exactly CRM2512-FX-R100ELF. Bourns PCN: silver->copper element for <1 Ω CRM parts from Jun-2021.",
       "confidence": "medium",
       "role": "shunt",
-      "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
+      "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+      "kicad": {
+        "symbol": "Device:R",
+        "footprint": "Resistor_SMD:R_2512_6332Metric_Pad1.40x3.35mm_HandSolder",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "F_in_0466003NRHF",
@@ -5294,7 +5836,17 @@
       "confidence": "medium",
       "role": "fuse",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
-      "stock_risk": true
+      "stock_risk": true,
+      "kicad": {
+        "symbol": "Device:Fuse",
+        "footprint": "Fuse:Fuse_1206_3216Metric_Pad1.42x1.75mm_HandSolder",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "F_in_1812L200_12DR",
@@ -5400,7 +5952,17 @@
       "notes": "Copy hosted by CERN (Littelfuse PolySwitch 1812L 2023). Hold margin at 1.5 A is thin above ~50 °C; 1812L260/12 would give more margin (C-number not searched). Bourns MF-MSMF200-2 (C210837) exists on LCSC but is EOL (Feb-2026) and not in current datasheet.",
       "confidence": "medium",
       "role": "fuse",
-      "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
+      "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+      "kicad": {
+        "symbol": "Device:Fuse",
+        "footprint": "Fuse:Fuse_1812_4532Metric_Pad1.30x3.40mm_HandSolder",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "official",
+        "note": ""
+      }
     },
     {
       "id": "J_KF301_5_0_2P",
@@ -5445,6 +6007,16 @@
         "pdf": "sources/C474881.pdf",
         "sha256": "d5758ddb6887651bcf00755cf80ce380bd6d45326f677aead92f9004240b1600",
         "retrieved_utc": "2026-11-09T11:24:35.898881+00:00"
+      },
+      "kicad": {
+        "symbol": "Connector:Screw_Terminal_01x02",
+        "footprint": "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2_1x02_P5.00mm_Horizontal",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "equivalent",
+        "note": "官方库无 KEFA KF301 封装；Phoenix MKDS-1,5-2 同为 5.00 mm 间距、1.3 mm 孔，焊盘可用，丝印外框须对照实物核对"
       }
     },
     {
@@ -5485,7 +6057,17 @@
       "notes": "True 5.08 mm alternative. Maker datasheet not read.",
       "confidence": "medium",
       "role": "terminal",
-      "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
+      "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算",
+      "kicad": {
+        "symbol": "Connector:Screw_Terminal_01x02",
+        "footprint": "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal",
+        "pinmap": {
+          "1": "1",
+          "2": "2"
+        },
+        "status": "equivalent",
+        "note": "官方库无 KF128 封装；用 5.08 mm 同类端子封装，外框须核对"
+      }
     },
     {
       "id": "J_hdr_1x4_B2100S04P",
@@ -5522,6 +6104,18 @@
         "pdf": "sources/C124378.pdf",
         "sha256": "53219f777f842b9c4552c9b0cebe7a9b0d3cd4359781e84dc912006c6c6606af",
         "retrieved_utc": "2026-11-09T11:24:35.949182+00:00"
+      },
+      "kicad": {
+        "symbol": "Connector_Generic:Conn_01x04",
+        "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+        "pinmap": {
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4"
+        },
+        "status": "official",
+        "note": ""
       }
     },
     {
@@ -5560,9 +6154,23 @@
         "pdf": "sources/C124379.pdf",
         "sha256": "53219f777f842b9c4552c9b0cebe7a9b0d3cd4359781e84dc912006c6c6606af",
         "retrieved_utc": "2026-11-09T11:24:35.956685+00:00"
+      },
+      "kicad": {
+        "symbol": "Connector_Generic:Conn_01x05",
+        "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical",
+        "pinmap": {
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4",
+          "5": "5"
+        },
+        "status": "official",
+        "note": ""
       }
     }
   ],
   "local_revision": "test1-r4",
-  "local_evidence_note": "Five entries supplemented from PDFs read from LCSC mirrors; see sources/retrieval.json. Shared skill DB untouched."
+  "local_evidence_note": "Five entries supplemented from PDFs read from LCSC mirrors; see sources/retrieval.json. Shared skill DB untouched.",
+  "kicad_fields": "kicad.symbol / kicad.footprint = KiCad 官方库 lib_id（存在性与引脚以 knowledge/kicad_lib_index.json 快照为准，由 kicad_lib.py 生成）；kicad.pinmap = 器件功能引脚 → 符号引脚号（依据数据手册引脚表）；status：official=官方专用符号/按尺寸对应的封装，generic=通用符号+Value 填料号，equivalent=同间距同类封装、外形须核对，derived=由引脚兼容官方符号派生到项目库 boost_module1（kicad.derive），custom=需自建"
 }
