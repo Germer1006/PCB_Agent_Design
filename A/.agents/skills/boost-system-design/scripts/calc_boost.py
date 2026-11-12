@@ -216,6 +216,8 @@ def calc(req, ch):
         "soft_start": {"ramp_ms": ctl["soft_start_ms"],
                        "action": "参考电压从当前 Vout 斜坡升至设定值，控制开关加能；不限制插电时经 L/D 的直通浪涌"},
     }
+    if pro.get("input_ramp"):
+        prot["input_ramp"] = dict(pro["input_ramp"])
     S.add("PR1", "软件过压阈值", "Vovp,sw = Vo·(1+x%)", f"{vo}×(1+{pro['ovp_sw_pct']}%)", v_ovp_sw, "V",
           f"ADC 码值 {prot['ovp_sw']['adc_code']}")
     S.add("PR2", "硬件过压阈值", "Vovp,hw = Vo·(1+y%)", f"{vo}×(1+{pro['ovp_hw_pct']}%)", v_ovp_hw, "V",

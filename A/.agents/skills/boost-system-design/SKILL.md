@@ -27,6 +27,8 @@ description: 模块一·系统总体设计智能体。把“MCU 控制的 Boost 
 scripts/      calc_boost.py  select_parts.py  loss_thermal.py(+loss_model.py)  loop_design.py  validate_loop.py
               check_design.py  export_handoff.py(+handoff_contract.py, handoff_header.py)  run_all.py（一键）
               draw_figures.py（框图/工作区图）  md2docx.mjs（报告转 Word，可选）  test_tools.py（单元测试）
+              sim_switching.py（T1 开关级仿真）  sim_control.py（采样与控制）
+              sim_scenarios.py（工况和指标）  test_sim_switching.py
               _common.py  boost_model.py  stage_params.py（含容差场景 variants）  svgplot.py
 knowledge/    parts_db.json（结构化器件库，含出处）  design_rules.md（工程规则与常见错误，按需检索）
 templates/    design_choices.default.json（设计决策模板）  report_outline.md（报告结构）
@@ -46,7 +48,7 @@ Windows 下建议设置 `PYTHONIOENCODING=utf-8`。只用 Python 标准库。
 | S4 控制方案 📋 | 确定 CC/CV 结构、采样位置、控制频率、ADC 触发、Dmax/Dmin 策略、保护分层与阈值百分比、软启动 | `design_rules.md §4,§5,§6` | `design_choices.json`(control/sensing/protection) + rationale | 每个参数有理由 |
 | S5 参数计算 | `python calc_boost.py <wd>` | 工具 | `calc.json` | 无异常；检查 notes 中的提示 |
 | S6 器件选型 📋 | `python select_parts.py <wd>`；逐类阅读淘汰原因；某类无候选 → 扩充器件库或回 S3/S4 | `parts_db.json` | `selection.json` | 每类有入选器件 |
-| S7 复核 | `python loss_thermal.py <wd>`（标称 + L/C 容差 × ESR 敏感性全组合：效率、结温、纹波、增益峰、浪涌包络）；若提示 η 偏差 → 改 `eta_assumed` 回 S5；`python loop_design.py <wd>`（全工况 × 容差场景的 PI 初值；DCM 点单列排除，不得据 CCM 结论宣称其稳定）；`python validate_loop.py <wd>`（用导出后的 PI 系数独立密扫复核） | 工具 | `losses.json`, `loop.json`, `loop_validation.json`, `bode_*.csv`, `bode_loops.svg` | η 一致；两个环路 ok；独立复核 PASS |
+| S7 复核 | `python loss_thermal.py <wd>` 复核损耗和容差，η 偏差过大则回 S5；`python loop_design.py <wd>` 设计 PI；`python validate_loop.py <wd>` 独立复核 CCM 环路；`python sim_switching.py <wd>` 执行 T1 场景及额定点交叉验证 | 工具 | `losses.json`, `loop.json`, `loop_validation.json`, `bode_*.csv`, `bode_loops.svg`, `sim.json`, `sim_*.csv`, `sim_waveforms.svg` | η 一致；环路复核 PASS；T1 失败回溯对应阶段 |
 | S8 设计规则检查 | `python check_design.py <wd>` | 工具 | `check.json` | FAIL = 0；WARN 逐条解释。状态 `conditional_review` = 无设计错误，但仍有只能靠仿真/实测关闭的验证项（如 DCM 稳定性、TVS 配合、浪涌限制），它们以 open 项交接，不得宣称“已实测合格” |
 | S9 交接与报告 ⏸ | `python export_handoff.py <wd>`；按 `templates/report_outline.md` 写 `system_design_report.md`（论证文字由模型写，数字只引用工具输出与 `report_tables.md`） | 工具 + 模板 | `design_spec.json`, `bom_module1.csv`, `boost_params.h`, `report_tables.md`, `system_design_report.md` | 报告与 JSON 版本号一致 |
 
@@ -54,6 +56,10 @@ Windows 下建议设置 `PYTHONIOENCODING=utf-8`。只用 Python 标准库。
 
 快速路径：用户只要结果时，S3/S4 采用模板默认决策，`python run_all.py <wd> --requirements <需求文件>` 一次跑完 S5–S9 的工具部分
 （含 η 自动迭代），然后由模型完成 S1–S4 的论证文字与报告。
+
+T1 默认执行完整工况矩阵。排查时可用 `python sim_switching.py <wd> --duty <D> --load-ohm <R>` 查看开环波形，或用 `--closed-loop` 替换 `--duty <D>` 查看单工况恒阻闭环波形。SR86 交叉验证失败先回 S7 核对模型、仿真参数和指标口径；SR80/81/83/84 失败回 S4/S7 检查控制与采样；SR82 失败回 S5/S6 复核电容和纹波预算；SR85 失败回 S4/S6 检查保护。线性浪涌估算超过 Isat 时保留实测验证项。
+
+SR87 分别检查输出过流的误触发、软件延时和硬件关断。SR88 核对独立硬件输入缓升下的电感及输入电流预算。缓升配置属于拟实施要求，保留 SR34/SR53 的实物关闭条件和直插对照。
 
 ## 与用户沟通（默认：新手模式）
 

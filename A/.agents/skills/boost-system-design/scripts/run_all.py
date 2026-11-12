@@ -1,4 +1,4 @@
-"""一键运行模块一工具链：calc → select → loss → (η 迭代) → loop → validate_loop → check → export.
+"""一键运行模块一工具链：calc → select → loss → (η 迭代) → loop → validate_loop → sim → check → export.
 
 用法:
   python run_all.py <workdir> [--requirements inputs/course_requirements.json] [--db parts_db.json] [--max-iter 3]
@@ -65,6 +65,7 @@ def main():
         print(f"\n>>> η 假设与复核偏差过大，更新 eta_assumed = {new} 后重算")
     step("loop_design.py", w, a.db)
     step("validate_loop.py", w)
+    step("sim_switching.py", w, a.db)
     step("check_design.py", w, a.db)
     step("export_handoff.py", w, a.db)
 

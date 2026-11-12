@@ -32,14 +32,14 @@
 | S4 控制方案 | CC/CV 双 PI 最小值选择、采样时序、分层保护 | `design_choices.json` |
 | S5 参数计算 | 占空比、电感、电容、应力、采样网络、保护阈值、PWM/资源预算 | `calc_boost.py` |
 | S6 器件选型 | 规则筛选 + 评分，器件只来自带数据手册出处的库 | `select_parts.py` + `parts_db.json` |
-| S7 复核 | 含寄生参数平均模型 + 容差扫描：效率、结温、纹波、浪涌；全工况 PI 设计及独立复核 | `loss_thermal.py`、`loop_design.py`、`validate_loop.py` |
+| S7 复核 | 平均模型、容差扫描、PI 设计及独立复核；T1 开关级仿真验证启动、负载阶跃、轻载和保护 | `loss_thermal.py`、`loop_design.py`、`validate_loop.py`、`sim_switching.py` |
 | S8 规则检查 | 系统设计规则检查（SDRC），类似 PCB 的 DRC | `check_design.py` |
 | S9 交接 | 设计基线 JSON、BOM（立创编号）、固件参数头文件、报告数据表 | `export_handoff.py` |
 
 设计原则：**数值全部由脚本计算；器件只从知识库选取（缺数据则淘汰）；关键阶段向用户确认**。
 对应参考论文《基于大语言模型的 PCB 自动化设计智能体》的分层编排、检索增强抑制幻觉和结构化输出。
 
-## 当前设计结果（工具链 v2 计算值，未实测）
+## 工具链 v2 回归基线（计算值，未实测）
 
 | 项目 | 结果 |
 |---|---|
@@ -67,7 +67,24 @@
 
 ## 后续改进
 
-见 [docs/改进任务书_v3.md](docs/改进任务书_v3.md)：开关级仿真、消融评测、计算依据账本、规则检查升级、skill 规范化。
+见 [docs/改进任务书_v3.md](docs/改进任务书_v3.md)。T1 已接入工具链，后续任务包括消融评测、计算依据账本、规则检查升级和 skill 规范化。
+
+### T1 开关级仿真
+
+`run_all.py` 在环路独立复核后自动运行 T1。已有计算、选型、损耗和环路结果的工作目录也可以直接执行 `python sim_switching.py <workdir>`。完整仿真输出 `sim.json`、各工况降采样 CSV 和 `sim_waveforms.svg`，系统规则检查从 `sim.json` 读取指标。
+
+r2 将过流工况分为不过阈值、软件延时动作及硬件快速动作，并增加独立输入缓升工况。带缓升的工况参与 SR88，未加保护的直插波形在 `sim.json` 的 `reference_cases` 中保留。验证方法及实物边界见 [T1 保护验证](docs/T1-protection-validation.md)。
+
+在 `scripts/` 中，对已完成参数计算和选型的试验工作目录运行：
+
+```bash
+python sim_switching.py <workdir> --duty <0到1之间的占空比> --load-ohm <负载电阻> --cycles <周期数>
+python sim_switching.py <workdir> --closed-loop --load-ohm <负载电阻> --cycles <周期数>
+python -m unittest test_tools test_sim_switching -v
+```
+
+脚本复用 `stage_params.build()` 的功率级参数，输出 `sim_open_loop.csv`，记录时间、电感电流、输出电压、输出电流、占空比和开关状态。PWM 翻转处可有相同时间戳的两行，用于记录电容 ESR 造成的电压跳变。
+单工况闭环命令还需要同版本的 `loop.json`。它使用与固件参数头文件相同的计算数据，在设定周期采样，更新双 PI，并将量化后的占空比用于下一 PWM 周期。输出 `sim_closed_loop.csv`，包含采样事件、主导环、待写入的比较计数和故障原因。硬件比较器在积分步上检查，实际 MCU 路由和保护延时仍需验证。
 
 ## 目录
 
