@@ -25,7 +25,7 @@ description: 模块一·系统总体设计智能体。把“MCU 控制的 Boost 
 
 ```
 scripts/      calc_boost.py  select_parts.py  loss_thermal.py(+loss_model.py)  loop_design.py  validate_loop.py
-              check_design.py  export_handoff.py(+handoff_contract.py, handoff_header.py)  run_all.py（一键）
+              check_design.py + knowledge/sdrc_rules.json  export_handoff.py(+handoff_contract.py, handoff_header.py)  run_all.py（一键）
               draw_figures.py（框图/工作区图）  md2docx.mjs（报告转 Word，可选）  test_tools.py（单元测试）
               sim_switching.py（T1 开关级仿真）  sim_control.py（采样与控制）
               sim_scenarios.py（工况和指标）  test_sim_switching.py
@@ -49,10 +49,14 @@ Windows 下建议设置 `PYTHONIOENCODING=utf-8`。只用 Python 标准库。
 | S5 参数计算 | `python calc_boost.py <wd>` | 工具 | `calc.json` | 无异常；检查 notes 中的提示 |
 | S6 器件选型 📋 | `python select_parts.py <wd>`；逐类阅读淘汰原因；某类无候选 → 扩充器件库或回 S3/S4 | `parts_db.json` | `selection.json` | 每类有入选器件 |
 | S7 复核 | `python loss_thermal.py <wd>` 复核损耗和容差，η 偏差过大则回 S5；`python loop_design.py <wd>` 设计 PI；`python validate_loop.py <wd>` 独立复核 CCM 环路；`python sim_switching.py <wd>` 执行 T1 场景及额定点交叉验证 | 工具 | `losses.json`, `loop.json`, `loop_validation.json`, `bode_*.csv`, `bode_loops.svg`, `sim.json`, `sim_*.csv`, `sim_waveforms.svg` | η 一致；环路复核 PASS；T1 失败回溯对应阶段 |
-| S8 设计规则检查 | `python check_design.py <wd>` | 工具 | `check.json` | FAIL = 0；WARN 逐条解释。状态 `conditional_review` = 无设计错误，但仍有只能靠仿真/实测关闭的验证项（如 DCM 稳定性、TVS 配合、浪涌限制），它们以 open 项交接，不得宣称“已实测合格” |
+| S8 设计规则检查 | `python check_design.py <wd>` | `sdrc_rules.json` | `check.json` | 所有规则含依据与严重度；FAIL = 0 且关键 NOT_ASSESSED = 0。`conditional_review` 的仿真/实测 WARN 逐条交接，不得宣称“已实测合格” |
 | S9 交接与报告 ⏸ | `python export_handoff.py <wd>`；按 `templates/report_outline.md` 写 `system_design_report.md`（论证文字由模型写，数字只引用工具输出与 `report_tables.md`） | 工具 + 模板 | `design_spec.json`, `bom_module1.csv`, `boost_params.h`, `report_tables.md`, `system_design_report.md` | 报告与 JSON 版本号一致 |
 
 ⏸ = 必须停下等用户确认；📋 = 用白话汇报后继续（若本阶段出现 A 类问题或无法消除的 FAIL，则升级为 ⏸）。详见下一节。
+
+SDRC 结果状态为 `PASS / WARN / FAIL / NOT_ASSESSED / N/A`。缺少证据不得判 PASS；未选中器件或缺少参数时必须产生 `NOT_ASSESSED`，并说明缺项。退出码：`0` = 无 FAIL 且无 critical/major NOT_ASSESSED；`2` = 存在 FAIL；`3` = 存在 critical/major NOT_ASSESSED；`1` = 程序错误。`run_all.py` 遇到 2/3 会停止并给出回溯提示。规则定义、严重度、依据和关闭方法见 `knowledge/sdrc_rules.json`。
+
+状态策略：FAIL、critical/major NOT_ASSESSED 或 automatic critical/major WARN → needs_rework；其余未关闭项 → conditional_review；无 WARN/NOT_ASSESSED → ready_for_downstream（有理由的 N/A 不阻塞）。现有 SR38/SR44 为 automatic/minor 建议，公开保留在 conditional_review，详见 `knowledge/sdrc_audit.md` 对任务书歧义的说明。退出码 0 也不代表实物验证完成。
 
 快速路径：用户只要结果时，S3/S4 采用模板默认决策，`python run_all.py <wd> --requirements <需求文件>` 一次跑完 S5–S9 的工具部分
 （含 η 自动迭代），然后由模型完成 S1–S4 的论证文字与报告。

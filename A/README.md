@@ -67,7 +67,15 @@
 
 ## 后续改进
 
-见 [docs/改进任务书_v3.md](docs/改进任务书_v3.md)。T1 已接入工具链，后续任务包括消融评测、计算依据账本、规则检查升级和 skill 规范化。
+见 [docs/改进任务书_v3.md](docs/改进任务书_v3.md)。T1 已接入工具链；T4 已增加结构化规则与自动门禁，原厂手册独立复核的边界见下文。后续还有消融评测、计算依据账本和 skill 规范化。
+
+### T4 规则检查与门禁
+
+规则定义位于 `knowledge/sdrc_rules.json`，检查结果含层级、严重度、理由、来源、验证方式和关闭方法。未知规则、重复或不完整的元数据会报错。报告表 G 按层级排序。
+
+`check_design.py` 退出码：0 无 FAIL 且无 critical/major NOT_ASSESSED；2 有 FAIL；3 无 FAIL 但关键证据缺失；1 程序错误。`run_all.py` 原样传播退出码并停止，直接导出也检查门禁。缺仿真、缺器件或缺参数会保留 NOT_ASSESSED；未配置输入缓升时 SR88 明确为 N/A，浪涌实物关闭项 SR53 仍然保留。
+
+状态策略对任务书作显式澄清：基线 SR38（内部纹波目标）和 SR44（部分误差预算）原本就是 automatic 的 minor WARN，继续作为公开的建议项，基线保持 conditional_review。automatic 的 critical/major WARN 会进入 needs_rework。不能把自动检查重新标成实测来绕过状态策略。检查退出码为 0 也不等于硬件已验证或允许制作。审计范围、规则来源及未完成的原厂手册复核见 [sdrc_audit.md](.agents/skills/boost-system-design/knowledge/sdrc_audit.md)。
 
 ### T1 开关级仿真
 

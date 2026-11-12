@@ -227,7 +227,9 @@ def write_tables(path, spec, calc, sel, loss, loop, chk):
                        [(c.get('variant'), c.get('vin'), c["load"], c.get('vo'), c.get("D"), c.get("f0_Hz"), c.get("fRHPZ_Hz"), c.get("fc_Hz"), c.get("PM_deg"), c.get("GM_dB"))
                         for c in r["corners"]]), ""]
     T += ["## 表 G 系统设计规则检查（SDRC）", f"汇总：{chk['summary']} → **{chk['status']}**", "",
-          md_table(["编号", "规则", "结论", "依据"], [(c["id"], c["rule"], c["verdict"], c["detail"]) for c in chk["checks"]]), ""]
+          md_table(["层", "编号", "严重度", "规则", "结论", "依据", "来源"],
+                   [(c["layer"], c["id"], c["severity"], c["rule"], c["verdict"], c["detail"], c["source"])
+                    for c in sorted(chk["checks"], key=lambda item: (item["layer"], item["id"]))]), ""]
     T += ["## 表 H 测试计划", md_table(["编号", "需求", "项目", "条件", "判据", "前置条件", "状态"],
           [(t["id"], ', '.join(t['requirements']), t["item"], t["condition"], t["criterion"], t['prerequisite'], t["status"]) for t in spec["verification_plan"]]), ""]
     T += ["## 表 I 主要器件（不是完整装配 BOM）", md_table(['位号','型号','数量','封装','立创编号','证据等级'],
@@ -245,8 +247,9 @@ def main():
     p = workdir_paths(a.workdir)
     J = {k: load_json(p[k]) for k in ("requirements", "choices", "calc", "selection", "losses", "loop", "check")}
     revisions = {J[k]['revision'] for k in ('choices', 'calc', 'selection', 'losses', 'loop', 'check')}
-    if len(revisions) != 1 or J['check']['summary']['FAIL'] != 0:
-        raise ValueError('交接禁止：版本不一致或 SDRC 有 FAIL')
+    from check_design import _exit_code
+    if len(revisions) != 1 or _exit_code(J['check']) or J['check']['status'] == 'needs_rework':
+        raise ValueError('交接禁止：版本不一致、SDRC 有 FAIL、关键证据缺失或状态需返工')
     if not all(J['loop'][mode]['ok'] for mode in ('CV', 'CC')):
         raise ValueError('交接禁止：环路初值复核未通过')
     db = load_json(a.db)

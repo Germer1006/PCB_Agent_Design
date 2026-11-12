@@ -65,18 +65,24 @@ class Steps:
 
 
 class Checks:
-    """Rule-check log with PASS / WARN / FAIL verdicts."""
+    """Rule-check log with explicit missing-data and inapplicable states."""
 
     def __init__(self):
         self.items = []
 
     def add(self, rid, rule, ok, detail, warn_only=False, ref=""):
-        verdict = "PASS" if ok else ("WARN" if warn_only else "FAIL")
+        verdict = "NOT_ASSESSED" if ok is None else (
+            "PASS" if ok else ("WARN" if warn_only else "FAIL"))
         self.items.append({"id": rid, "rule": rule, "verdict": verdict, "detail": detail, "ref": ref})
         return ok
 
+    def not_applicable(self, rid, rule, reason, ref=""):
+        if not reason:
+            raise ValueError("N/A requires an explicit reason")
+        self.items.append({"id": rid, "rule": rule, "verdict": "N/A", "detail": reason, "ref": ref})
+
     def summary(self):
-        s = {"PASS": 0, "WARN": 0, "FAIL": 0}
+        s = {"PASS": 0, "WARN": 0, "FAIL": 0, "NOT_ASSESSED": 0, "N/A": 0}
         for c in self.items:
             s[c["verdict"]] += 1
         return s

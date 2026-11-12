@@ -27,7 +27,14 @@ def step(script, workdir, db=None):
     sys.stdout.write(r.stdout)
     if r.returncode:
         sys.stderr.write(r.stderr)
-        sys.exit(f"{script} failed")
+        if script == "check_design.py":
+            messages = {2: "SDRC 有 FAIL；检查 check.json 中的失败规则并按 closure_if_fail 回溯。",
+                        3: "SDRC 有 critical/major NOT_ASSESSED；补齐证据后再交给下游。",
+                        1: "SDRC 程序错误；检查 stderr。"}
+            print(messages.get(r.returncode, f"{script} failed with exit code {r.returncode}"), file=sys.stderr)
+        else:
+            print(f"{script} failed", file=sys.stderr)
+        sys.exit(r.returncode)
 
 
 def main():
