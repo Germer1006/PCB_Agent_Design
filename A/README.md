@@ -67,7 +67,22 @@
 
 ## 后续改进
 
-见 [docs/改进任务书_v3.md](docs/改进任务书_v3.md)。T1 已接入工具链，后续任务包括消融评测、计算依据账本、规则检查升级和 skill 规范化。
+见 [docs/改进任务书_v3.md](docs/改进任务书_v3.md)。T1 与 T3 已接入工具链，后续任务包括消融评测、规则检查升级和 skill 规范化。
+
+### T3 计算依据账本与一致性校验
+
+`run_all.py` 在规则检查后生成 `ledger.json` / `ledger.md`，导出交接文件后执行一致性校验。有报告占位符模板时先渲染正文。账本校验来源是否存在、记录值是否过期、各阶段 revision 是否一致；交接校验覆盖设计规格、BOM、固件参数头文件和报告表格。
+
+```text
+python ledger.py <workdir>
+python ledger.py <workdir> --stale L_MWSA1206S_680MT
+python ledger.py <workdir> --stale ao3400a
+python ledger.py <workdir> --stale inductor_ripple_ratio
+python check_consistency.py <workdir>
+python -m unittest test_tools test_sim_switching test_ledger test_consistency -v
+```
+
+旧版中间产物没有结构化来源，需要重跑计算、损耗和环路阶段。r6 迁移范围与验证边界见 [T3 验证说明](docs/T3-r6-validation.md)。来源记录不能代替公式审计或原厂数据手册审计。
 
 ### T1 开关级仿真
 

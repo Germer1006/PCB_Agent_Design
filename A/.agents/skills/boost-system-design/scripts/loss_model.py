@@ -1,11 +1,12 @@
 """CCM 损耗、容差、纹波与被动上电浪涌复核模型（估计值，非保证；由 loss_thermal.py 调用）."""
 import cmath
 import math
-from _common import Steps, param, r3
+from _common import CALC_CONSTANTS, Steps, constant_input, param, part_input, r3, source_input, step_input
 from stage_params import variants, selected
 
 
-def ripple(d, pk, valley, fsw, caps, R, N=1024, nh=60):
+def ripple(d, pk, valley, fsw, caps, R, N=CALC_CONSTANTS["ripple_time_samples"],
+           nh=CALC_CONSTANTS["ripple_harmonics"]):
     wave=[0. if k/N<d else pk-(pk-valley)*(k/N-d)/(1-d) for k in range(N)]
     coeff, rms2=[],[0.]*len(caps)
     for n in range(1,nh+1):
@@ -25,20 +26,31 @@ def run(calc,ch,sel,db):
     po,ta=vo*io,lc['ambient_c']
     parts={k:selected(sel,db,k)[0] for k in ('mosfet','diode','gate_driver','pmos','fuse','inductor')}
     defaults=[]
-    def get(role,key,fallback,fields=('max','typ','min')):
-        value=param(parts[role],key,fields)
-        if value is None: defaults.append(key)
-        return fallback if value is None else value
-    qg,qgd,qgs=(get('mosfet',k,v) for k,v in (('qg_nc',8),('qgd_nc',2),('qgs_nc',1.3)))
-    coss,rgint=get('mosfet','coss_pf',80),get('mosfet','rg_ohm',4.5)
-    cj,iq=get('diode','cj_pf',500),get('gate_driver','iq_ma',1.9)
-    isrc,isnk=get('gate_driver','i_source_a',1.3),get('gate_driver','i_sink_a',7.6)
-    thermal={name:get(role,'rth_ja_cw',fallback) for name,role,fallback in (('MOSFET','mosfet',125),('二极管','diode',80),('防反接 PMOS','pmos',125))}
-    rp=get('pmos','rds_on_mohm_vgs4v5',60)*1e-3*lc['rds_hot_factor']
-    rf=get('fuse','r_mohm',19)*1e-3
+    device_inputs = []
+
+    def get(role, key, fallback_key=None):
+        record = part_input(parts[role], key, ("max", "typ", "min"))
+        if record is None:
+            defaults.append(key)
+            record = constant_input("loss_default." + (fallback_key or key))
+        device_inputs.append(record)
+        return record["value"]
+
+    qg,qgd,qgs=(get('mosfet',k) for k in ('qg_nc','qgd_nc','qgs_nc'))
+    coss,rgint=get('mosfet','coss_pf'),get('mosfet','rg_ohm')
+    cj,iq=get('diode','cj_pf'),get('gate_driver','iq_ma')
+    isrc,isnk=get('gate_driver','i_source_a'),get('gate_driver','i_sink_a')
+    # 热阻用于结温包络，与总损耗和效率公式的输入分开。
+    thermal_start = len(device_inputs)
+    thermal={name:get(role,'rth_ja_cw',role) for name,role in (('MOSFET','mosfet'),('二极管','diode'),('防反接 PMOS','pmos'))}
+    thermal_inputs = device_inputs[thermal_start:]
+    del device_inputs[thermal_start:]
+    rp=get('pmos','rds_on_mohm_vgs4v5')*1e-3*lc['rds_hot_factor']
+    rf=get('fuse','r_mohm')*1e-3
     rs=calc['sensing']['iout']['shunt_ohm']; vb=vo+io*rs
     cases,all_cases,inrush_cases={ },[],[]
-    models=list(variants(sel,db,calc,ch))
+    model_inputs = []
+    models=list(variants(sel,db,calc,ch,evidence=model_inputs))
     for variant,model,mi in models:
         for key,vin in calc['inputs']['vin'].items():
             dc=model.solve_dc(vin,vb,io)
@@ -96,19 +108,51 @@ def run(calc,ch,sel,db):
             'linear_model_exceeds_isat':wi['i_peak_a']>isat,'mitigation_verified':False,
             'note':'线性 L/恒定二极管压降/零初始电压/无负载估计；超过 Isat 时不是可靠上界。外部电源限流瞬态及其输出电容、或 PMOS 缓启动 SOA 须验证。保险丝 I²t 为 nominal，非重复浪涌寿命保证。'}
     nom=cases['nom']
-    for sid,name,val,unit,formula,note in (
-        ('E1','额定点总损耗',nom['p_total_W'],'W','ΣP','见 cases.nom.losses_W'),
-        ('E2','额定整机效率',100*nom['eta_total'],'%','Po/(Po+ΣP)','非实测'),
-        ('E3','额定功率级效率',100*nom['eta_power_stage'],'%','Po/(Po+ΣP−Paux)',''),
-        ('E4','容差场景最低效率',100*we['eta_total'],'%','min η',we['variant']),
-        ('R2','容差场景最大纹波',wr['vpp_harmonic_mv'],'mV','二极管电流谐波×并联支路阻抗','60次谐波，未计ESL/布局尖峰'),
-        ('R3','容差场景最大纹波比',wr['ripple_pct'],'%','Vpp/Vo',''),
-        ('U1','被动充电浪涌线性估计',inrush['i_peak_a'],'A','(Vin−VF)/Z0·exp(−α·tpeak)','超过 Isat 时不是可靠上界'),
-        ('U2','被动充电 I²t 线性估计',inrush['i2t_a2s'],'A²s','C·(Vin−VF)^2/(2R)','完整充电过程的能量积分')):
-        S.add(sid,name,formula,'',val,unit,note)
+    def from_calc(*paths):
+        return [source_input("calc", calc, path) for path in paths]
+
+    common = from_calc("inputs.vin", "inputs.vout_v", "inputs.iout_cc_a", "inputs.fsw_hz", "sensing.iout.shunt_ohm")
+    plant = [*model_inputs, *common]
+    loss_inputs = [
+        *plant, *device_inputs,
+        *from_calc("sensing.vout.divider_loss_w", "sensing.vin.r_top_ohm", "sensing.vin.r_bot_ohm", "aux.i_3v3_ma"),
+        *(source_input("choice", ch, "losses." + k) for k in
+          ("gate_resistor_ohm", "miller_plateau_v", "switching_loss_factor", "core_loss_frac_of_copper")),
+        constant_input("ripple_harmonics"), constant_input("ripple_time_samples"),
+    ]
+    total_input = step_input("ΣP (nom)", nom["p_total_W"], "step:E1")
+    percent = constant_input("percent_divisor")
+    S.add("E1", "额定点总损耗", "ΣP", "", nom["p_total_W"], "W", "见 cases.nom.losses_W", inputs=loss_inputs)
+    S.add("E2", "额定整机效率", "Po/(Po+ΣP)", "", 100*nom["eta_total"], "%", "非实测",
+          inputs=[*from_calc("inputs.pout_w"), total_input, percent])
+    S.add("E3", "额定功率级效率", "Po/(Po+ΣP−Paux)", "", 100*nom["eta_power_stage"], "%",
+          inputs=[*from_calc("inputs.pout_w"), total_input, percent,
+                  source_input("loss", {"cases": cases}, "cases.nom.losses_W", "各支路损耗（显示值）")])
+    S.add("E4", "容差场景最低效率", "min η", "", 100*we["eta_total"], "%", we["variant"],
+          inputs=[*loss_inputs, percent])
+    S.add("R2", "容差场景最大纹波", "二极管电流谐波×并联支路阻抗", "", wr["vpp_harmonic_mv"], "mV",
+          "60次谐波，未计ESL/布局尖峰",
+          inputs=[*plant, constant_input("ripple_harmonics"), constant_input("ripple_time_samples")])
+    S.add("R3", "容差场景最大纹波比", "Vpp/Vo", "", wr["ripple_pct"], "%",
+          inputs=[step_input("Vpp", wr["vpp_harmonic_mv"], "step:R2"), *from_calc("inputs.vout_v"), percent])
+    inrush_inputs = [*model_inputs, *from_calc("inputs.vin.max")]
+    S.add("U1", "被动充电浪涌线性估计", "(Vin−VF)/Z0·exp(−α·tpeak)", "", inrush["i_peak_a"], "A",
+          "超过 Isat 时不是可靠上界", inputs=inrush_inputs)
+    S.add("U2", "被动充电 I²t 线性估计", "C·(Vin−VF)^2/(2R)", "", inrush["i2t_a2s"], "A²s",
+          "完整充电过程的能量积分", inputs=inrush_inputs)
+    for sid, name, field in (("L_PK_MAX", "最大电感峰值", "IL_pk_A"),
+                             ("L_RMS_MAX", "最大电感 RMS 电流", "IL_rms_A"),
+                             ("L_RIPPLE_MAX", "最大电感纹波比", "ripple_ratio")):
+        S.add(sid, name, "max(容差工况)", "", max(x[field] for x in all_cases), "" if field == "ripple_ratio" else "A",
+              inputs=plant)
+    for name, role, heat in zip(thermal, ("MOSFET", "DIODE", "PMOS"), thermal_inputs):
+        S.add("TJ_" + role, f"{name}最高结温", "max(Ta + P·RθJA)", "",
+              max(x["tj_C"][name] for x in all_cases), "°C",
+              inputs=[*loss_inputs, heat, source_input("choice", ch, "losses.ambient_c")])
     gain=[(*m.gain_peak(calc['inputs']['vin']['min'],vo/io+rs),name) for name,m,_ in models]
     gp=min(gain,key=lambda x:x[0]); mi=models[0][2]
-    S.add('G1','最低增益峰占空比','max Vo(D)','含输入串联电阻',gp[0],'','线性寄生模型')
+    S.add('G1','最低增益峰占空比','max Vo(D)','含输入串联电阻',gp[0],'','线性寄生模型',
+          inputs=[*model_inputs, *from_calc("inputs.vin.min", "inputs.vout_v", "inputs.iout_cc_a", "sensing.iout.shunt_ohm")])
     return {'schema':'boost-losses/2','revision':ch['revision'],'model':mi,
             'assumptions':{**lc,'defaults_used_for_missing_data':sorted(set(defaults)),
                 'limitations':['ESR 0.5/1/2倍为敏感性场景，非手册全温界限。',

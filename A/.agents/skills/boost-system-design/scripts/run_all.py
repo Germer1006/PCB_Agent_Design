@@ -1,4 +1,4 @@
-"""一键运行模块一工具链：calc → select → loss → (η 迭代) → loop → validate_loop → sim → check → export.
+"""一键运行模块一工具链：calc → select → loss → (η 迭代) → loop → validate_loop → sim → check → ledger → export → consistency.
 
 用法:
   python run_all.py <workdir> [--requirements inputs/course_requirements.json] [--db parts_db.json] [--max-iter 3]
@@ -21,7 +21,7 @@ HERE = Path(__file__).resolve().parent
 
 def step(script, workdir, db=None):
     cmd = [sys.executable, str(HERE / script), str(workdir)] + (["--db", str(db)] if db else [])
-    print(f"\n$ {script}")
+    print(f"\n$ {script}", flush=True)
     r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace",
                        env={**__import__("os").environ, "PYTHONIOENCODING": "utf-8"})
     sys.stdout.write(r.stdout)
@@ -67,7 +67,11 @@ def main():
     step("validate_loop.py", w)
     step("sim_switching.py", w, a.db)
     step("check_design.py", w, a.db)
+    step("ledger.py", w, a.db)
     step("export_handoff.py", w, a.db)
+    if (w / "system_design_report.template.md").exists():
+        step("render_report.py", w)
+    step("check_consistency.py", w, a.db)
 
 
 if __name__ == "__main__":
