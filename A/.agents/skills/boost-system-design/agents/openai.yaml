@@ -1,0 +1,4 @@
+interface:
+  display_name: "模块一·系统总体设计"
+  short_description: "Boost CC/CV 电源：需求→拓扑→控制→计算→选型→复核→交接"
+  default_prompt: "使用 $boost-system-design，按 inputs/course_requirements.json 完成模块一系统总体设计，工作目录用 outputs/test1；我不是电源设计专业人士，请用白话汇报，只问我能回答的问题。"

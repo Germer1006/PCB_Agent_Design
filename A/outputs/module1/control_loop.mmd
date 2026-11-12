@@ -1,0 +1,17 @@
+%% CC/CV 数字控制框图（每 50 µs 执行一次，fctrl = 20 kHz）
+flowchart LR
+    VREF["Vref<br/>软启动斜坡 → 12 V"] --> EV(("+<br/>−"))
+    IREF["Iref = 0.5 A"] --> EI(("+<br/>−"))
+    EV -- eV --> PIV["CV-PI<br/>Kp_v, Ki_v"]
+    EI -- eI --> PIC["CC-PI<br/>Kp_i, Ki_i"]
+    PIV -- Dv --> MIN["min(Dv, Di)"]
+    PIC -- Di --> MIN
+    MIN --> LIM["限幅 [0, Dmax]<br/>抗饱和：非激活环积分钳位"]
+    LIM -- D --> PWM["TIM1 CCR<br/>预装载，下一周期生效"]
+    PWM --> PLANT["Boost 功率级<br/>(含 RHPZ、LC 谐振)"]
+    PLANT -- Vout --> HV["分压 + RC<br/>ADC 码 × VOUT_V_PER_CODE"]
+    PLANT -- Iout --> HI["分流 + 放大 + RC<br/>ADC 码 × IOUT_A_PER_CODE"]
+    HV -- Vout_meas --> EV
+    HI -- Iout_meas --> EI
+    LIM -. 积分跟踪 .-> PIV
+    LIM -. 积分跟踪 .-> PIC

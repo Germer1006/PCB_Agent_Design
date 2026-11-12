@@ -1,0 +1,3292 @@
+{
+  "schema": "boost-design-spec/1",
+  "revision": "r6",
+  "date": "2026-11-11",
+  "status": "conditional_review",
+  "sdrc_summary": {
+    "PASS": 78,
+    "WARN": 8,
+    "FAIL": 0
+  },
+  "source_documents": [
+    "嵌入式系统实践课程设计要求(1).docx — 2.1 模块一、四、设计参考",
+    "requirements.json",
+    "design_choices.json",
+    "calc.json",
+    "selection.json",
+    "losses.json",
+    "loop.json",
+    "loop_validation.json",
+    "check.json",
+    "tooling/knowledge/parts_db.json"
+  ],
+  "requirements": [
+    {
+      "id": "REQ-IN",
+      "text": "输入电压及容差",
+      "level": "must",
+      "source_field": "vin",
+      "source_value": {
+        "nom_v": 5.0,
+        "tol_pct": 5,
+        "level": "must",
+        "origin": "四、输入电压：5V 直流，允许 ±5% 波动"
+      },
+      "origin": "四、输入电压：5V 直流，允许 ±5% 波动"
+    },
+    {
+      "id": "REQ-CV",
+      "text": "恒压设定及稳态误差",
+      "level": "must",
+      "source_field": "vout",
+      "source_value": {
+        "set_v": 12.0,
+        "steady_err_pct": 5,
+        "level": "must",
+        "origin": "四、目标输出电压 12V，稳态误差不超过 ±5%"
+      },
+      "origin": "四、目标输出电压 12V，稳态误差不超过 ±5%"
+    },
+    {
+      "id": "REQ-CC",
+      "text": "恒流设定及稳态误差；限声明的可调区",
+      "level": "must",
+      "source_field": "iout",
+      "source_value": {
+        "cc_set_a": 0.5,
+        "steady_err_pct": 5,
+        "level": "must",
+        "origin": "四、恒流目标 0.5A，稳态误差不超过 ±5%"
+      },
+      "origin": "四、恒流目标 0.5A，稳态误差不超过 ±5%"
+    },
+    {
+      "id": "REQ-PWR",
+      "text": "额定功率与连续运行",
+      "level": "must",
+      "source_field": "pout",
+      "source_value": {
+        "rated_w": 6.0,
+        "level": "must",
+        "origin": "四、额定输出功率约 6W，稳定连续运行"
+      },
+      "origin": "四、额定输出功率约 6W，稳定连续运行"
+    },
+    {
+      "id": "REQ-FSW",
+      "text": "开关频率范围",
+      "level": "must",
+      "source_field": "fsw.range_hz",
+      "source_value": [
+        50000,
+        100000
+      ],
+      "origin": "四、开关频率 50～100kHz，建议统一 100kHz"
+    },
+    {
+      "id": "TGT-FSW",
+      "text": "建议开关频率",
+      "level": "target",
+      "source_field": "fsw.suggested_hz",
+      "source_value": 100000,
+      "origin": "四、开关频率 50～100kHz，建议统一 100kHz"
+    },
+    {
+      "id": "REQ-RIPPLE",
+      "text": "输出纹波基本上限",
+      "level": "must",
+      "source_field": "ripple.max_pct",
+      "source_value": 5,
+      "origin": "四、输出电压纹波 ≤5%，建议 ≤3%"
+    },
+    {
+      "id": "TGT-RIPPLE",
+      "text": "输出纹波建议目标",
+      "level": "target",
+      "source_field": "ripple.target_pct",
+      "source_value": 3,
+      "origin": "四、输出电压纹波 ≤5%，建议 ≤3%"
+    },
+    {
+      "id": "REQ-MCU",
+      "text": "使用 32 位 MCU",
+      "level": "must",
+      "source_field": "controller.type",
+      "source_value": "32-bit MCU",
+      "origin": "四、控制器 32 位 MCU，推荐 STM32"
+    },
+    {
+      "id": "TGT-MCU",
+      "text": "优先 STM32",
+      "level": "target",
+      "source_field": "controller.preferred",
+      "source_value": "STM32",
+      "origin": "四、控制器 32 位 MCU，推荐 STM32"
+    },
+    {
+      "id": "REQ-CTRL",
+      "text": "MCU 数字 PI CC/CV",
+      "level": "must",
+      "source_field": "control",
+      "source_value": {
+        "method": "digital PI",
+        "modes": [
+          "CC",
+          "CV"
+        ],
+        "level": "must",
+        "origin": "四、控制方式数字 PI，实现 CC/CV 控制"
+      },
+      "origin": "四、控制方式数字 PI，实现 CC/CV 控制"
+    },
+    {
+      "id": "REQ-PROT",
+      "text": "OVP/OCP/占空比限幅",
+      "level": "must",
+      "source_field": "protection.required",
+      "source_value": [
+        "OVP",
+        "OCP",
+        "duty_limit"
+      ],
+      "origin": "四、保护功能：过压、过流、占空比限幅；建议增加软启动"
+    },
+    {
+      "id": "TGT-START",
+      "text": "建议软启动",
+      "level": "target",
+      "source_field": "protection.suggested",
+      "source_value": [
+        "soft_start"
+      ],
+      "origin": "四、保护功能：过压、过流、占空比限幅；建议增加软启动"
+    },
+    {
+      "id": "REQ-ETA-MEAS",
+      "text": "效率必须实测",
+      "level": "must",
+      "source_field": "efficiency.measure",
+      "source_value": true,
+      "origin": "四、效率完成实测，额定点尽量 ≥75%"
+    },
+    {
+      "id": "TGT-ETA",
+      "text": "额定效率建议目标",
+      "level": "target",
+      "source_field": "efficiency.target_pct",
+      "source_value": 75,
+      "origin": "四、效率完成实测，额定点尽量 ≥75%"
+    },
+    {
+      "id": "REQ-LOAD",
+      "text": "电子负载支持 CC/CR；CV 用 CC，CC 用 CR",
+      "level": "must",
+      "source_field": "test_load",
+      "source_value": {
+        "type": "electronic load",
+        "modes": [
+          "CC",
+          "CR"
+        ],
+        "level": "must",
+        "origin": "四、调试负载：电子负载，支持 CC/CR 模式"
+      },
+      "origin": "四、调试负载：电子负载，支持 CC/CR 模式"
+    },
+    {
+      "id": "REQ-PCB",
+      "text": "两层 PCB，功率级与控制级布局合理",
+      "level": "must",
+      "source_field": "pcb",
+      "source_value": {
+        "layers": 2,
+        "note": "功率级与控制级布局合理",
+        "level": "must",
+        "origin": "四、PCB 两层板即可"
+      },
+      "origin": "四、PCB 两层板即可"
+    },
+    {
+      "id": "REQ-BUILD",
+      "text": "制作实物并手工焊接",
+      "level": "project_constraint",
+      "source_field": "project_constraints.build_physical",
+      "source_value": true,
+      "origin": "小组确认（2026-11-09）：要做实物，原理图用嘉立创 EDA，芯片无现成，由智能体选型"
+    },
+    {
+      "id": "REQ-EDA",
+      "text": "使用嘉立创 EDA",
+      "level": "project_constraint",
+      "source_field": "project_constraints.eda",
+      "source_value": "嘉立创EDA",
+      "origin": "小组确认（2026-11-09）：要做实物，原理图用嘉立创 EDA，芯片无现成，由智能体选型"
+    },
+    {
+      "id": "REQ-SOURCE",
+      "text": "立创采购且可追溯",
+      "level": "project_constraint",
+      "source_field": "project_constraints.sourcing",
+      "source_value": "立创商城 (LCSC)",
+      "origin": "小组确认（2026-11-09）：要做实物，原理图用嘉立创 EDA，芯片无现成，由智能体选型"
+    }
+  ],
+  "topology": {
+    "type": "async_boost",
+    "fsw_hz": 100000,
+    "rationale": "S3 用户已确认：采用非同步 Boost（电感、低边 MOSFET、整流二极管、输出电容），MCU 经独立驱动器控制功率开关。理由是单路 PWM、实现与调试负担较低，可由 MCU 数字 PI 直接闭环。同步 Boost 的死区、高边驱动及反向电流管理增加实现负担；SEPIC/升降压在当前已确认的工作区边界下没有必要；内置闭环的专用 Boost 控制 IC 不满足本次由 MCU 数字 PI 闭环的实现要求。效率是否达标须待 S7 复核与实测，不能由拓扑选择直接保证。"
+  },
+  "operating_point_nominal": {
+    "variant": "nominal",
+    "factors": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "vin_key": "nom",
+    "vin_v": 5.0,
+    "D": 0.6288,
+    "IL_avg_A": 1.347,
+    "IL_pk_A": 1.561,
+    "IL_valley_A": 1.133,
+    "IL_rms_A": 1.353,
+    "dIL_A": 0.4276,
+    "ripple_ratio": 0.3175,
+    "VBOOST_v": 12.03,
+    "driver_vdd_v": 4.869,
+    "t_rise_ns": 18.87,
+    "t_fall_ns": 14.84,
+    "losses_W": {
+      "MOSFET 导通": 0.04786,
+      "MOSFET 开关": 0.04181,
+      "MOSFET Coss": 0.0005876,
+      "二极管导通": 0.245,
+      "二极管结电容": 0.003918,
+      "电感铜损": 0.2561,
+      "输出电容 ESR": 0.00862,
+      "采样电阻": 0.0125,
+      "分压电阻": 0.003967,
+      "防反接 PMOS": 0.1427,
+      "保险丝": 0.03476,
+      "栅极驱动": 0.01266,
+      "3.3V 辅助电源": 0.1965,
+      "电感磁损(估)": 0.06403
+    },
+    "p_total_W": 1.071,
+    "eta_total": 0.8485,
+    "eta_power_stage": 0.8744,
+    "iin_avg_A": 1.414,
+    "tj_C": {
+      "MOSFET": 51.28,
+      "二极管": 54.93,
+      "防反接 PMOS": 57.84
+    },
+    "vpp_harmonic_mv": 54.76,
+    "ripple_pct": 0.4564,
+    "capacitor_branch_rms_A": [
+      0.1471,
+      0.5974
+    ]
+  },
+  "functional_blocks": [
+    {
+      "id": "MOD-IN",
+      "name": "输入接口与保护",
+      "function": "端子、保险丝、防反接 PMOS、输入电容；独立输入限流待关闭",
+      "impl": "硬件",
+      "requirements": [
+        "REQ-IN",
+        "REQ-PWR",
+        "REQ-PROT"
+      ]
+    },
+    {
+      "id": "MOD-PWR",
+      "name": "Boost 功率级",
+      "function": "电感、开关管、二极管、输出电容",
+      "impl": "硬件",
+      "requirements": [
+        "REQ-CV",
+        "REQ-CC",
+        "REQ-PWR",
+        "REQ-FSW",
+        "TGT-FSW",
+        "REQ-RIPPLE",
+        "TGT-RIPPLE",
+        "TGT-ETA"
+      ]
+    },
+    {
+      "id": "MOD-DRV",
+      "name": "栅极驱动",
+      "function": "MCU PWM 经独立 B 版驱动器驱动 MOSFET",
+      "impl": "硬件",
+      "requirements": [
+        "REQ-FSW",
+        "REQ-PROT",
+        "TGT-ETA"
+      ]
+    },
+    {
+      "id": "MOD-SENSE",
+      "name": "采样调理",
+      "function": "端子电压、输出电容后高边负载电流、输入电压；校准与滤波",
+      "impl": "硬件",
+      "requirements": [
+        "REQ-IN",
+        "REQ-CV",
+        "REQ-CC",
+        "REQ-PROT",
+        "REQ-ETA-MEAS"
+      ]
+    },
+    {
+      "id": "MOD-MCU",
+      "name": "MCU 控制核心",
+      "function": "ADC、数字 PI CC/CV、PWM、比较器刹车、状态机",
+      "impl": "硬件+固件",
+      "requirements": [
+        "REQ-MCU",
+        "TGT-MCU",
+        "REQ-CTRL",
+        "REQ-PROT",
+        "TGT-START",
+        "REQ-FSW",
+        "TGT-FSW"
+      ]
+    },
+    {
+      "id": "MOD-AUX",
+      "name": "辅助电源",
+      "function": "LDO 与去耦，模拟参考环境",
+      "impl": "硬件",
+      "requirements": [
+        "REQ-IN",
+        "REQ-MCU",
+        "REQ-CV",
+        "REQ-CC"
+      ]
+    },
+    {
+      "id": "MOD-OUT",
+      "name": "输出接口与保护",
+      "function": "输出端子、TVS、测试点；不具备输出隔离",
+      "impl": "硬件",
+      "requirements": [
+        "REQ-CV",
+        "REQ-CC",
+        "REQ-PROT",
+        "REQ-LOAD"
+      ]
+    },
+    {
+      "id": "MOD-DBG",
+      "name": "调试接口",
+      "function": "SWD、UART、状态指示、外部仪表测试",
+      "impl": "硬件+固件",
+      "requirements": [
+        "REQ-LOAD",
+        "REQ-ETA-MEAS",
+        "TGT-ETA"
+      ]
+    },
+    {
+      "id": "MOD-ENG",
+      "name": "跨模块工程约束",
+      "function": "B/C/D 工程、采购和装配审查",
+      "impl": "工程验证",
+      "requirements": [
+        "REQ-PCB",
+        "REQ-BUILD",
+        "REQ-EDA",
+        "REQ-SOURCE"
+      ]
+    }
+  ],
+  "nets": [
+    {
+      "name": "VIN_RAW",
+      "desc": "输入端子正极",
+      "class": "power"
+    },
+    {
+      "name": "VIN_F",
+      "desc": "保险丝后",
+      "class": "power"
+    },
+    {
+      "name": "VIN",
+      "desc": "防反接后 5 V 母线",
+      "class": "power"
+    },
+    {
+      "name": "SW",
+      "desc": "开关节点（高 dv/dt，面积最小）",
+      "class": "power-noisy"
+    },
+    {
+      "name": "VBOOST",
+      "desc": "二极管阴极/输出电容",
+      "class": "power"
+    },
+    {
+      "name": "VOUT",
+      "desc": "分流电阻后输出（接端子）",
+      "class": "power"
+    },
+    {
+      "name": "GATE",
+      "desc": "Q1 栅极",
+      "class": "drive"
+    },
+    {
+      "name": "GATE_DRV",
+      "desc": "驱动器输出（经栅极电阻到 GATE）",
+      "class": "drive"
+    },
+    {
+      "name": "PWM_SW",
+      "desc": "MCU TIM1_CH1 → 驱动器输入",
+      "class": "signal"
+    },
+    {
+      "name": "VOUT_SENSE",
+      "desc": "输出电压分压点 → ADC/COMP",
+      "class": "analog"
+    },
+    {
+      "name": "IOUT_SENSE_RAW",
+      "desc": "电流放大器输出，R6/C32 之前；COMP 取样支路待 SR46 核实",
+      "class": "analog"
+    },
+    {
+      "name": "IOUT_SENSE",
+      "desc": "R6/C32 之后的电流 ADC 信号；硬件比较器路径和延迟待核实",
+      "class": "analog"
+    },
+    {
+      "name": "VIN_SENSE",
+      "desc": "输入电压分压点 → ADC",
+      "class": "analog"
+    },
+    {
+      "name": "+3V3",
+      "desc": "LDO 输出",
+      "class": "power-aux"
+    },
+    {
+      "name": "GND",
+      "desc": "唯一地网络（不另设 PGND/AGND 网络）：连续参考地平面；功率回流分区，不让开关回流穿过采样地；“功率回流区”仅是布局分区说明，不在高边分流处接地",
+      "class": "ground"
+    },
+    {
+      "name": "SWDIO",
+      "desc": "调试",
+      "class": "debug"
+    },
+    {
+      "name": "SWCLK",
+      "desc": "调试",
+      "class": "debug"
+    },
+    {
+      "name": "NRST",
+      "desc": "复位",
+      "class": "debug"
+    },
+    {
+      "name": "UART_TX",
+      "desc": "日志输出",
+      "class": "debug"
+    },
+    {
+      "name": "UART_RX",
+      "desc": "命令输入",
+      "class": "debug"
+    }
+  ],
+  "interfaces": [
+    {
+      "id": "IF-01",
+      "signal": "PWM_SW",
+      "from": "MOD-MCU",
+      "to": "MOD-DRV",
+      "type": "数字 3.3 V",
+      "spec": "100 kHz，0–80% 占空比，高有效；复位期间下拉为低"
+    },
+    {
+      "id": "IF-02",
+      "signal": "GATE",
+      "from": "MOD-DRV",
+      "to": "MOD-PWR",
+      "type": "栅极驱动",
+      "spec": "0/Vin 摆幅，tr≈18.87 ns, tf≈14.84 ns（模型估计）；分离输出按已建模等效栅极电阻连接，修改后重算"
+    },
+    {
+      "id": "IF-03",
+      "signal": "VOUT_SENSE",
+      "from": "MOD-SENSE",
+      "to": "MOD-MCU (ADC + COMP)",
+      "type": "模拟 0–3.3 V",
+      "spec": "Vout = code × 3.3/4095 / 0.1887；12 V→code 2810；满量程 17.49 V"
+    },
+    {
+      "id": "IF-04",
+      "signal": "IOUT_SENSE",
+      "from": "MOD-SENSE",
+      "to": "MOD-MCU (ADC；COMP 分支待核实)",
+      "type": "模拟 0–3.3 V",
+      "spec": "Iout = code × 3.3/4095 / 2.5；0.5 A→code 1551；满量程 1.3 A"
+    },
+    {
+      "id": "IF-05",
+      "signal": "VIN_SENSE",
+      "from": "MOD-SENSE",
+      "to": "MOD-MCU (ADC)",
+      "type": "模拟 0–3.3 V",
+      "spec": "Vin = code × 3.3/4095 / 0.5；满量程 6.6 V"
+    },
+    {
+      "id": "IF-06",
+      "signal": "+3V3",
+      "from": "MOD-AUX",
+      "to": "MOD-MCU, MOD-SENSE",
+      "type": "电源",
+      "spec": "3.3 V，负载约 39.3 mA；同时作为 ADC 基准（VDDA）"
+    },
+    {
+      "id": "IF-07",
+      "signal": "SWD/UART",
+      "from": "MOD-DBG",
+      "to": "PC",
+      "type": "调试",
+      "spec": "SWD 4 线 + UART 115200 bps，日志 50 Hz"
+    },
+    {
+      "id": "IF-08",
+      "signal": "VIN_RAW/VOUT",
+      "from": "实验电源/电子负载",
+      "to": "MOD-IN/MOD-OUT",
+      "type": "功率端子",
+      "spec": "输入 5 V ±5%，约 1.503 A；输出 12 V/0.5 A；CR 测 CC 段 12.5–24.0 Ω"
+    }
+  ],
+  "components": [
+    {
+      "designator": "J1,J2",
+      "role": "terminal",
+      "block": "MOD-IN/MOD-OUT",
+      "value": "KF301-5.0-2P",
+      "mpn": "KF301-5.0-2P",
+      "manufacturer": "Cixi Kefa Elec (KEFA)",
+      "package": "THT 2P, 5.0 mm pitch",
+      "qty": 2,
+      "lcsc": "C474881",
+      "datasheet": "https://datasheet.lcsc.com/datasheet/pdf/dbe48a1bef5e997cc12dba31bc0ac67e.pdf?productCode=C474881",
+      "part_id": "J_KF301_5_0_2P",
+      "confidence": "medium",
+      "parameter_evidence": {
+        "rated_current_a": {
+          "typ": null,
+          "max": 10,
+          "min": null,
+          "condition": "Conservative minimum of UL use-group B=16 A / D=10 A; IEC=17 A. Not a claimed DC certification.",
+          "page": "KEFA KF301-5.0 drawing rev A 21.03.13 p1, technical data"
+        },
+        "rated_voltage_v": {
+          "typ": null,
+          "max": 250,
+          "min": null,
+          "condition": "IEC overvoltage category III, pollution degree 3; not a claimed DC certification.",
+          "page": "p1 IEC technical data"
+        },
+        "pitch_mm": {
+          "typ": 5.0,
+          "max": null,
+          "min": null,
+          "condition": "5.00±0.03 mm; not 5.08 mm; P=2 from product page",
+          "page": "p1 PCB layout"
+        }
+      },
+      "lcsc_evidence": "https://www.lcsc.com/product-detail/C474881.html ; JSON-LD sku=C474881, mpn=KF301-5.0-2P, brand=Cixi Kefa Elec; retrieved=2026-11-09T11:24:35.898881+00:00",
+      "stock_risk": false,
+      "connection": "J1=输入 VIN_RAW/GND，J2=输出 VOUT/GND"
+    },
+    {
+      "designator": "F1",
+      "role": "fuse",
+      "block": "MOD-IN",
+      "value": "0466003.NRHF",
+      "mpn": "0466003.NRHF",
+      "manufacturer": "Littelfuse",
+      "package": "1206 thin-film fuse",
+      "qty": 1,
+      "lcsc": "C14165",
+      "datasheet": "https://static.chipdip.ru/lib/373/DOC018373187.pdf",
+      "part_id": "F_in_0466003NRHF",
+      "confidence": "medium",
+      "parameter_evidence": {
+        "rated_current_a": {
+          "typ": 3.0,
+          "max": null,
+          "min": null,
+          "condition": "very fast acting; 200% opens ≤5 s, 300% ≤0.2 s, 100% ≥4 h",
+          "page": "1"
+        },
+        "max_voltage_v": {
+          "typ": null,
+          "max": 32,
+          "min": null,
+          "condition": "AC/DC",
+          "page": "1"
+        },
+        "interrupting_rating_a": {
+          "typ": null,
+          "max": 50,
+          "min": null,
+          "condition": "@32 VAC/VDC",
+          "page": "1"
+        },
+        "cold_resistance_mohm": {
+          "typ": 19,
+          "max": null,
+          "min": null,
+          "condition": "nominal, at 10% rated current, 25 °C",
+          "page": "1"
+        },
+        "melting_i2t_a2s": {
+          "typ": 0.576,
+          "max": null,
+          "min": null,
+          "condition": "nominal",
+          "page": "1"
+        },
+        "voltage_drop_mv": {
+          "typ": 75.99,
+          "max": null,
+          "min": null,
+          "condition": "nominal at rated current",
+          "page": "1"
+        },
+        "power_dissipation_w": {
+          "typ": 0.228,
+          "max": null,
+          "min": null,
+          "condition": "nominal",
+          "page": "1"
+        },
+        "derating": {
+          "typ": null,
+          "max": null,
+          "min": null,
+          "condition": "continuous at 70 °C: I = 0.75*0.80*Irat = 0.60*Irat = 1.8 A",
+          "page": "2"
+        },
+        "i_rated_a": {
+          "typ": 3.0,
+          "max": null,
+          "min": null,
+          "condition": "very fast acting; 200% opens ≤5 s, 300% ≤0.2 s, 100% ≥4 h",
+          "page": "1",
+          "alias_of": "rated_current_a"
+        },
+        "v_max_v": {
+          "typ": null,
+          "max": 32.0,
+          "min": null,
+          "condition": "AC/DC",
+          "page": "1",
+          "alias_of": "max_voltage_v"
+        },
+        "r_mohm": {
+          "typ": 19.0,
+          "max": null,
+          "min": null,
+          "condition": "nominal, at 10% rated current, 25 °C",
+          "page": "1",
+          "alias_of": "cold_resistance_mohm"
+        }
+      },
+      "lcsc_evidence": "https://www.lcsc.com/product-detail/Fuses_Littelfuse-0466003-NRHF_C14165.html (snippet 'Melting I2t 0.576, Interrupt Rating 50A ... 3A, 32V'); non-HF 0466003.NR = C99555 (out of stock)",
+      "stock_risk": true,
+      "connection": "VIN_RAW → VIN_F"
+    },
+    {
+      "designator": "Q2",
+      "role": "pmos",
+      "block": "MOD-IN",
+      "value": "AO3401A",
+      "mpn": "AO3401A",
+      "manufacturer": "Alpha & Omega Semiconductor (AOS)",
+      "package": "SOT-23",
+      "qty": 1,
+      "lcsc": "C15127",
+      "datasheet": "https://www.aosmd.com/res/datasheets/AO3401A.pdf",
+      "part_id": "ao3401a",
+      "confidence": "high",
+      "parameter_evidence": {
+        "vds_max_v": {
+          "typ": null,
+          "max": -30,
+          "min": null,
+          "condition": "abs max",
+          "page": "p1"
+        },
+        "vgs_max_v": {
+          "typ": null,
+          "max": 12,
+          "min": null,
+          "condition": "+/-12 V",
+          "page": "p1"
+        },
+        "id_cont_a_ta25": {
+          "typ": null,
+          "max": -4.0,
+          "min": null,
+          "condition": "TA=25C",
+          "page": "p1"
+        },
+        "id_cont_a_ta70": {
+          "typ": null,
+          "max": -3.2,
+          "min": null,
+          "condition": "TA=70C",
+          "page": "p1"
+        },
+        "idm_a": {
+          "typ": null,
+          "max": -27,
+          "min": null,
+          "condition": "pulsed",
+          "page": "p1"
+        },
+        "pd_w_ta25": {
+          "typ": null,
+          "max": 1.4,
+          "min": null,
+          "condition": "TA=25C",
+          "page": "p1"
+        },
+        "rds_on_mohm_vgs10v": {
+          "typ": 41,
+          "max": 50,
+          "min": null,
+          "condition": "VGS=-10V, ID=-4.0A",
+          "page": "p2"
+        },
+        "rds_on_mohm_vgs4v5": {
+          "typ": 47,
+          "max": 60,
+          "min": null,
+          "condition": "VGS=-4.5V, ID=-3.5A",
+          "page": "p2"
+        },
+        "rds_on_mohm_vgs2v5": {
+          "typ": 60,
+          "max": 85,
+          "min": null,
+          "condition": "VGS=-2.5V, ID=-2.5A",
+          "page": "p2"
+        },
+        "vgs_th_v": {
+          "typ": -0.9,
+          "max": -1.3,
+          "min": -0.5,
+          "condition": "VDS=VGS, ID=-250uA (datasheet min/typ/max columns)",
+          "page": "p2"
+        },
+        "qg_nc_vgs4v5": {
+          "typ": 7,
+          "max": null,
+          "min": null,
+          "condition": "Qg(4.5V); test VGS=-10V, VDS=-15V, ID=-4A",
+          "page": "p2"
+        },
+        "ciss_pf": {
+          "typ": 645,
+          "max": null,
+          "min": null,
+          "condition": "VGS=0V, VDS=-15V, f=1MHz",
+          "page": "p2"
+        },
+        "coss_pf": {
+          "typ": 80,
+          "max": null,
+          "min": null,
+          "condition": "VGS=0V, VDS=-15V, f=1MHz",
+          "page": "p2"
+        },
+        "rg_ohm": {
+          "typ": 7.8,
+          "max": 12,
+          "min": 4,
+          "condition": "f=1MHz",
+          "page": "p2"
+        },
+        "rth_ja_c_per_w_steady": {
+          "typ": 100,
+          "max": 125,
+          "min": null,
+          "condition": "steady state, 1 in^2 FR-4, 2 oz Cu",
+          "page": "p1"
+        },
+        "rth_ja_c_per_w_t10s": {
+          "typ": 70,
+          "max": 90,
+          "min": null,
+          "condition": "t<=10s",
+          "page": "p1"
+        },
+        "id_a": {
+          "typ": null,
+          "max": -4.0,
+          "min": null,
+          "condition": "TA=25C",
+          "page": "p1",
+          "alias_of": "id_cont_a_ta25"
+        },
+        "qg_nc": {
+          "typ": 7.0,
+          "max": null,
+          "min": null,
+          "condition": "Qg(4.5V); test VGS=-10V, VDS=-15V, ID=-4A",
+          "page": "p2",
+          "alias_of": "qg_nc_vgs4v5"
+        },
+        "rth_ja_cw": {
+          "typ": 100.0,
+          "max": 125.0,
+          "min": null,
+          "condition": "steady state, 1 in^2 FR-4, 2 oz Cu",
+          "page": "p1",
+          "alias_of": "rth_ja_c_per_w_steady"
+        }
+      },
+      "lcsc_evidence": "WebSearch: lcsc.com/product-detail/MOSFET_Alpha-Omega-Semicon-AO3401A_C15127.html; jlcpcb.com/partdetail/Alpha_OmegaSemicon-AO3401A/C15127 (Basic)",
+      "stock_risk": false,
+      "connection": "防反接：D=VIN_F, S=VIN；栅极网络由 B 核实；未实现经验证的浪涌限制"
+    },
+    {
+      "designator": "C1,C2",
+      "role": "cin_ceramic",
+      "block": "MOD-IN",
+      "value": "22µF/16.0V",
+      "mpn": "CL31A226KOHNNNE",
+      "manufacturer": "Samsung Electro-Mechanics",
+      "package": "1206 (3216)",
+      "qty": 2,
+      "lcsc": "C90146",
+      "datasheet": "https://datasheet.lcsc.com/datasheet/pdf/015e8892be1d4004ad7b0cd1139329c7.pdf?productCode=C90146",
+      "part_id": "C_in_CL31A226KOHNNNE",
+      "confidence": "medium",
+      "parameter_evidence": {
+        "capacitance_uf": {
+          "typ": 22,
+          "max": null,
+          "min": null,
+          "condition": "±10%",
+          "page": "Samsung reference sheet p1, exact CL31A226KOHNNNE"
+        },
+        "rated_voltage_v": {
+          "typ": 16,
+          "max": null,
+          "min": null,
+          "condition": "",
+          "page": "Samsung reference sheet p1, exact CL31A226KOHNNNE"
+        },
+        "dielectric": {
+          "typ": null,
+          "max": null,
+          "min": null,
+          "condition": "X5R",
+          "page": "Samsung reference sheet p1, exact CL31A226KOHNNNE"
+        },
+        "dimensions_mm": {
+          "typ": null,
+          "max": null,
+          "min": null,
+          "condition": "L=3.20±0.20, W=1.60±0.20, T=1.60±0.20 mm",
+          "page": "Samsung reference sheet p1, exact CL31A226KOHNNNE"
+        },
+        "dc_bias_cap_change_pct_at_5v": {
+          "typ": null,
+          "max": null,
+          "min": null,
+          "condition": "not available",
+          "page": null
+        },
+        "voltage_v": {
+          "typ": 16.0,
+          "max": null,
+          "min": null,
+          "condition": "",
+          "page": "Samsung reference sheet p1, exact CL31A226KOHNNNE",
+          "alias_of": "rated_voltage_v"
+        }
+      },
+      "lcsc_evidence": "https://www.lcsc.com/product-detail/C90146.html ; JSON-LD sku=C90146, mpn=CL31A226KOHNNNE, brand=Samsung Electro-Mechanics; retrieved=2026-11-09T11:24:36.179417+00:00",
+      "stock_risk": false,
+      "connection": "VIN – GND，靠近 L1 与 Q1 源极地"
+    },
+    {
+      "designator": "C5",
+      "role": "cin_bulk",
+      "block": "MOD-IN",
+      "value": "100µF/16.0V",
+      "mpn": "EEE-FK1C101P",
+      "manufacturer": "Panasonic",
+      "package": "SMD can 6.3x5.8 mm (size code D)",
+      "qty": 1,
+      "lcsc": "C128532",
+      "datasheet": "https://datasheet.octopart.com/EEE-FK1H221P-Panasonic-datasheet-8188412.pdf",
+      "part_id": "C_in_EEEFK1C101P",
+      "confidence": "high",
+      "parameter_evidence": {
+        "capacitance_uf": {
+          "typ": 100,
+          "max": null,
+          "min": null,
+          "condition": "±20%",
+          "page": "4"
+        },
+        "rated_voltage_v": {
+          "typ": 16,
+          "max": null,
+          "min": null,
+          "condition": "",
+          "page": "4"
+        },
+        "impedance_mohm_100khz": {
+          "typ": null,
+          "max": 360,
+          "min": null,
+          "condition": "100 kHz, 20 °C",
+          "page": "4"
+        },
+        "ripple_current_ma_100khz": {
+          "typ": null,
+          "max": 240,
+          "min": null,
+          "condition": "100 kHz, 105 °C",
+          "page": "4"
+        },
+        "tan_delta": {
+          "typ": null,
+          "max": 0.16,
+          "min": null,
+          "condition": "120 Hz",
+          "page": "4"
+        },
+        "endurance_h": {
+          "typ": 2000,
+          "max": null,
+          "min": null,
+          "condition": "@105 °C",
+          "page": "4"
+        },
+        "dimensions_mm": {
+          "typ": null,
+          "max": null,
+          "min": null,
+          "condition": "D 6.3 x L 5.8",
+          "page": "4"
+        },
+        "voltage_v": {
+          "typ": 16.0,
+          "max": null,
+          "min": null,
+          "condition": "",
+          "page": "4",
+          "alias_of": "rated_voltage_v"
+        },
+        "esr_mohm_100khz": {
+          "typ": null,
+          "max": 360.0,
+          "min": null,
+          "condition": "100 kHz 阻抗（该尺寸下≈ESR）",
+          "page": "4",
+          "alias_of": "impedance_mohm_100khz"
+        }
+      },
+      "lcsc_evidence": "https://www.lcsc.com/product-detail/Aluminum-Electrolytic-Capacitors-SMD_PANASONIC_EEEFK1C101P_100uF-20-16V_C128532.html ; https://jlcpcb.com/partdetail/PANASONIC-EEEFK1C101P/C128532",
+      "stock_risk": true,
+      "connection": "VIN – GND，靠近输入端子（抵消电源线电感）"
+    },
+    {
+      "designator": "L1",
+      "role": "inductor",
+      "block": "MOD-PWR",
+      "value": "68µH",
+      "mpn": "MWSA1206S-680MT",
+      "manufacturer": "Sunlord",
+      "package": "SMD molded 12.6x13.45x5.8 mm",
+      "qty": 1,
+      "lcsc": "C408532",
+      "datasheet": "https://media.digikey.com/pdf/Data%20Sheets/Shenzhen%20Sunlord/MWSA-S_Series_DS.pdf",
+      "part_id": "L_MWSA1206S_680MT",
+      "confidence": "medium",
+      "parameter_evidence": {
+        "inductance_uh": {
+          "typ": 68,
+          "max": null,
+          "min": null,
+          "condition": "tol ±20%, @100 kHz, 1 V",
+          "page": "13 of 38"
+        },
+        "isat_a": {
+          "typ": 4.5,
+          "max": null,
+          "min": 3.6,
+          "condition": "typ = L drop ~30%; 3.60 A = 'Isat(Max)' column = L drop ~20%",
+          "page": "13 of 38"
+        },
+        "irms_a": {
+          "typ": 4.0,
+          "max": null,
+          "min": 3.2,
+          "condition": "typ ΔT 40 °C; 3.20 A = ΔT 20 °C",
+          "page": "13 of 38"
+        },
+        "dcr_mohm": {
+          "typ": null,
+          "max": 140,
+          "min": null,
+          "condition": "max",
+          "page": "13 of 38"
+        },
+        "dimensions_mm": {
+          "typ": null,
+          "max": null,
+          "min": null,
+          "condition": "12.6±0.3 x 13.45±0.35 x 5.8±0.2",
+          "page": "3 of 38"
+        },
+        "shielding": {
+          "typ": null,
+          "max": null,
+          "min": null,
+          "condition": "molded alloy powder",
+          "page": "3 of 38"
+        }
+      },
+      "lcsc_evidence": "https://test.jlcpcb.com/partdetail/Sunlord-MWSA1206S680MT/C408532 (snippet 'JLCPCB Part #: C408532 ... 4A 68uH ±20% 140mΩ'); EasyEDA page lists same",
+      "stock_risk": false,
+      "connection": "VIN → SW"
+    },
+    {
+      "designator": "Q1",
+      "role": "mosfet",
+      "block": "MOD-PWR",
+      "value": "AO3400A",
+      "mpn": "AO3400A",
+      "manufacturer": "Alpha & Omega Semiconductor (AOS)",
+      "package": "SOT-23",
+      "qty": 1,
+      "lcsc": "C20917",
+      "datasheet": "https://www.aosmd.com/res/datasheets/AO3400A.pdf",
+      "part_id": "ao3400a",
+      "confidence": "high",
+      "parameter_evidence": {
+        "vds_max_v": {
+          "typ": null,
+          "max": 30,
+          "min": null,
+          "condition": "abs max, TA=25C",
+          "page": "p1"
+        },
+        "vgs_max_v": {
+          "typ": null,
+          "max": 12,
+          "min": null,
+          "condition": "abs max, +/-12 V",
+          "page": "p1"
+        },
+        "id_cont_a_ta25": {
+          "typ": null,
+          "max": 5.7,
+          "min": null,
+          "condition": "TA=25C (PD/ID based on t<=10s RthJA)",
+          "page": "p1"
+        },
+        "id_cont_a_ta70": {
+          "typ": null,
+          "max": 4.7,
+          "min": null,
+          "condition": "TA=70C",
+          "page": "p1"
+        },
+        "idm_a": {
+          "typ": null,
+          "max": 30,
+          "min": null,
+          "condition": "pulsed",
+          "page": "p1"
+        },
+        "pd_w_ta25": {
+          "typ": null,
+          "max": 1.4,
+          "min": null,
+          "condition": "TA=25C (t<=10s RthJA basis)",
+          "page": "p1"
+        },
+        "rds_on_mohm_vgs10v": {
+          "typ": 18,
+          "max": 26.5,
+          "min": null,
+          "condition": "VGS=10V, ID=5.7A, TJ=25C",
+          "page": "p2"
+        },
+        "rds_on_mohm_vgs4v5": {
+          "typ": 19,
+          "max": 32,
+          "min": null,
+          "condition": "VGS=4.5V, ID=5A, TJ=25C",
+          "page": "p2"
+        },
+        "rds_on_mohm_vgs2v5": {
+          "typ": 24,
+          "max": 48,
+          "min": null,
+          "condition": "VGS=2.5V, ID=3A, TJ=25C",
+          "page": "p2"
+        },
+        "vgs_th_v": {
+          "typ": 1.05,
+          "max": 1.45,
+          "min": 0.65,
+          "condition": "VDS=VGS, ID=250uA",
+          "page": "p2"
+        },
+        "qg_nc_vgs4v5": {
+          "typ": 6,
+          "max": 7,
+          "min": null,
+          "condition": "VGS=4.5V, VDS=15V, ID=5.7A",
+          "page": "p2"
+        },
+        "qgs_nc": {
+          "typ": 1.3,
+          "max": null,
+          "min": null,
+          "condition": "VGS=4.5V, VDS=15V, ID=5.7A",
+          "page": "p2"
+        },
+        "qgd_nc": {
+          "typ": 1.8,
+          "max": null,
+          "min": null,
+          "condition": "VGS=4.5V, VDS=15V, ID=5.7A",
+          "page": "p2"
+        },
+        "ciss_pf": {
+          "typ": 630,
+          "max": null,
+          "min": null,
+          "condition": "VGS=0V, VDS=15V, f=1MHz",
+          "page": "p2"
+        },
+        "coss_pf": {
+          "typ": 75,
+          "max": null,
+          "min": null,
+          "condition": "VGS=0V, VDS=15V, f=1MHz",
+          "page": "p2"
+        },
+        "crss_pf": {
+          "typ": 50,
+          "max": null,
+          "min": null,
+          "condition": "VGS=0V, VDS=15V, f=1MHz",
+          "page": "p2"
+        },
+        "rg_ohm": {
+          "typ": 3,
+          "max": 4.5,
+          "min": 1.5,
+          "condition": "VGS=0V, VDS=0V, f=1MHz",
+          "page": "p2"
+        },
+        "rth_ja_c_per_w_steady": {
+          "typ": 100,
+          "max": 125,
+          "min": null,
+          "condition": "steady state, 1 in^2 FR-4, 2 oz Cu, still air",
+          "page": "p1"
+        },
+        "rth_ja_c_per_w_t10s": {
+          "typ": 70,
+          "max": 90,
+          "min": null,
+          "condition": "t<=10s, 1 in^2 FR-4, 2 oz Cu",
+          "page": "p1"
+        },
+        "rth_jl_c_per_w": {
+          "typ": 63,
+          "max": 80,
+          "min": null,
+          "condition": "steady state",
+          "page": "p1"
+        },
+        "vsd_v": {
+          "typ": 0.7,
+          "max": 1.0,
+          "min": null,
+          "condition": "IS=1A, VGS=0V",
+          "page": "p2"
+        },
+        "id_a": {
+          "typ": null,
+          "max": 5.7,
+          "min": null,
+          "condition": "TA=25C (PD/ID based on t<=10s RthJA)",
+          "page": "p1",
+          "alias_of": "id_cont_a_ta25"
+        },
+        "qg_nc": {
+          "typ": 6.0,
+          "max": 7.0,
+          "min": null,
+          "condition": "VGS=4.5V, VDS=15V, ID=5.7A",
+          "page": "p2",
+          "alias_of": "qg_nc_vgs4v5"
+        },
+        "rth_ja_cw": {
+          "typ": 100.0,
+          "max": 125.0,
+          "min": null,
+          "condition": "steady state, 1 in^2 FR-4, 2 oz Cu, still air",
+          "page": "p1",
+          "alias_of": "rth_ja_c_per_w_steady"
+        }
+      },
+      "lcsc_evidence": "WebSearch: lcsc.com/product-detail/MOSFET_AOS_AO3400A_AO3400A_C20917.html 'Manufacturer AOS, MPN AO3400A, LCSC Part # C20917, SOT-23'; jlcpcb.com/partdetail/Alpha_OmegaSemicon-AO3400A/C20917 (Basic part)",
+      "stock_risk": false,
+      "connection": "D=SW, S=GND（功率回流区）, G=GATE"
+    },
+    {
+      "designator": "D1",
+      "role": "diode",
+      "block": "MOD-PWR",
+      "value": "SS54",
+      "mpn": "SS54",
+      "manufacturer": "MDD (Microdiode Semiconductor)",
+      "package": "SMA (DO-214AC)",
+      "qty": 1,
+      "lcsc": "C22452",
+      "datasheet": "https://pdf.digi-electronics.com/pdf/5541/SS54-datasheet.pdf",
+      "part_id": "ss54_mdd",
+      "confidence": "medium",
+      "parameter_evidence": {
+        "vrrm_v": {
+          "typ": null,
+          "max": 40,
+          "min": null,
+          "condition": "",
+          "page": "spec p4"
+        },
+        "if_av_a": {
+          "typ": null,
+          "max": 5.0,
+          "min": null,
+          "condition": "at TL (fig.1)",
+          "page": "spec p4"
+        },
+        "ifsm_a": {
+          "typ": null,
+          "max": 120,
+          "min": null,
+          "condition": "8.3 ms half sine",
+          "page": "spec p4"
+        },
+        "vf_v_at_5a": {
+          "typ": null,
+          "max": 0.55,
+          "min": null,
+          "condition": "IF=5.0A, 25C",
+          "page": "spec p4"
+        },
+        "vf_v_at_1a": {
+          "typ": null,
+          "max": null,
+          "min": null,
+          "condition": "not tabulated",
+          "page": ""
+        },
+        "ir_ma_at_vr_rated": {
+          "typ": null,
+          "max": 1.0,
+          "min": null,
+          "condition": "TA=25C (50 mA at TA=100C)",
+          "page": "spec p4"
+        },
+        "cj_pf": {
+          "typ": 500,
+          "max": null,
+          "min": null,
+          "condition": "VR=4V, 1MHz",
+          "page": "spec p4"
+        },
+        "rth_ja_c_per_w": {
+          "typ": 60,
+          "max": null,
+          "min": null,
+          "condition": "PCB, 5x5 mm copper pads",
+          "page": "spec p4"
+        },
+        "tj_max_c": {
+          "typ": null,
+          "max": 125,
+          "min": null,
+          "condition": "",
+          "page": "spec p4"
+        },
+        "if_avg_a": {
+          "typ": null,
+          "max": 5.0,
+          "min": null,
+          "condition": "at TL (fig.1)",
+          "page": "spec p4",
+          "alias_of": "if_av_a"
+        },
+        "rth_ja_cw": {
+          "typ": 60.0,
+          "max": null,
+          "min": null,
+          "condition": "PCB, 5x5 mm copper pads",
+          "page": "spec p4",
+          "alias_of": "rth_ja_c_per_w"
+        }
+      },
+      "lcsc_evidence": "WebSearch: lcsc.com/product-detail/Schottky-Barrier-Diodes-SBD_MDD-Microdiode-Electronics-SS54_C22452.html; jlcpcb C22452 'SMA(DO-214AC)' Basic. (MDD SS54C in SMC = C16103; SS54B in SMB = C32513)",
+      "stock_risk": false,
+      "connection": "A=SW, K=VBOOST"
+    },
+    {
+      "designator": "C10,C11",
+      "role": "cout_ceramic",
+      "block": "MOD-PWR",
+      "value": "10µF/25.0V",
+      "mpn": "CL31B106KAHNNNE",
+      "manufacturer": "Samsung Electro-Mechanics",
+      "package": "1206 (3216)",
+      "qty": 2,
+      "lcsc": "C14860",
+      "datasheet": "https://media.digikey.com/pdf/Data%20Sheets/Samsung%20PDFs/CL31B106KAHNNNE_Spec.pdf",
+      "part_id": "C_out_CL31B106KAHNNNE",
+      "confidence": "high",
+      "parameter_evidence": {
+        "capacitance_uf": {
+          "typ": 10,
+          "max": null,
+          "min": null,
+          "condition": "±10%",
+          "page": "1"
+        },
+        "rated_voltage_v": {
+          "typ": 25,
+          "max": null,
+          "min": null,
+          "condition": "",
+          "page": "1"
+        },
+        "dielectric": {
+          "typ": null,
+          "max": null,
+          "min": null,
+          "condition": "X7R",
+          "page": "1"
+        },
+        "dimensions_mm": {
+          "typ": null,
+          "max": null,
+          "min": null,
+          "condition": "3.20±0.20 x 1.60±0.20 x T 1.60±0.20",
+          "page": "1"
+        },
+        "dc_bias_cap_change_pct_at_12v": {
+          "typ": null,
+          "max": null,
+          "min": null,
+          "condition": "not in reference sheet",
+          "page": null
+        },
+        "voltage_v": {
+          "typ": 25.0,
+          "max": null,
+          "min": null,
+          "condition": "",
+          "page": "1",
+          "alias_of": "rated_voltage_v"
+        }
+      },
+      "lcsc_evidence": "https://www.lcsc.com/product-detail/C14860.html ; https://jlcpcb.com/partdetail/15532-CL31B106KAHNNNE/C14860 (snippet 'from $0.0963, 817,480 in stock')",
+      "stock_risk": false,
+      "connection": "VBOOST – GND（功率回流区），紧靠 D1 阴极与 Q1 源极（功率回路最小）"
+    },
+    {
+      "designator": "C20",
+      "role": "cout_bulk",
+      "block": "MOD-PWR",
+      "value": "100µF/25.0V",
+      "mpn": "25SVPF100M",
+      "manufacturer": "Panasonic (OS-CON SVPF)",
+      "package": "SMD can 8x6.9 mm (size code E7, 7.0 max)",
+      "qty": 1,
+      "lcsc": "C136279",
+      "datasheet": "https://na.industrial.panasonic.com/products/capacitors/polymer-capacitors/os-con-aluminum-polymer/series/91057/model/91093",
+      "part_id": "C_out_polymer_25SVPF100M",
+      "confidence": "high",
+      "parameter_evidence": {
+        "capacitance_uf": {
+          "typ": 100,
+          "max": null,
+          "min": null,
+          "condition": "±20%",
+          "page": "model page"
+        },
+        "rated_voltage_v": {
+          "typ": 25,
+          "max": null,
+          "min": null,
+          "condition": "",
+          "page": "model page"
+        },
+        "esr_mohm_100khz": {
+          "typ": null,
+          "max": 24,
+          "min": null,
+          "condition": "100 kHz",
+          "page": "model page"
+        },
+        "ripple_current_ma_100khz": {
+          "typ": null,
+          "max": 3200,
+          "min": null,
+          "condition": "100 kHz, 105 °C",
+          "page": "model page"
+        },
+        "leakage_ua": {
+          "typ": null,
+          "max": 500,
+          "min": null,
+          "condition": "",
+          "page": "model page"
+        },
+        "endurance_h": {
+          "typ": 5000,
+          "max": null,
+          "min": null,
+          "condition": "@105 °C",
+          "page": "model page"
+        },
+        "dimensions_mm": {
+          "typ": null,
+          "max": null,
+          "min": null,
+          "condition": "D 8 x L 6.9 (height max 7)",
+          "page": "model page"
+        },
+        "voltage_v": {
+          "typ": 25.0,
+          "max": null,
+          "min": null,
+          "condition": "",
+          "page": "model page",
+          "alias_of": "rated_voltage_v"
+        }
+      },
+      "lcsc_evidence": "https://www.lcsc.com/product-detail/Solid-Polymer-Electrolytic-Capacitor_PANASONIC_25SVPF100M_100uF-25V_C136279.html (snippet 'From $0.4844, 2,949 in stock')",
+      "stock_risk": false,
+      "connection": "VBOOST – GND（功率回流区；储能/环路阻尼）"
+    },
+    {
+      "designator": "R1",
+      "role": "shunt",
+      "block": "MOD-SENSE",
+      "value": "50mΩ 1%",
+      "mpn": "PA2512FKE7W0R05E",
+      "manufacturer": "Yageo",
+      "package": "2512",
+      "qty": 1,
+      "lcsc": "C375690",
+      "datasheet": "https://yageogroup.com/content/datasheet/asset/file/PYU-PA_E_51_ROHS",
+      "part_id": "R_shunt_PA2512FKE7W0R05E",
+      "confidence": "high",
+      "parameter_evidence": {
+        "resistance_mohm": {
+          "typ": 50,
+          "max": null,
+          "min": null,
+          "condition": "F = ±1%",
+          "page": "2"
+        },
+        "power_w": {
+          "typ": null,
+          "max": 2,
+          "min": null,
+          "condition": "'7W' = 2x standard (2 W) at 70 °C",
+          "page": "2,4"
+        },
+        "tcr_ppm": {
+          "typ": null,
+          "max": 50,
+          "min": null,
+          "condition": "code E = ±50 ppm/°C",
+          "page": "2"
+        },
+        "operating_temp_c": {
+          "typ": null,
+          "max": 170,
+          "min": -55,
+          "condition": "",
+          "page": "4"
+        },
+        "dimensions_mm": {
+          "typ": null,
+          "max": null,
+          "min": null,
+          "condition": "6.35±0.25 x 3.18±0.25 x 0.63±0.25 (7 mΩ–100 mΩ)",
+          "page": "4"
+        },
+        "tolerance_pct": {
+          "max": 1.0,
+          "condition": "MPN 精度代码 F = ±1%",
+          "alias_of": "resistance_mohm.condition"
+        }
+      },
+      "lcsc_evidence": "https://jlcpcb.com/partdetail/YAGEO-PA2512FKE7W0R05E/C375690 (snippet '2W 50mΩ Current Sense Resistor ±1% ±50ppm/℃ 2512')",
+      "stock_risk": false,
+      "connection": "VBOOST → VOUT（高边分流）"
+    },
+    {
+      "designator": "U3",
+      "role": "csa",
+      "block": "MOD-SENSE",
+      "value": "INA180A2IDBVR",
+      "mpn": "INA180A2IDBVR",
+      "manufacturer": "Texas Instruments",
+      "package": "SOT-23-5 (DBV)",
+      "qty": 1,
+      "lcsc": "C192764",
+      "datasheet": "https://www.ti.com/lit/ds/symlink/ina180.pdf",
+      "part_id": "ina180a2",
+      "confidence": "high",
+      "parameter_evidence": {
+        "gain_v_per_v": {
+          "typ": 50,
+          "max": null,
+          "min": null,
+          "condition": "INA180A2",
+          "page": "p8"
+        },
+        "bandwidth_khz": {
+          "typ": 210,
+          "max": null,
+          "min": null,
+          "condition": "A2 devices, CLOAD=10pF",
+          "page": "p8"
+        },
+        "vcm_v": {
+          "typ": null,
+          "max": 26,
+          "min": -0.2,
+          "condition": "recommended operating (abs max GND-0.3..26 V)",
+          "page": "p7 sec 7.3"
+        },
+        "vs_v": {
+          "typ": null,
+          "max": 5.5,
+          "min": 2.7,
+          "condition": "operating supply",
+          "page": "p7"
+        },
+        "vos_uv_vcm0": {
+          "typ": 25,
+          "max": 150,
+          "min": null,
+          "condition": "+/-, VIN+=0V, RTI",
+          "page": "p8 sec 7.5"
+        },
+        "vos_uv_vcm12": {
+          "typ": 100,
+          "max": 500,
+          "min": null,
+          "condition": "+/-, VIN+=12V, RTI",
+          "page": "p8"
+        },
+        "vos_drift_uv_per_c": {
+          "typ": 0.2,
+          "max": 1,
+          "min": null,
+          "condition": "-40..125C",
+          "page": "p8"
+        },
+        "gain_error_pct": {
+          "typ": 0.1,
+          "max": 1.0,
+          "min": null,
+          "condition": "+/-, VOUT=0.5V..VS-0.5V",
+          "page": "p8",
+          "alias_of": "gain_error_pct"
+        },
+        "cmrr_db": {
+          "typ": 100,
+          "max": null,
+          "min": 84,
+          "condition": "VIN+=0..26V, -40..125C",
+          "page": "p8"
+        },
+        "swing_to_vs_v": {
+          "typ": -0.02,
+          "max": -0.03,
+          "min": null,
+          "condition": "VS-0.02 typ / VS-0.03 worst; RL=10k, -40..125C",
+          "page": "p8"
+        },
+        "swing_to_gnd_v": {
+          "typ": 0.0005,
+          "max": 0.005,
+          "min": null,
+          "condition": "GND+; RL=10k, -40..125C",
+          "page": "p8"
+        },
+        "iq_ua": {
+          "typ": 197,
+          "max": 260,
+          "min": null,
+          "condition": "25C; 300 uA max over -40..125C",
+          "page": "p8"
+        },
+        "slew_v_per_us": {
+          "typ": 2,
+          "max": null,
+          "min": null,
+          "condition": "",
+          "page": "p8"
+        },
+        "rth_ja_c_per_w": {
+          "typ": 197.1,
+          "max": null,
+          "min": null,
+          "condition": "DBV SOT-23-5",
+          "page": "p7"
+        },
+        "gain": 50.0,
+        "vcm_max_v": {
+          "max": 26,
+          "alias_of": "vcm_v.max"
+        },
+        "vs_min_v": {
+          "min": 2.7,
+          "alias_of": "vs_v.min"
+        },
+        "vs_max_v": {
+          "max": 5.5,
+          "alias_of": "vs_v.max"
+        },
+        "vos_uv": {
+          "typ": 100.0,
+          "max": 500.0,
+          "min": null,
+          "condition": "+/-, VIN+=12V, RTI（取共模 12 V 规格：分流电阻位于 12 V 母线）",
+          "page": "p8",
+          "alias_of": "vos_uv_vcm12"
+        }
+      },
+      "lcsc_evidence": "WebSearch: lcsc.com/product-detail/C192764.html 'INA180A2IDBVR'",
+      "stock_risk": false,
+      "connection": "IN+=VBOOST, IN−=VOUT, OUT=IOUT_SENSE_RAW, VS=+3V3；经 R6/C32 到 IOUT_SENSE；COMP 支路和延迟待核实"
+    },
+    {
+      "designator": "D2",
+      "role": "tvs",
+      "block": "MOD-OUT",
+      "value": "SMAJ15A",
+      "mpn": "SMAJ15A",
+      "manufacturer": "Littelfuse",
+      "package": "SMA (DO-214AC)",
+      "qty": 1,
+      "lcsc": "C148216",
+      "datasheet": "https://datasheet.lcsc.com/datasheet/pdf/bf298e2c0542e0172af23908598fa548.pdf?productCode=C148216",
+      "part_id": "smaj15a",
+      "confidence": "medium",
+      "parameter_evidence": {
+        "vrwm_v": {
+          "typ": null,
+          "max": 15,
+          "min": null,
+          "condition": "",
+          "page": "Littelfuse SMAJ series rev 11/20/15 p2, SMAJ15A row"
+        },
+        "vbr_v": {
+          "typ": null,
+          "max": 18.5,
+          "min": 16.7,
+          "condition": "IT=1mA",
+          "page": "Littelfuse SMAJ series rev 11/20/15 p2, SMAJ15A row"
+        },
+        "vc_v_at_ipp": {
+          "typ": null,
+          "max": 24.4,
+          "min": null,
+          "condition": "IPP=16.4A, 10/1000us",
+          "page": "Littelfuse SMAJ series rev 11/20/15 p2, SMAJ15A row"
+        },
+        "ipp_a": {
+          "typ": null,
+          "max": 16.4,
+          "min": null,
+          "condition": "10/1000us",
+          "page": "Littelfuse SMAJ series rev 11/20/15 p2, SMAJ15A row"
+        },
+        "ppp_w": {
+          "typ": null,
+          "max": 400,
+          "min": null,
+          "condition": "10/1000us",
+          "page": "Littelfuse SMAJ series rev 11/20/15 p1"
+        },
+        "ir_ua_at_vrwm": {
+          "typ": null,
+          "max": 1.0,
+          "min": null,
+          "condition": "",
+          "page": "Littelfuse SMAJ series rev 11/20/15 p2, SMAJ15A row"
+        },
+        "rth_ja_c_per_w": {
+          "typ": 120,
+          "max": null,
+          "min": null,
+          "condition": "Typical; TA=25 C unless otherwise noted; mounting note: 5.0x5.0 mm copper pad at each terminal",
+          "page": "Littelfuse SMAJ series rev 11/20/15 p1"
+        },
+        "vbr_min_v": {
+          "min": 16.7,
+          "alias_of": "vbr_v.min",
+          "page": "Littelfuse SMAJ series rev 11/20/15 p2, SMAJ15A row"
+        },
+        "vc_v": {
+          "typ": null,
+          "max": 24.4,
+          "min": null,
+          "condition": "IPP=16.4A, 10/1000us",
+          "page": "Littelfuse SMAJ series rev 11/20/15 p2, SMAJ15A row",
+          "alias_of": "vc_v_at_ipp"
+        }
+      },
+      "lcsc_evidence": "https://www.lcsc.com/product-detail/C148216.html ; JSON-LD sku=C148216, mpn=SMAJ15A, brand=Littelfuse; retrieved=2026-11-09T11:24:36.058379+00:00",
+      "stock_risk": false,
+      "connection": "VOUT – GND"
+    },
+    {
+      "designator": "U2",
+      "role": "gate_driver",
+      "block": "MOD-DRV",
+      "value": "LM5114BMFX/S7003094",
+      "mpn": "LM5114BMFX/S7003094",
+      "manufacturer": "Texas Instruments",
+      "package": "SOT-23-6",
+      "qty": 1,
+      "lcsc": "C2676979",
+      "datasheet": "https://www.ti.com/lit/ds/symlink/lm5114.pdf",
+      "part_id": "lm5114b",
+      "confidence": "high",
+      "parameter_evidence": {
+        "vdd_min_v": {
+          "min": 4.0,
+          "condition": "VDD 工作电压, TJ −40..125°C",
+          "page": "SNVS790F p5"
+        },
+        "vdd_max_v": {
+          "max": 12.6,
+          "condition": "工作电压；绝对最大 14 V",
+          "page": "p4-5"
+        },
+        "uvlo_on_v": {
+          "typ": 3.6,
+          "max": 4.0,
+          "min": 3.25,
+          "condition": "VDD 上升, TJ −40..125°C；回差 0.4 V",
+          "page": "p5"
+        },
+        "vih_v": {
+          "max": 2.4,
+          "condition": "B 版 TTL 输入（A 版为 0.67×VDD，不兼容 3.3 V）",
+          "page": "p5"
+        },
+        "i_source_a": {
+          "typ": 1.3,
+          "condition": "峰值, CL=10nF, VDD=12V；P_OUT 上拉 2.2 Ω typ @4.5V",
+          "page": "p5"
+        },
+        "i_sink_a": {
+          "typ": 7.6,
+          "condition": "峰值, CL=10nF, VDD=12V；N_OUT 0.24 Ω typ @4.5V",
+          "page": "p5"
+        },
+        "tr_ns": {
+          "typ": 12,
+          "condition": "VDD=4.5V, CL=1nF",
+          "page": "p6"
+        },
+        "tf_ns": {
+          "typ": 3.0,
+          "condition": "VDD=4.5V, CL=1nF",
+          "page": "p6"
+        },
+        "tpd_ns": {
+          "typ": 12,
+          "max": 25,
+          "condition": "CL=1nF, VDD=10V",
+          "page": "p6"
+        },
+        "iq_ma": {
+          "typ": 0.95,
+          "max": 1.9,
+          "condition": "VDD=12V",
+          "page": "p5"
+        }
+      },
+      "lcsc_evidence": "LCSC 托管数据手册 URL .../2302281101_Texas-Instruments-LM5114BMFX-S7003094_C2676979.pdf",
+      "stock_risk": false,
+      "connection": "IN=PWM_SW, 输出=GATE_DRV→栅极电阻→GATE, VDD=VIN（分离输出时开通/关断电阻可分设）；引脚：1 VDD, 2 P_OUT(拉), 3 N_OUT(灌), 4 VSS, 5 INB(反相，不用接 VSS), 6 IN(同相)；库内替代提案（采用前重审）：LM5114BMF/NOPB（同标记 SJ4B，均可）"
+    },
+    {
+      "designator": "U4",
+      "role": "ldo",
+      "block": "MOD-AUX",
+      "value": "ME6211C33M5G-N",
+      "mpn": "ME6211C33M5G-N",
+      "manufacturer": "MICRONE (南京微盟)",
+      "package": "SOT-23-5",
+      "qty": 1,
+      "lcsc": "C82942",
+      "datasheet": "https://img.iceasy.com/product/product/files/202111/8a8a8a1a7d35bc8a017d4ba03ae500f5.pdf",
+      "part_id": "me6211c33",
+      "confidence": "high",
+      "parameter_evidence": {
+        "vin_max_v": {
+          "typ": null,
+          "max": 6.5,
+          "min": null,
+          "condition": "abs max; operating range 1.2-6.0 V",
+          "page": "p1/p5"
+        },
+        "iout_max_a": {
+          "typ": 0.5,
+          "max": null,
+          "min": null,
+          "condition": "IOUTMAX, VIN=VOUT+1V",
+          "page": "p9"
+        },
+        "dropout_mv_100ma": {
+          "typ": 120,
+          "max": null,
+          "min": null,
+          "condition": "IOUT=100mA (no max given)",
+          "page": "p9"
+        },
+        "dropout_mv_200ma": {
+          "typ": 260,
+          "max": null,
+          "min": null,
+          "condition": "IOUT=200mA (no max given)",
+          "page": "p9"
+        },
+        "iq_ua": {
+          "typ": 30,
+          "max": 60,
+          "min": null,
+          "condition": "VIN=VOUT+1V",
+          "page": "p9"
+        },
+        "vout_accuracy_pct": {
+          "typ": null,
+          "max": 1.0,
+          "min": null,
+          "condition": "+/-1%, IOUT=30mA, VIN=VOUT+1V, 25C",
+          "page": "p9"
+        },
+        "load_reg_mv": {
+          "typ": 9,
+          "max": 60,
+          "min": null,
+          "condition": "1mA<=IOUT<=100mA",
+          "page": "p9"
+        },
+        "cout_required": {
+          "typ": "1uF",
+          "max": null,
+          "min": null,
+          "condition": "test condition CIN=CL=1uF; datasheet says compatible with low-ESR ceramic",
+          "page": "p2/p9"
+        },
+        "ishort_ma": {
+          "typ": 70,
+          "max": null,
+          "min": null,
+          "condition": "",
+          "page": "p9"
+        },
+        "iout_ma": {
+          "typ": 500.0,
+          "max": null,
+          "min": null,
+          "condition": "IOUTMAX, VIN=VOUT+1V",
+          "page": "p9",
+          "alias_of": "iout_max_a"
+        },
+        "dropout_mv": {
+          "typ": 120.0,
+          "max": null,
+          "min": null,
+          "condition": "IOUT=100mA (no max given) @100 mA（本项目负载约 40 mA，偏保守）",
+          "page": "p9",
+          "alias_of": "dropout_mv_100ma"
+        },
+        "accuracy_pct": {
+          "typ": null,
+          "max": 1.0,
+          "min": null,
+          "condition": "+/-1%, IOUT=30mA, VIN=VOUT+1V, 25C",
+          "page": "p9",
+          "alias_of": "vout_accuracy_pct"
+        }
+      },
+      "lcsc_evidence": "WebSearch: jlcpcb.com/partdetail/84106-ME6211C33M5GN/C82942; lcsc.com/datasheet/C82942.pdf titled 'ME6211C33M5G-N'",
+      "stock_risk": false,
+      "connection": "VIN → +3V3"
+    },
+    {
+      "designator": "U1",
+      "role": "mcu",
+      "block": "MOD-MCU",
+      "value": "STM32G431CBT6",
+      "mpn": "STM32G431CBT6",
+      "manufacturer": "STMicroelectronics",
+      "package": "LQFP-48 7x7 0.5mm",
+      "qty": 1,
+      "lcsc": "C529355",
+      "datasheet": "https://www.st.com/resource/en/datasheet/stm32g431cb.pdf",
+      "part_id": "stm32g431cbt6",
+      "confidence": "high",
+      "parameter_evidence": {
+        "core": "Cortex-M4F",
+        "f_cpu_mhz": {
+          "max": 170,
+          "page": "DS12589 Rev6 §1"
+        },
+        "tim_clk_mhz": {
+          "max": 170,
+          "condition": "TIM1 16-bit, 100 kHz 边沿对齐 1700 计数"
+        },
+        "flash_kb": 128,
+        "ram_kb": 32,
+        "adc_count": {
+          "typ": 2,
+          "condition": "12-bit, 4 Msps, 硬件过采样 2–256 (RM0440 §21.4.29)，可由 TIM1 TRGO/TRGO2 触发 (RM0440 Table 166)"
+        },
+        "adc_channels": {
+          "typ": 17,
+          "condition": "LQFP48 封装可用通道"
+        },
+        "comp_count": {
+          "typ": 4,
+          "condition": "INM 可接内部 DAC3（RM0440 Table 200）；输出经 TIM1_AF1.BKCMPxE 送 TIM1 刹车（RM0440 Table 269）"
+        },
+        "opamp_count": 3,
+        "pitch_mm": 0.5,
+        "io_count": 38,
+        "i_run_ma": {
+          "typ": 25.5,
+          "max": 28.0,
+          "condition": "170 MHz, 25 °C, Flash+ART, 外设全关 (DS12589 Table 21)"
+        },
+        "hsi_accuracy_pct": {
+          "typ": 1,
+          "condition": "0–85 °C ±1% (DS12589 Table 42)；PLL 可由 HSI16 驱动至 170 MHz，无需晶振"
+        }
+      },
+      "lcsc_evidence": "WebSearch: lcsc.com/product-detail/...STM32G431CBT6_C529355.html; item.szlcsc.com/549633.html; jlcpcb.com/partdetail/.../C529355",
+      "stock_risk": false,
+      "connection": "见 pin_plan"
+    },
+    {
+      "designator": "J3",
+      "role": "header_swd",
+      "block": "MOD-DBG",
+      "value": "B-2100S05P-A110",
+      "mpn": "B-2100S05P-A110",
+      "manufacturer": "Ckmtw (Shenzhen Cankemeng)",
+      "package": "THT 1x5 2.54 mm straight",
+      "qty": 1,
+      "lcsc": "C124379",
+      "datasheet": "https://datasheet.lcsc.com/datasheet/pdf/219f7e7eb5f34457895b2c164313179f.pdf?productCode=C124379",
+      "part_id": "J_hdr_1x5_B2100S05P",
+      "confidence": "medium",
+      "parameter_evidence": {
+        "rated_current_a": {
+          "typ": null,
+          "max": 3,
+          "min": null,
+          "condition": "Family specification, current rating 3 A",
+          "page": "Ckmtw 210S-1x*P drawing rev A 2010-08-12 p1"
+        },
+        "pitch_mm": {
+          "typ": 2.54,
+          "max": null,
+          "min": null,
+          "condition": "2.54 mm; mating 6.0 mm, tail 3.0 mm, square pin 0.64±0.02 mm",
+          "page": "p1 dimensional drawing"
+        }
+      },
+      "lcsc_evidence": "https://www.lcsc.com/product-detail/C124379.html ; JSON-LD sku=C124379, mpn=B-2100S05P-A110, brand=Ckmtw; retrieved=2026-11-09T11:24:35.956685+00:00",
+      "stock_risk": false,
+      "connection": "SWD：1 3V3, 2 SWDIO, 3 SWCLK, 4 NRST, 5 GND"
+    },
+    {
+      "designator": "J4",
+      "role": "header_uart",
+      "block": "MOD-DBG",
+      "value": "B-2100S04P-A110",
+      "mpn": "B-2100S04P-A110",
+      "manufacturer": "Ckmtw (Shenzhen Cankemeng)",
+      "package": "THT 1x4 2.54 mm straight",
+      "qty": 1,
+      "lcsc": "C124378",
+      "datasheet": "https://datasheet.lcsc.com/datasheet/pdf/219f7e7eb5f34457895b2c164313179f.pdf?productCode=C124378",
+      "part_id": "J_hdr_1x4_B2100S04P",
+      "confidence": "medium",
+      "parameter_evidence": {
+        "rated_current_a": {
+          "typ": null,
+          "max": 3,
+          "min": null,
+          "condition": "Family specification, current rating 3 A",
+          "page": "Ckmtw 210S-1x*P drawing rev A 2010-08-12 p1"
+        },
+        "pitch_mm": {
+          "typ": 2.54,
+          "max": null,
+          "min": null,
+          "condition": "2.54 mm; mating 6.0 mm, tail 3.0 mm, square pin 0.64±0.02 mm",
+          "page": "p1 dimensional drawing"
+        }
+      },
+      "lcsc_evidence": "https://www.lcsc.com/product-detail/C124378.html ; JSON-LD sku=C124378, mpn=B-2100S04P-A110, brand=Ckmtw; retrieved=2026-11-09T11:24:35.949182+00:00",
+      "stock_risk": false,
+      "connection": "UART：1 3V3, 2 TX(PA9), 3 RX(PA10), 4 GND"
+    }
+  ],
+  "generic_passives": [
+    {
+      "designator": "R2,R3",
+      "value": "43k / 10k 1% 0603",
+      "block": "MOD-SENSE",
+      "connection": "VOUT–R2–VOUT_SENSE–R3–GND",
+      "note": "分压比 0.1887；数值/封装提案，不是已查证可采购器件",
+      "status": "engineering_value_proposal_not_selected",
+      "lcsc": null,
+      "sourcing": "B 从有出处的器件库补选；缺失时先按器件库扩充流程查证"
+    },
+    {
+      "designator": "C30",
+      "value": "2.2nF C0G 0603",
+      "block": "MOD-SENSE",
+      "connection": "VOUT_SENSE–GND，靠近 MCU 引脚",
+      "note": "fc≈8917 Hz；数值/封装提案，不是已查证可采购器件",
+      "status": "engineering_value_proposal_not_selected",
+      "lcsc": null,
+      "sourcing": "B 从有出处的器件库补选；缺失时先按器件库扩充流程查证"
+    },
+    {
+      "designator": "R4,R5",
+      "value": "10k / 10k 1% 0603",
+      "block": "MOD-SENSE",
+      "connection": "VIN–R4–VIN_SENSE–R5–GND",
+      "note": "分压比 0.5；数值/封装提案，不是已查证可采购器件",
+      "status": "engineering_value_proposal_not_selected",
+      "lcsc": null,
+      "sourcing": "B 从有出处的器件库补选；缺失时先按器件库扩充流程查证"
+    },
+    {
+      "designator": "C31",
+      "value": "3.3nF 0603",
+      "block": "MOD-SENSE",
+      "connection": "VIN_SENSE–GND",
+      "status": "engineering_value_proposal_not_selected",
+      "lcsc": null,
+      "sourcing": "B 从有出处的器件库补选；缺失时先按器件库扩充流程查证",
+      "note": "；数值/封装提案，不是已查证可采购器件"
+    },
+    {
+      "designator": "R6",
+      "value": "1000Ω",
+      "block": "MOD-SENSE",
+      "connection": "IOUT_SENSE_RAW–R6–IOUT_SENSE",
+      "status": "engineering_value_proposal_not_selected",
+      "lcsc": null,
+      "sourcing": "B 从有出处的器件库补选；缺失时先按器件库扩充流程查证",
+      "note": "；数值/封装提案，不是已查证可采购器件"
+    },
+    {
+      "designator": "C32",
+      "value": "10nF",
+      "block": "MOD-SENSE",
+      "connection": "IOUT_SENSE–GND；与 S7 模型一致",
+      "status": "engineering_value_proposal_not_selected",
+      "lcsc": null,
+      "sourcing": "B 从有出处的器件库补选；缺失时先按器件库扩充流程查证",
+      "note": "；数值/封装提案，不是已查证可采购器件"
+    },
+    {
+      "designator": "R7",
+      "value": "10Ω",
+      "block": "MOD-DRV",
+      "connection": "GATE_DRV–GATE；更改后复核开关损耗与振铃",
+      "status": "engineering_value_proposal_not_selected",
+      "lcsc": null,
+      "sourcing": "B 从有出处的器件库补选；缺失时先按器件库扩充流程查证",
+      "note": "；数值/封装提案，不是已查证可采购器件"
+    },
+    {
+      "designator": "R8",
+      "value": "下拉阻值/额定待 B 设计与查证",
+      "block": "MOD-DRV",
+      "connection": "GATE–GND 下拉（MCU 复位期间保持关断）",
+      "status": "engineering_value_proposal_not_selected",
+      "lcsc": null,
+      "sourcing": "B 从有出处的器件库补选；缺失时先按器件库扩充流程查证",
+      "note": "；数值/封装提案，不是已查证可采购器件"
+    },
+    {
+      "designator": "R9",
+      "value": "下拉阻值/额定待 B 设计与查证",
+      "block": "MOD-DRV",
+      "connection": "PWM_SW–GND 下拉",
+      "status": "engineering_value_proposal_not_selected",
+      "lcsc": null,
+      "sourcing": "B 从有出处的器件库补选；缺失时先按器件库扩充流程查证",
+      "note": "；数值/封装提案，不是已查证可采购器件"
+    },
+    {
+      "designator": "待 B 分配",
+      "value": "去耦/复位/BOOT/LED/按键/PMOS栅极等未齐套",
+      "block": "MOD-MCU/MOD-AUX/MOD-IN/MOD-DBG",
+      "connection": "按有出处的器件手册补齐；不是已选物料",
+      "status": "engineering_value_proposal_not_selected",
+      "lcsc": null,
+      "sourcing": "B 从有出处的器件库补选；缺失时先按器件库扩充流程查证",
+      "note": "；数值/封装提案，不是已查证可采购器件"
+    }
+  ],
+  "mcu_pin_plan": {
+    "_source": "器件库资源提案；B/D 必须核对 DS/RM/CubeMX、封装引脚和并用条件后冻结",
+    "PWM_SW": {
+      "pin": "PA8",
+      "pin_no": 30,
+      "function": "TIM1_CH1 (AF6)",
+      "note": "LQFP48 中唯一 TIM1_CH1 引脚"
+    },
+    "VOUT_SENSE": {
+      "pin": "PA0",
+      "pin_no": 8,
+      "function": "ADC12_IN1 + COMP3_INP",
+      "note": "仅候选资源；ADC/COMP 并用、独立阈值 DAC 及 TIM1 刹车路径未核实，见 SR46"
+    },
+    "IOUT_SENSE": {
+      "pin": "PA1",
+      "pin_no": 9,
+      "function": "ADC12_IN2 + COMP1_INP",
+      "note": "仅候选资源；ADC/COMP 并用、独立阈值 DAC 及 TIM1 刹车路径未核实，见 SR46"
+    },
+    "VIN_SENSE": {
+      "pin": "PA2",
+      "pin_no": 10,
+      "function": "ADC1_IN3"
+    },
+    "NTC_SENSE(可选)": {
+      "pin": "PB1",
+      "pin_no": 17,
+      "function": "ADC1_IN12",
+      "note": "预留温度检测"
+    },
+    "UART_TX": {
+      "pin": "PA9",
+      "pin_no": 31,
+      "function": "USART1_TX (AF7)"
+    },
+    "UART_RX": {
+      "pin": "PA10",
+      "pin_no": 32,
+      "function": "USART1_RX (AF7)",
+      "note": "PA9/PA10 高电平会使能 PB4/PB6 的 UCPD 5.1k 下拉，故 PB4/PB6 不作他用"
+    },
+    "SWDIO": {
+      "pin": "PA13",
+      "pin_no": 37
+    },
+    "SWCLK": {
+      "pin": "PA14",
+      "pin_no": 38
+    },
+    "NRST": {
+      "pin": "PG10-NRST",
+      "pin_no": 7,
+      "note": "100 nF 对地 + 复位按键"
+    },
+    "BOOT0": {
+      "pin": "PB8-BOOT0",
+      "pin_no": 45,
+      "note": "10 kΩ 下拉，从 Flash 启动（出厂选项字节 nSWBOOT0=1）"
+    },
+    "LED_RUN": {
+      "pin": "PB5",
+      "pin_no": 42
+    },
+    "LED_CC": {
+      "pin": "PB9",
+      "pin_no": 46
+    },
+    "LED_FAULT": {
+      "pin": "PB10",
+      "pin_no": 22
+    },
+    "KEY_EN": {
+      "pin": "PB11",
+      "pin_no": 25,
+      "note": "内部上拉，按键接地"
+    },
+    "power": {
+      "VBAT": 1,
+      "VSSA": 19,
+      "VREF+": 20,
+      "VDDA": 21,
+      "VSS": [
+        23,
+        35,
+        47
+      ],
+      "VDD": [
+        24,
+        36,
+        48
+      ],
+      "note": "VREF+ 接 VDDA（3.3 V，1 µF+100 nF）；VDDA 经磁珠/10 Ω+1 µF 与 VDD 隔离；每个 VDD 100 nF；VBAT 接 VDD"
+    },
+    "unverified": [
+      "ADC/COMP 同时使用及输入滤波/快速保护分支",
+      "两路不同硬件阈值所需独立 DAC 通道、参考与容差",
+      "COMP→TIM1 break 路由及锁存，关闭自动重使能",
+      "封装所有电源/复位/BOOT 和引脚复用需逐脚复核"
+    ],
+    "_status": "tentative_unverified_not_for_schematic_freeze"
+  },
+  "sensing": {
+    "adc_bits": 12,
+    "adc_vref_v": 3.3,
+    "vout": {
+      "r_top_ohm": 43000.0,
+      "r_bot_ohm": 10000,
+      "ratio": 0.1887,
+      "fullscale_v": 17.49,
+      "filter_c_f": 2.2e-09,
+      "filter_fc_hz": 8917.0,
+      "r_thevenin_ohm": 8113.0,
+      "lsb_mv": 4.271,
+      "code_at_vset": 2810,
+      "divider_loss_w": 0.002717
+    },
+    "vin": {
+      "r_top_ohm": 10000.0,
+      "r_bot_ohm": 10000,
+      "ratio": 0.5,
+      "fullscale_v": 6.6,
+      "filter_c_f": 3.3e-09,
+      "filter_fc_hz": 9646.0,
+      "r_thevenin_ohm": 5000.0
+    },
+    "iout": {
+      "location": "output_high_side",
+      "shunt_ohm": 0.05,
+      "gain": 50,
+      "transimpedance_v_per_a": 2.5,
+      "fullscale_a": 1.3,
+      "adc_fullscale_a": 1.32,
+      "lsb_ma": 0.3223,
+      "code_at_icc": 1551,
+      "shunt_loss_rated_w": 0.0125,
+      "v_sense_at_icc_mv": 25.0
+    }
+  },
+  "protection": {
+    "ovp_sw": {
+      "value": 13.200000000000001,
+      "unit": "V",
+      "adc_code": 3091,
+      "action": "软件关断 PWM 并锁存故障"
+    },
+    "ovp_hw": {
+      "value": 13.799999999999999,
+      "unit": "V",
+      "adc_code": 3231,
+      "action": "片内比较器 + 独立阈值源 → TIM1 刹车并锁存；关闭自动重使能，显式复位后才允许启动"
+    },
+    "ocp_sw": {
+      "value": 0.6,
+      "unit": "A",
+      "adc_code": 1861,
+      "delay_ms": 10,
+      "action": "持续超限后关断 PWM 并锁存（CC 环正常时不会触发）"
+    },
+    "ocp_hw": {
+      "value": 1.0,
+      "unit": "A",
+      "adc_code": 3102,
+      "action": "输出电流比较器 → TIM1 刹车并锁存；不是电感逐周期峰值限流，不切断输入直通路径"
+    },
+    "uvlo": {
+      "off_v": 4.3,
+      "on_v": 4.5,
+      "adc_code_off": 2668,
+      "adc_code_on": 2792,
+      "action": "输入欠压停机并锁存；回差恢复仅允许显式复位、自检、软启动，不自动重启"
+    },
+    "duty_limit": {
+      "dmin": 0.0,
+      "dmax": 0.8,
+      "ccr_max": 1360,
+      "action": "PI 输出限幅 + 定时器比较值钳位"
+    },
+    "soft_start": {
+      "ramp_ms": 20,
+      "action": "参考电压从当前 Vout 斜坡升至设定值，控制开关加能；不限制插电时经 L/D 的直通浪涌"
+    }
+  },
+  "control": {
+    "structure": "双 PI 最小值选择后统一限幅；未主导环积分状态 I=d_actual−Kp*e，跟踪实际占空比；主导环条件积分或回算抗饱和，切换无扰初始化",
+    "f_pwm_hz": 100000,
+    "f_ctrl_hz": 20000,
+    "tim1_rcr": 4,
+    "pwm_arr": 1699,
+    "pwm_ccr_max": 1360,
+    "adc_trigger": "S4 用户已确认：控制更新 20000 Hz，100000 Hz 边沿对齐 PWM；170000000 Hz 的定时器/CPU 为基于库内 STM32G431 候选的预算，未构成最终选型；中断 1500 cycles 为待测预算。TIM1 比较事件映射 TRGO2，目标在实际导通区间中点采样，更新采样相位时与 PWM 占空比同步预装载。可每个 PWM 周期采样，以新鲜完整数据帧作整数抽取控制；RCR 不默认门控比较触发。注入/规则组及 DMA、采样时长与延迟在 S6/D 核实，不隐含跨周期平均。；D=0 或导通窗口不足时使用远离开关沿的稳定区触发，不使用不存在的导通中点；硬件比较器持续工作。过期/缺失/饱和的 ADC 数据不继续闭环，进入故障。过采样、软件低通和多周期平均若增加延迟，必须重新做环路复核。",
+    "cv_pi": {
+      "Kp": 0.012165373,
+      "Ki": 41.255886,
+      "Ki_Tc": 0.0020627943,
+      "fc_min_Hz": 198.7,
+      "units": "Kp: 1/V（占空比每V误差）；Ki: 1/(V·s)；Ki_Tc 为每拍积分增益"
+    },
+    "cc_pi": {
+      "Kp": 0.25556467,
+      "Ki": 1342.4954,
+      "Ki_Tc": 0.06712477,
+      "fc_min_Hz": 145.2,
+      "units": "Kp: 1/A（占空比每A误差）；Ki: 1/(A·s)；Ki_Tc 为每拍积分增益"
+    },
+    "duty_limit": [
+      0.0,
+      0.8
+    ],
+    "soft_start_ms": 20,
+    "states": [
+      "INIT",
+      "CALIB(采样自检/加载标定；仅确认无实际电流才更新电流零点，不在带电输出盲目归零)",
+      "STANDBY(PWM 关，等待显式使能且 Vin 正常)",
+      "SOFTSTART(从实测 Vout 建立参考斜坡)",
+      "RUN(CV/CC 自动切换)",
+      "FAULT(锁存，PWM 关；按键/串口清除且条件消失后回 STANDBY)"
+    ],
+    "validation": "PI 参数为平均模型网格搜索所得初值；须经程序模块仿真/实测确认（阶跃响应、模式切换）",
+    "current_filter": {
+      "r_ohm": 1000,
+      "c_f": 1e-08,
+      "amplifier_bandwidth_source": "所选 CSA 的 parameter_evidence.bandwidth_khz，S7 使用典型值极点"
+    },
+    "model_assumptions": [
+      "控制频率 20000 Hz，一拍计算延迟 + ZOH",
+      "采样 RC 滤波 fc≈8917 Hz",
+      "CC用1k/10nF RC及INA180A2 210kHz典型极点；CV用实际分压RC",
+      "仅覆盖列出的CCM工况；DCM、空载、停脉冲及非线性CC/CV切换均未证明稳定；ESR范围是敏感性假设",
+      "电子负载 CC 模式下测 CV、CR 模式下测 CC；CC 负载测 CC 无确定工作点"
+    ],
+    "hardware_resource_status": "SR46 open；独立阈值源/ADC/COMP/刹车路由待验证；禁止把 ADC 等效码当成 DAC 配置"
+  },
+  "cc_range": {
+    "vo_min_v": 6.25,
+    "r_min_ohm": 12.5,
+    "r_max_ohm": 24.0,
+    "short_circuit": "非同步 Boost 无法限制短路电流，需输入保险丝/实验电源限流"
+  },
+  "pcb_guidance": [
+    "功率回路 Q1(D)–D1–C10(Cout 陶瓷)–Q1(S) 面积最小，C10 紧贴 D1 阴极和 Q1 源极",
+    "输入回路 C1–L1–Q1 次之；SW 铜皮够用即可，不宜过大（EMI）",
+    "连续参考地平面与功能分区；功率回流直接回到功率器件，避免穿过采样地；R1 是高边分流，不是地汇合点",
+    "分流电阻 R1 用开尔文连接走差分线到 U3；VOUT_SENSE 从输出端子处取样",
+    "MCU、采样 RC 远离 SW 节点与电感；驱动器 U2 紧靠 Q1，栅极回路短",
+    "预留测试点：SW、GATE、VOUT、IOUT_SENSE_RAW、IOUT_SENSE、VOUT_SENSE、PWM_SW、GND 钩",
+    "输入/输出端子封装按已选器件库与数据手册核对（不可用其他节距封装代换）；预留 SWD 与 UART"
+  ],
+  "verification_plan": [
+    {
+      "id": "T01",
+      "req": "REQ-CV",
+      "requirements": [
+        "REQ-CV",
+        "REQ-IN",
+        "REQ-LOAD"
+      ],
+      "item": "CV 稳态精度",
+      "condition": "输入 [4.75, 5.0, 5.25] V；电子负载 CC [0.1, 0.25, 0.45] A；端子处用校准外部仪表测压",
+      "criterion": "各 CV 稳态点 |Vout−12|/12 ≤ 5%；轻载 DCM 点另验，不能引用 CCM 裕度作为证明",
+      "status": "计划，未实测",
+      "prerequisite": "SR34/SR46/SR53 对应上电条件已关闭，输入独立限流",
+      "load_mode": "CC",
+      "input_v": [
+        4.75,
+        5.0,
+        5.25
+      ],
+      "load_a": [
+        0.1,
+        0.25,
+        0.45
+      ]
+    },
+    {
+      "id": "T02",
+      "req": "REQ-CC",
+      "requirements": [
+        "REQ-CC",
+        "REQ-IN",
+        "REQ-LOAD"
+      ],
+      "item": "CC 稳态精度及边界",
+      "condition": "输入 [4.75, 5.0, 5.25] V；电子负载 CR [12.5, 18.25, 24.0] Ω；输出规划 6.25–12 V；上端是 CC/CV 交界，向区内邻点复核",
+      "criterion": "可调 CC 区 |Iout−0.5|/0.5 ≤ 5%；低于电压/阻值下限属于不可控区，不保证恒流",
+      "status": "计划，未实测",
+      "prerequisite": "输入/保护实现条件关闭；完成电流标定和完整误差预算",
+      "load_mode": "CR",
+      "input_v": [
+        4.75,
+        5.0,
+        5.25
+      ],
+      "load_ohm": [
+        12.5,
+        18.25,
+        24.0
+      ]
+    },
+    {
+      "id": "T03",
+      "req": "REQ-CTRL",
+      "requirements": [
+        "REQ-CTRL",
+        "REQ-CC",
+        "REQ-CV"
+      ],
+      "item": "模式切换与非线性动态",
+      "condition": "电子负载 CR 从 CV 区跨过 CC/CV 交界到可调 CC 区，正反向阶跃；另测空载/DCM/停脉冲及饱和恢复",
+      "criterion": "记录过冲、恢复时间、主导环和积分跟踪；稳态回到相应误差范围；动态量化判据由 B/D 联调前另行确定，课程未给过冲限值",
+      "status": "计划，未实测",
+      "prerequisite": "SR65 待仿真和实测关闭"
+    },
+    {
+      "id": "T04",
+      "req": "REQ-RIPPLE",
+      "requirements": [
+        "REQ-RIPPLE",
+        "TGT-RIPPLE"
+      ],
+      "item": "输出纹波",
+      "condition": "额定及各声明工况；示波器短地弹簧，计划 20 MHz 限带；同时保留全带宽尖峰记录",
+      "criterion": "Vpp/Vout ≤ 5% 为基本要求；≤ 3% 为建议目标",
+      "status": "计划，未实测",
+      "prerequisite": ""
+    },
+    {
+      "id": "T05",
+      "req": "REQ-ETA-MEAS",
+      "requirements": [
+        "REQ-ETA-MEAS",
+        "TGT-ETA"
+      ],
+      "item": "效率实测",
+      "condition": "额定及轻载同步测 Vin/Iin/Vout/Iout，电压在输入/输出端子测量；记录仪器误差和系统边界",
+      "criterion": "必须提交实测效率；额定 ≥ 75% 为建议目标，不以估算替代实测",
+      "status": "计划，未实测",
+      "prerequisite": ""
+    },
+    {
+      "id": "T06",
+      "req": "REQ-PROT",
+      "requirements": [
+        "REQ-PROT"
+      ],
+      "item": "软硬件 OVP 与锁存",
+      "condition": "在受控、限能平台独立注入软件/硬件采样信号；名义 SW/HW 阈值 13.2/13.8 V",
+      "criterion": "软件超限封锁并锁存；停止控制程序时硬件仍能刹车并保持关断；阈值容差和延迟先预算再测量；故障解除不自动重启",
+      "status": "计划，未实测",
+      "prerequisite": "SR35/SR46 关闭；先验证保护通道，再考虑功率瞬态；不以直接断开反馈起步"
+    },
+    {
+      "id": "T07",
+      "req": "REQ-PROT",
+      "requirements": [
+        "REQ-PROT"
+      ],
+      "item": "输出 OCP 与输入故障保护",
+      "condition": "受控限能信号注入分别测试输出 SW 0.6 A/10 ms 与 HW 1 A；独立输入保护另测",
+      "criterion": "验证动作、延迟和锁存；输出 OCP 不等于电感峰值限流，PWM 关闭不隔离输出；不把不可控区或短路当作 CC 合格点",
+      "status": "计划，未实测",
+      "prerequisite": "SR34/SR46/SR53 关闭；故障能源和 SOA 有依据后才安排功率故障测试"
+    },
+    {
+      "id": "T08",
+      "req": "REQ-PROT",
+      "requirements": [
+        "REQ-PROT"
+      ],
+      "item": "占空比限幅与默认关断",
+      "condition": "审查限幅代码、定时器寄存器；用波形测复位/初始化/饱和/故障时 PWM，禁止用日志代替波形",
+      "criterion": "实际 D∈[0,0.8]，CCR≤1360；硬件刹车锁存，自动输出重使能关闭",
+      "status": "计划，未实测",
+      "prerequisite": ""
+    },
+    {
+      "id": "T09",
+      "req": "TGT-START",
+      "requirements": [
+        "TGT-START",
+        "REQ-PROT"
+      ],
+      "item": "软启动、UVLO 与显式恢复",
+      "condition": "从当前实测输出施加 20 ms 参考斜坡；输入跨越 UVLO 4.3/4.5 V",
+      "criterion": "记录参考/输出/输入电流；UVLO 恢复只解除禁止，需显式复位、自检、启动；插电直通浪涌另验，不能归入数字软启动保证",
+      "status": "计划，未实测",
+      "prerequisite": ""
+    },
+    {
+      "id": "T10",
+      "req": "REQ-IN",
+      "requirements": [
+        "REQ-IN",
+        "REQ-CV"
+      ],
+      "item": "输入扰动",
+      "condition": "在输入范围 4.75–5.25 V 内阶跃，电子负载 CC 保持 CV 工况",
+      "criterion": "稳态恢复至输出 ±5%；记录动态而不虚构课程恢复时间指标",
+      "status": "计划，未实测",
+      "prerequisite": ""
+    },
+    {
+      "id": "T11",
+      "req": "REQ-PWR",
+      "requirements": [
+        "REQ-PWR",
+        "REQ-BUILD"
+      ],
+      "item": "额定连续运行与温升",
+      "condition": "12 V/0.5 A 额定运行，记录环境、持续时长、温度及漂移；时长/环境/重复次数由下游开测前明确",
+      "criterion": "额定稳定运行，误差满足需求；各器件温度按有条件手册额定及设计降额核验；不虚设课程温度/时长标准",
+      "status": "计划，未实测",
+      "prerequisite": ""
+    },
+    {
+      "id": "T12",
+      "req": "REQ-FSW",
+      "requirements": [
+        "REQ-FSW",
+        "TGT-FSW",
+        "REQ-MCU",
+        "TGT-MCU",
+        "REQ-CTRL"
+      ],
+      "item": "控制与时序资源",
+      "condition": "核对 MCU 手册和工程；测 PWM/SW 频率、ADC 窗口/帧新鲜度/截止时间、控制中断与最坏执行时间",
+      "criterion": "采用所选 32 位 STM32 和数字 PI；频率在 [50000, 100000] Hz，设计值 100000 Hz；实现延迟与复核模型一致",
+      "status": "计划，未实测",
+      "prerequisite": ""
+    },
+    {
+      "id": "T13",
+      "req": "REQ-PCB",
+      "requirements": [
+        "REQ-PCB",
+        "REQ-EDA",
+        "REQ-BUILD",
+        "REQ-SOURCE"
+      ],
+      "item": "工程与装配审查",
+      "condition": "嘉立创 EDA 工程/ERC；两层 PCB/DRC、功率环路/Kelvin/热铜审查；采购证据和手工焊接装配检查",
+      "criterion": "工程可打开、连接和布局规则通过；完整装配 BOM 的每个器件均有可追溯选型依据；当前主要器件 BOM 不能代替完整装配 BOM",
+      "status": "计划，未实测",
+      "prerequisite": ""
+    },
+    {
+      "id": "T14",
+      "req": "REQ-CC",
+      "requirements": [
+        "REQ-CC",
+        "REQ-PROT"
+      ],
+      "item": "不可控区识别",
+      "condition": "在独立输入限流及保护条件关闭后受控接近 CC 下限，记录越界识别和故障处理，不直接短接输出",
+      "criterion": "低于 6.25 V 或 CR 12.5 Ω 不声明恒流；未误标为 CC 精度通过",
+      "status": "计划，未实测",
+      "prerequisite": ""
+    }
+  ],
+  "traceability": [
+    {
+      "req": "REQ-IN",
+      "text": "输入电压及容差",
+      "level": "must",
+      "source_field": "vin",
+      "blocks": [
+        "MOD-IN",
+        "MOD-SENSE",
+        "MOD-AUX"
+      ],
+      "tests": [
+        "T01",
+        "T02",
+        "T10"
+      ],
+      "checks": [
+        "SR22",
+        "SR30",
+        "SR31",
+        "SR32",
+        "SR35",
+        "SR33",
+        "SR34",
+        "SR53",
+        "SR54",
+        "SR70",
+        "SR71"
+      ],
+      "check_ref_aliases": [
+        "PWR-AUX",
+        "PROT"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "REQ-CV",
+      "text": "恒压设定及稳态误差",
+      "level": "must",
+      "source_field": "vout",
+      "blocks": [
+        "MOD-PWR",
+        "MOD-SENSE",
+        "MOD-AUX",
+        "MOD-OUT"
+      ],
+      "tests": [
+        "T01",
+        "T03",
+        "T10"
+      ],
+      "checks": [
+        "SR40",
+        "SR41",
+        "SR42",
+        "SR43",
+        "SR44",
+        "SR45",
+        "SR46",
+        "SR60-CV",
+        "SR60-reachable-CV",
+        "SR60-CC",
+        "SR60-reachable-CC",
+        "SR65",
+        "SR61"
+      ],
+      "check_ref_aliases": [
+        "REQ-ACC",
+        "IF-ADC",
+        "CTRL"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "REQ-CC",
+      "text": "恒流设定及稳态误差；限声明的可调区",
+      "level": "must",
+      "source_field": "iout",
+      "blocks": [
+        "MOD-PWR",
+        "MOD-SENSE",
+        "MOD-AUX",
+        "MOD-OUT"
+      ],
+      "tests": [
+        "T02",
+        "T03",
+        "T14"
+      ],
+      "checks": [
+        "SR40",
+        "SR41",
+        "SR42",
+        "SR43",
+        "SR44",
+        "SR45",
+        "SR46",
+        "SR60-CV",
+        "SR60-reachable-CV",
+        "SR60-CC",
+        "SR60-reachable-CC",
+        "SR65",
+        "SR61",
+        "SR64"
+      ],
+      "check_ref_aliases": [
+        "REQ-CC",
+        "REQ-ACC",
+        "IF-ADC",
+        "CTRL"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "REQ-PWR",
+      "text": "额定功率与连续运行",
+      "level": "must",
+      "source_field": "pout",
+      "blocks": [
+        "MOD-IN",
+        "MOD-PWR"
+      ],
+      "tests": [
+        "T11"
+      ],
+      "checks": [
+        "SR01",
+        "SR36",
+        "SR37",
+        "SR39",
+        "SR51-MOSFET",
+        "SR51-二极管",
+        "SR51-防反接 PMOS"
+      ],
+      "check_ref_aliases": [
+        "REQ-PWR",
+        "PWR",
+        "THERM"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "REQ-FSW",
+      "text": "开关频率范围",
+      "level": "must",
+      "source_field": "fsw.range_hz",
+      "blocks": [
+        "MOD-PWR",
+        "MOD-DRV",
+        "MOD-MCU"
+      ],
+      "tests": [
+        "T12"
+      ],
+      "checks": [
+        "SR03",
+        "SR62",
+        "SR63"
+      ],
+      "check_ref_aliases": [
+        "REQ-FSW",
+        "FW"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "TGT-FSW",
+      "text": "建议开关频率",
+      "level": "target",
+      "source_field": "fsw.suggested_hz",
+      "blocks": [
+        "MOD-PWR",
+        "MOD-MCU"
+      ],
+      "tests": [
+        "T12"
+      ],
+      "checks": [
+        "SR03"
+      ],
+      "check_ref_aliases": [
+        "REQ-FSW"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "REQ-RIPPLE",
+      "text": "输出纹波基本上限",
+      "level": "must",
+      "source_field": "ripple.max_pct",
+      "blocks": [
+        "MOD-PWR"
+      ],
+      "tests": [
+        "T04"
+      ],
+      "checks": [
+        "SR52",
+        "SR52-target"
+      ],
+      "check_ref_aliases": [
+        "REQ-RIP"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "TGT-RIPPLE",
+      "text": "输出纹波建议目标",
+      "level": "target",
+      "source_field": "ripple.target_pct",
+      "blocks": [
+        "MOD-PWR"
+      ],
+      "tests": [
+        "T04"
+      ],
+      "checks": [
+        "SR52",
+        "SR52-target"
+      ],
+      "check_ref_aliases": [
+        "REQ-RIP"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "REQ-MCU",
+      "text": "使用 32 位 MCU",
+      "level": "must",
+      "source_field": "controller.type",
+      "blocks": [
+        "MOD-MCU",
+        "MOD-AUX"
+      ],
+      "tests": [
+        "T12"
+      ],
+      "checks": [
+        "SR05"
+      ],
+      "check_ref_aliases": [
+        "REQ-MCU"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "TGT-MCU",
+      "text": "优先 STM32",
+      "level": "target",
+      "source_field": "controller.preferred",
+      "blocks": [
+        "MOD-MCU"
+      ],
+      "tests": [
+        "T12"
+      ],
+      "checks": [
+        "SR05"
+      ],
+      "check_ref_aliases": [
+        "REQ-MCU"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "REQ-CTRL",
+      "text": "MCU 数字 PI CC/CV",
+      "level": "must",
+      "source_field": "control",
+      "blocks": [
+        "MOD-MCU"
+      ],
+      "tests": [
+        "T03",
+        "T12"
+      ],
+      "checks": [
+        "SR20",
+        "SR21",
+        "SR60-CV",
+        "SR60-reachable-CV",
+        "SR60-CC",
+        "SR60-reachable-CC",
+        "SR65",
+        "SR61",
+        "SR62",
+        "SR63"
+      ],
+      "check_ref_aliases": [
+        "CTRL",
+        "FW",
+        "CTRL-DUTY"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "REQ-PROT",
+      "text": "OVP/OCP/占空比限幅",
+      "level": "must",
+      "source_field": "protection.required",
+      "blocks": [
+        "MOD-IN",
+        "MOD-DRV",
+        "MOD-SENSE",
+        "MOD-MCU",
+        "MOD-OUT"
+      ],
+      "tests": [
+        "T06",
+        "T07",
+        "T08",
+        "T09",
+        "T14"
+      ],
+      "checks": [
+        "SR04-OVP",
+        "SR04-OCP",
+        "SR04-duty_limit",
+        "SR04-soft_start",
+        "SR20",
+        "SR21",
+        "SR22",
+        "SR30",
+        "SR31",
+        "SR32",
+        "SR35",
+        "SR33",
+        "SR34",
+        "SR40",
+        "SR41",
+        "SR42",
+        "SR43",
+        "SR46",
+        "SR53",
+        "SR54"
+      ],
+      "check_ref_aliases": [
+        "REQ-PROT",
+        "PROT",
+        "CTRL-DUTY",
+        "IF-ADC"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "TGT-START",
+      "text": "建议软启动",
+      "level": "target",
+      "source_field": "protection.suggested",
+      "blocks": [
+        "MOD-MCU"
+      ],
+      "tests": [
+        "T09"
+      ],
+      "checks": [
+        "SR22",
+        "SR30",
+        "SR31",
+        "SR32",
+        "SR35",
+        "SR33",
+        "SR34",
+        "SR53",
+        "SR54"
+      ],
+      "check_ref_aliases": [
+        "PROT"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "REQ-ETA-MEAS",
+      "text": "效率必须实测",
+      "level": "must",
+      "source_field": "efficiency.measure",
+      "blocks": [
+        "MOD-SENSE",
+        "MOD-DBG"
+      ],
+      "tests": [
+        "T05"
+      ],
+      "checks": [],
+      "check_ref_aliases": [],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "TGT-ETA",
+      "text": "额定效率建议目标",
+      "level": "target",
+      "source_field": "efficiency.target_pct",
+      "blocks": [
+        "MOD-PWR",
+        "MOD-DRV",
+        "MOD-DBG"
+      ],
+      "tests": [
+        "T05"
+      ],
+      "checks": [
+        "SR50",
+        "SR50-margin"
+      ],
+      "check_ref_aliases": [
+        "REQ-EFF",
+        "DEC-EFF"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "REQ-LOAD",
+      "text": "电子负载支持 CC/CR；CV 用 CC，CC 用 CR",
+      "level": "must",
+      "source_field": "test_load",
+      "blocks": [
+        "MOD-OUT",
+        "MOD-DBG"
+      ],
+      "tests": [
+        "T01",
+        "T02"
+      ],
+      "checks": [],
+      "check_ref_aliases": [],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "REQ-PCB",
+      "text": "两层 PCB，功率级与控制级布局合理",
+      "level": "must",
+      "source_field": "pcb",
+      "blocks": [
+        "MOD-ENG"
+      ],
+      "tests": [
+        "T13"
+      ],
+      "checks": [],
+      "check_ref_aliases": [],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "REQ-BUILD",
+      "text": "制作实物并手工焊接",
+      "level": "project_constraint",
+      "source_field": "project_constraints.build_physical",
+      "blocks": [
+        "MOD-ENG"
+      ],
+      "tests": [
+        "T11",
+        "T13"
+      ],
+      "checks": [
+        "SR10-mcu",
+        "SR10-mosfet",
+        "SR10-pmos",
+        "SR10-diode",
+        "SR10-inductor",
+        "SR10-cout_bulk",
+        "SR10-cout_ceramic",
+        "SR10-cin_ceramic",
+        "SR10-cin_bulk",
+        "SR10-gate_driver",
+        "SR10-csa",
+        "SR10-shunt",
+        "SR10-ldo",
+        "SR10-tvs",
+        "SR10-fuse",
+        "SR10-terminal",
+        "SR10-header_swd",
+        "SR10-header_uart"
+      ],
+      "check_ref_aliases": [
+        "SEL"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "REQ-EDA",
+      "text": "使用嘉立创 EDA",
+      "level": "project_constraint",
+      "source_field": "project_constraints.eda",
+      "blocks": [
+        "MOD-ENG"
+      ],
+      "tests": [
+        "T13"
+      ],
+      "checks": [],
+      "check_ref_aliases": [],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    },
+    {
+      "req": "REQ-SOURCE",
+      "text": "立创采购且可追溯",
+      "level": "project_constraint",
+      "source_field": "project_constraints.sourcing",
+      "blocks": [
+        "MOD-ENG"
+      ],
+      "tests": [
+        "T13"
+      ],
+      "checks": [
+        "SR11-mcu",
+        "SR11-mosfet",
+        "SR11-pmos",
+        "SR11-diode",
+        "SR11-inductor",
+        "SR11-cout_bulk",
+        "SR11-cout_ceramic",
+        "SR11-cin_ceramic",
+        "SR11-cin_bulk",
+        "SR11-gate_driver",
+        "SR11-csa",
+        "SR11-shunt",
+        "SR11-ldo",
+        "SR11-tvs",
+        "SR11-fuse",
+        "SR11-terminal",
+        "SR11-header_swd",
+        "SR11-header_uart"
+      ],
+      "check_ref_aliases": [
+        "SOURCING"
+      ],
+      "verification_note": "SDRC 为计算/资料检查；未覆盖部分按测试或工程审查计划验证，均未实测"
+    }
+  ],
+  "open_issues": [
+    "SR35 检查目标「TVS 全条件保护配合已验证」尚未关闭；观测：24.4V 仅对应手册16.4A、10/1000µs脉冲；25V电容裕量小。温度、布线寄生与故障能量未验证。",
+    "SR34 检查目标「故障电感峰值及输入保护配合已证明」尚未关闭；观测：仅稳态换算输出OCPhw对应IL≈2.86 A vs Isat=3.6 A；不是故障上界。无电感逐周期限流，输出OCP不能保证避免电感饱和；独立输入限流的瞬态与短路耐受尚未验证。",
+    "SR38 检查目标「电感实际纹波比满足内部设计目标」尚未关闭；观测：容差场景最大0.4293 vs 内部目标0.35；非课程硬指标",
+    "SR44 检查目标「电流测量部分误差预算 ≤ 稳态精度要求的一半」尚未关闭；观测：失调 + 增益误差 + 分流 1% ≈ 4.00% vs ≤2.5%；失调条件为12V共模，未含ADC/基准/温漂/CMRR，非完整最坏保证；须在实际共模下标定。",
+    "SR46 检查目标「电压/电流完整误差与硬件阈值容差已闭合」尚未关闭；观测：ADC、基准、温漂、共模范围和阈值源须补预算；ADC等效码不是DAC码；独立DAC/COMP/BKIN及ADC并用路由尚待核实。",
+    "SR53 检查目标「上电浪涌限制措施已验证」尚未关闭；观测：线性峰值5.563A；超过Isat时不是可靠上界。PMOS防反接与数字软启动均不等于浪涌限流；外部输入限流瞬态/其输出电容或PMOS缓启SOA待验证。",
+    "SR65 检查目标「DCM/空载/停脉冲/CC-CV切换/饱和已验证」尚未关闭；观测：CV有36个DCM点排除于CCM搜索；需开关仿真和实测，禁止把CCM通过推为全负载稳定。",
+    "SR73 检查目标「模型假设与实物功率/采样时序已验证」尚未关闭；观测：开关/磁损、热Rds系数、MLCC保持率、陶瓷ESR、ESR敏感性范围及热布局均为估计；放大器典型带宽非最坏保证；ADC窗口/CPU最坏执行时间需B/C/D实测。"
+  ],
+  "implementation_closures": [
+    {
+      "id": "SR35",
+      "status": "open",
+      "verdict": "WARN",
+      "rule": "TVS 全条件保护配合已验证",
+      "evidence": "24.4V 仅对应手册16.4A、10/1000µs脉冲；25V电容裕量小。温度、布线寄生与故障能量未验证。",
+      "owner": "B/C",
+      "required_before": "原理图/PCB 冻结及瞬态测试前",
+      "closure": "核对全温钳位曲线、脉冲能量、布局过冲和电容耐压；不足时调整保护/耐压方案并回算。",
+      "closure_evidence": null
+    },
+    {
+      "id": "SR34",
+      "status": "open",
+      "verdict": "WARN",
+      "rule": "故障电感峰值及输入保护配合已证明",
+      "evidence": "仅稳态换算输出OCPhw对应IL≈2.86 A vs Isat=3.6 A；不是故障上界。无电感逐周期限流，输出OCP不能保证避免电感饱和；独立输入限流的瞬态与短路耐受尚未验证。",
+      "owner": "B/D",
+      "required_before": "故障试验及上电前",
+      "closure": "验证独立输入限流的响应、释放能量、直通路径、磁饱和及器件 SOA；输出 OCP 不可替代电感峰值保护。",
+      "closure_evidence": null
+    },
+    {
+      "id": "SR38",
+      "status": "open",
+      "verdict": "WARN",
+      "rule": "电感实际纹波比满足内部设计目标",
+      "evidence": "容差场景最大0.4293 vs 内部目标0.35；非课程硬指标",
+      "owner": "A/B/C",
+      "required_before": "实物额定纹波/温升验收前",
+      "closure": "记录偏离内部纹波目标；若实物不满足纹波或温升则增大电感，升级版本并重算。",
+      "closure_evidence": null
+    },
+    {
+      "id": "SR44",
+      "status": "open",
+      "verdict": "WARN",
+      "rule": "电流测量部分误差预算 ≤ 稳态精度要求的一半",
+      "evidence": "失调 + 增益误差 + 分流 1% ≈ 4.00% vs ≤2.5%；失调条件为12V共模，未含ADC/基准/温漂/CMRR，非完整最坏保证；须在实际共模下标定。",
+      "owner": "B/D",
+      "required_before": "CC 精度验收前",
+      "closure": "在实际 CC 共模范围进行标定；补齐 ADC、参考源、温漂、CMRR、残余误差并实测稳态精度。",
+      "closure_evidence": null
+    },
+    {
+      "id": "SR46",
+      "status": "open",
+      "verdict": "WARN",
+      "rule": "电压/电流完整误差与硬件阈值容差已闭合",
+      "evidence": "ADC、基准、温漂、共模范围和阈值源须补预算；ADC等效码不是DAC码；独立DAC/COMP/BKIN及ADC并用路由尚待核实。",
+      "owner": "B/D",
+      "required_before": "模拟保护原理图冻结及上电前",
+      "closure": "完成完整电压/电流误差预算、ADC/COMP 并用验证、独立 DAC 阈值及容差、BKIN 锁存路由；必要时分配独立引脚或外部比较器。",
+      "closure_evidence": null
+    },
+    {
+      "id": "SR53",
+      "status": "open",
+      "verdict": "WARN",
+      "rule": "上电浪涌限制措施已验证",
+      "evidence": "线性峰值5.563A；超过Isat时不是可靠上界。PMOS防反接与数字软启动均不等于浪涌限流；外部输入限流瞬态/其输出电容或PMOS缓启SOA待验证。",
+      "owner": "B/C",
+      "required_before": "插电及故障试验前",
+      "closure": "验证独立输入限流瞬态和电源输出电容释放能量；PMOS 缓启须另有栅极时序和线性 SOA 设计；防反接或数字软启动不构成关闭依据。",
+      "closure_evidence": null
+    },
+    {
+      "id": "SR65",
+      "status": "open",
+      "verdict": "WARN",
+      "rule": "DCM/空载/停脉冲/CC-CV切换/饱和已验证",
+      "evidence": "CV有36个DCM点排除于CCM搜索；需开关仿真和实测，禁止把CCM通过推为全负载稳定。",
+      "owner": "D",
+      "required_before": "动态/全负载验收前",
+      "closure": "另行仿真和实测 DCM、空载、停脉冲、负载阶跃、CC/CV 切换、积分跟踪及恢复；考虑电子负载动态。",
+      "closure_evidence": null
+    },
+    {
+      "id": "SR73",
+      "status": "open",
+      "verdict": "WARN",
+      "rule": "模型假设与实物功率/采样时序已验证",
+      "evidence": "开关/磁损、热Rds系数、MLCC保持率、陶瓷ESR、ESR敏感性范围及热布局均为估计；放大器典型带宽非最坏保证；ADC窗口/CPU最坏执行时间需B/C/D实测。",
+      "owner": "B/C/D",
+      "required_before": "布局冻结及系统验收前",
+      "closure": "核对偏压/温度参数和热铜面积；测采样窗口、延迟、WCET；实际器件、滤波、平均算法或时序变化后重跑模型。",
+      "closure_evidence": null
+    }
+  ],
+  "handoff_scope": "r6 系统设计交接；conditional_review，实施关闭条件保留；不是无条件制造/上电批准",
+  "net_naming": "网络名遵循模块 B 规范 §12.3（VIN/VOUT/GND/PWM_SW/VOUT_SENSE/IOUT_SENSE…）；只有一个地网络 GND",
+  "bom_scope": "主要器件清单；generic_passives 为未选型提案，不列入可采购 BOM；完整装配 BOM 由 B 按有证据器件库补齐",
+  "data_classification": {
+    "calculation": [
+      "calc.json",
+      "losses.json",
+      "loop.json",
+      "loop_validation.json"
+    ],
+    "switching_simulation": "未进行",
+    "measurement": "未进行，verification_plan 均为计划"
+  },
+  "cc_boundary": "低于 CC 电压或 CR 阻值下限为不可控区，不保证恒流；上端为 CC/CV 交界；PWM 关闭不等于输出隔离",
+  "acceptance_load_modes": {
+    "CV": "CC",
+    "CC": "CR"
+  }
+}
