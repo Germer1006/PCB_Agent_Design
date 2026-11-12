@@ -1,0 +1,178 @@
+{
+  "date": "2026-11-12",
+  "scope": "Downloaded sources; download success does not establish complete audit or exact part identity. See sdrc_audit.md for reviewed pages and gaps.",
+  "sources": [
+    {
+      "role": "mcu",
+      "url": "https://www.st.com/resource/en/datasheet/stm32g431cb.pdf",
+      "final_url": "https://www.st.com/resource/en/datasheet/stm32g431cb.pdf",
+      "sha256": "c2e903e3de4b05c0b5d77e5bfda037ce65e8652c41f7a4fe092f6893c870f6e9",
+      "bytes": 2654849,
+      "pages": 198
+    },
+    {
+      "role": "mosfet",
+      "url": "https://www.aosmd.com/res/datasheets/AO3400A.pdf",
+      "final_url": "https://www.aosmd.com/res/datasheets/AO3400A.pdf",
+      "sha256": "9c60d0b6c1ddc7609a4b788a91181468d8ffe6c3e9ba425c3d8ffc5ba88c5033",
+      "bytes": 317848,
+      "pages": 5
+    },
+    {
+      "role": "pmos",
+      "url": "https://www.aosmd.com/res/datasheets/AO3401A.pdf",
+      "final_url": "https://www.aosmd.com/res/datasheets/AO3401A.pdf",
+      "sha256": "0d8e3261ae280e007b5837fff60c55142f2d92af71edc4d02aee6f7a760a785c",
+      "bytes": 326568,
+      "pages": 5
+    },
+    {
+      "role": "diode",
+      "url": "https://pdf.digi-electronics.com/pdf/5541/SS54-datasheet.pdf",
+      "final_url": "https://pdf.digi-electronics.com/pdf/5541/SS54-datasheet.pdf",
+      "sha256": "2eb921793a8d155e8c4d41a853c08f54323b1038e56afb8df6b8efc7bc998f23",
+      "bytes": 2243878,
+      "pages": 14
+    },
+    {
+      "role": "inductor",
+      "url": "https://media.digikey.com/pdf/Data%20Sheets/Shenzhen%20Sunlord/MWSA-S_Series_DS.pdf",
+      "final_url": "https://media.digikey.com/pdf/Data%20Sheets/Shenzhen%20Sunlord/MWSA-S_Series_DS.pdf",
+      "sha256": "20c2dbc43149c070a45df90718705b99cf8fb95880cf818fa17a2185c1ef93d3",
+      "bytes": 3584075,
+      "pages": 38
+    },
+    {
+      "role": "cout_bulk",
+      "url": "https://na.industrial.panasonic.com/products/capacitors/polymer-capacitors/os-con-aluminum-polymer/series/91057/model/91093",
+      "final_url": "https://na.industrial.panasonic.com/products/capacitors/polymer-capacitors/os-con-aluminum-polymer/series/91057/model/91093",
+      "sha256": "b5b6fef0d482f50f37b2cd09aea5134638a4577c97b5e27b1248420539b0bb3b",
+      "bytes": 560417
+    },
+    {
+      "role": "cout_ceramic",
+      "url": "https://media.digikey.com/pdf/Data%20Sheets/Samsung%20PDFs/CL31B106KAHNNNE_Spec.pdf",
+      "final_url": "https://media.digikey.com/pdf/Data%20Sheets/Samsung%20PDFs/CL31B106KAHNNNE_Spec.pdf",
+      "sha256": "b9d6cbfd40f8a0269ff07298280126d36bb935c977671808439ee2d379c1254f",
+      "bytes": 1357649,
+      "pages": 36
+    },
+    {
+      "role": "cin_ceramic",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/015e8892be1d4004ad7b0cd1139329c7.pdf?productCode=C90146",
+      "final_url": "https://datasheet.lcsc.com/datasheet/pdf/015e8892be1d4004ad7b0cd1139329c7.pdf?productCode=C90146",
+      "sha256": "67e827dfbfe2e439605e1c7f719e6be87a8c5755ccb67aac577c4df45a3465a0",
+      "bytes": 331806,
+      "pages": 3
+    },
+    {
+      "role": "cin_bulk",
+      "url": "https://datasheet.octopart.com/EEE-FK1H221P-Panasonic-datasheet-8188412.pdf",
+      "final_url": "https://datasheet.octopart.com/EEE-FK1H221P-Panasonic-datasheet-8188412.pdf",
+      "sha256": "c8298dc951d71d86bdd928b06d01516a948b9f651776a954a30ca139669eeca4",
+      "bytes": 170030,
+      "pages": 9
+    },
+    {
+      "role": "gate_driver",
+      "url": "https://www.ti.com/lit/ds/symlink/lm5114.pdf",
+      "final_url": "https://www.ti.com/lit/ds/symlink/lm5114.pdf",
+      "sha256": "56da09e8b71b74818fbef328abf48ca61c470aad201f2844f10706da36fc83ae",
+      "bytes": 2043640,
+      "pages": 28
+    },
+    {
+      "role": "csa",
+      "url": "https://www.ti.com/lit/ds/symlink/ina180.pdf",
+      "final_url": "https://www.ti.com/lit/ds/symlink/ina180.pdf",
+      "sha256": "d48a0e37dbd3afcfe053f740ba2ba30e94a05fa22cab2cbc5873651ac39bf1e6",
+      "bytes": 3131947,
+      "pages": 53
+    },
+    {
+      "role": "shunt",
+      "url": "https://yageogroup.com/content/datasheet/asset/file/PYU-PA_E_51_ROHS",
+      "final_url": "https://yageogroup.com/content/datasheet/asset/file/PYU-PA_E_51_ROHS",
+      "sha256": "141cabd71261b4d9b0b27541d160b9fa17e8894c2a7e0615c494e480985bdbfd",
+      "bytes": 858839,
+      "pages": 10
+    },
+    {
+      "role": "ldo",
+      "url": "https://img.iceasy.com/product/product/files/202111/8a8a8a1a7d35bc8a017d4ba03ae500f5.pdf",
+      "final_url": "https://img.iceasy.com/product/product/files/202111/8a8a8a1a7d35bc8a017d4ba03ae500f5.pdf",
+      "sha256": "79b119b2ba3e7ca8d432f2606fdc34d72fec2c178027817c37eb471ab6c9402b",
+      "bytes": 858046,
+      "pages": 23
+    },
+    {
+      "role": "tvs",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/bf298e2c0542e0172af23908598fa548.pdf?productCode=C148216",
+      "final_url": "https://datasheet.lcsc.com/datasheet/pdf/bf298e2c0542e0172af23908598fa548.pdf?productCode=C148216",
+      "sha256": "3f987f8fc0988aae0f14259b9d1953f26bdfe2525bbc4fc636477f6b221fc38a",
+      "bytes": 1009698,
+      "pages": 6
+    },
+    {
+      "role": "fuse",
+      "url": "https://static.chipdip.ru/lib/373/DOC018373187.pdf",
+      "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>"
+    },
+    {
+      "role": "terminal",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/dbe48a1bef5e997cc12dba31bc0ac67e.pdf?productCode=C474881",
+      "final_url": "https://datasheet.lcsc.com/datasheet/pdf/dbe48a1bef5e997cc12dba31bc0ac67e.pdf?productCode=C474881",
+      "sha256": "d5758ddb6887651bcf00755cf80ce380bd6d45326f677aead92f9004240b1600",
+      "bytes": 327528,
+      "pages": 1
+    },
+    {
+      "role": "header_swd",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/219f7e7eb5f34457895b2c164313179f.pdf?productCode=C124379",
+      "final_url": "https://datasheet.lcsc.com/datasheet/pdf/219f7e7eb5f34457895b2c164313179f.pdf?productCode=C124379",
+      "sha256": "53219f777f842b9c4552c9b0cebe7a9b0d3cd4359781e84dc912006c6c6606af",
+      "bytes": 479102,
+      "pages": 1
+    },
+    {
+      "role": "header_uart",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/219f7e7eb5f34457895b2c164313179f.pdf?productCode=C124378",
+      "final_url": "https://datasheet.lcsc.com/datasheet/pdf/219f7e7eb5f34457895b2c164313179f.pdf?productCode=C124378",
+      "sha256": "53219f777f842b9c4552c9b0cebe7a9b0d3cd4359781e84dc912006c6c6606af",
+      "bytes": 479102,
+      "pages": 1
+    },
+    {
+      "role": "rm0440",
+      "url": "https://www.st.com/resource/en/reference_manual/rm0440-stm32g4-series-advanced-armbased-32bit-mcus-stmicroelectronics.pdf",
+      "final_url": "https://www.st.com/resource/en/reference_manual/rm0440-stm32g4-series-advanced-armbased-32bit-mcus-stmicroelectronics.pdf",
+      "sha256": "7f8c15bc667c46614e2c5ad0341b9eaa20e8d417f21b819b9f2dde7dfe1ae564",
+      "bytes": 39045335,
+      "pages": 2140
+    },
+    {
+      "role": "fuse_primary",
+      "url": "https://www.littelfuse.com/assetdocs/fuse-466-datasheet?assetguid=dbe9bcd7-6072-4adf-bf5b-d33e52a6b90f",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "role": "tvs_primary",
+      "url": "https://www.littelfuse.com/~/media/electronics/datasheets/tvs_diodes/littelfuse_tvs_diode_smaj_datasheet.pdf.pdf",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "role": "ldo_primary_page",
+      "url": "https://www.microne.com.cn/product/20.html",
+      "final_url": "https://www.microne.com.cn/product/20.html",
+      "sha256": "04915e6a18c4133abc477ecdf62c7c474316f1c84b4ebb2c0be6f239bafd152f",
+      "bytes": 156935
+    },
+    {
+      "role": "diode_listing",
+      "url": "https://www.lcsc.com/zh-CN/product-detail/Schottky-Diodes_MDD-Microdiode-Semiconductor-SS54_C22452.html",
+      "final_url": "https://www.lcsc.com/zh-CN/product-detail/Schottky-Diodes_MDD-Microdiode-Semiconductor-SS54_C22452.html",
+      "sha256": "2ec32f118dc0da74e1bd416b0184e8bab0f04fc0007daea61bb11e0392ada697",
+      "bytes": 420081
+    }
+  ]
+}

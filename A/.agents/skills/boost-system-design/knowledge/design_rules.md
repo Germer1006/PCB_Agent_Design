@@ -123,7 +123,7 @@
 | 电流放大器失调看 Vcm=0 规格 | INA180：150 µV max @Vcm=0，**500 µV max @Vcm=12 V** | 高边 12 V 采样时 25 mV 信号上误差 2% → 固件零点/两点标定 |
 | 陶瓷电容按标称容量算 | Murata 1206/25 V/X5R 22 µF：**12 V 下 −73%**（剩约 5.9 µF） | 输出电容改为低 ESR 固态电容为主、陶瓷为辅 |
 | “SS34”“AMS1117”等通用料号 | 同名克隆众多，参数各异 | 记录具体厂家料号与立创编号（如 AO3400A 原厂 C20917） |
-| LDO 压差只看典型 | AMS1117 只给 1.3 V max @0.8 A | 4.75 V 输入余量不足；选 ME6211（120 mV @100 mA） |
+| LDO 压差只看典型 | ME6211C33 V22 镜像 PDF p9：120 mV @100 mA、260 mV @200 mA 均为 typ，max 栏为空 | 不能以典型压差证明最坏供电；SR70 需 dropout.max，且使用保险丝/PMOS 后 VIN。现有选型待补证据，不代表已证明不合格 |
 | 端子“5.08 mm” | KF301-5.0-2P 实为 **5.0 mm** 间距 | 原理图/PCB 封装要与实物一致 |
 
 ### 9.2 智能体测试运行中发现并已修入工具的问题（2026-11-09，Codex 运行 outputs/test1 → 合并入 skill）
@@ -136,6 +136,9 @@
 | 电感取标准值用隐含 0.97 系数 | 显式参数 inductor_rounding_allowance 并检查实际纹波比 | calc_boost.py / select_parts.py；SR38 |
 | 只在标称参数下复核 | 对 L/C 容差与 ESR 敏感性做全组合扫描，按包络判定；导出的四舍五入 PI 系数再独立复核 | stage_params.variants；loss_model.py；validate_loop.py |
 | 措辞夸大（“逐周期封锁”“比较器参考码值”“软启动避免浪涌”） | 写清实际语义：刹车并锁存；ADC 等效码≠DAC 码；数字软启动不限制插电直通浪涌 | calc_boost.py / export_handoff.py / handoff_header.py |
+| 典型/标称参数被用于最坏供电证明（2026-11-12 审计） | 保险丝 19 mΩ 为 nominal，不能作为 max；SR70/SR71 缺 max 时 NOT_ASSESSED。电流取工况包络，温度/布线仍需验证 | check_design.py；sdrc_audit.md |
+| 同名料号、镜像封面与内页厂商不一致 | SS54 C22452 的现有镜像封面为 MDD、内页为 NextGen；不能用不同厂家的同名器件补证 | sdrc_evidence.json；sdrc_audit.md |
+| 电感电流列标题与判据混淆 | Sunlord MWSA-S p13 的 3.6 A/3.2 A 分别对应 L 下降 20%/温升 20°C，参考环境 20°C；数据库 min 是模型判据归一化，不是生产最低保证 | SR36/SR37；sdrc_audit.md |
 
 T1 开环模型补充：关断期间如果二极管电流降到零，应在积分步内定位关断时刻，切换到电感电流为零、输出电容供电的状态。若输出端电压低到二极管可正向导通，输入仍可经电感与二极管给电容充电。两种情况由 `test_sim_switching.py` 验证。
 
