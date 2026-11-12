@@ -50,7 +50,7 @@
 | 纹波 | 容差场景最大 0.77 %（上限 5 %，建议 ≤ 3 %） |
 | 环路 | CV 489 个 CCM 工况、CC 225 个工况全部 PM ≥ 60°、GM ≥ 6 dB；36 个 DCM 点单列，待仿真/实测 |
 | CC 范围 | 6.25–12 V，对应 CR 12.5–24 Ω；低于下限为不可控区 |
-| SDRC | 78 PASS / 8 WARN / 0 FAIL → `conditional_review`（无设计错误；8 项为仿真/实测才能关闭的验证项，已指定责任模块） |
+| SDRC | 2026-11-12 审计后 r6：85 PASS / 8 WARN / 0 FAIL / 2 NOT_ASSESSED / 1 N/A → `needs_rework`；SR70/SR71 缺供电保证值，详见下方 T4 说明 |
 
 > 注：`outputs/module1/` 目前仍是 r1 旧版（工具链 v1），将用 v2 重新生成；数值以上表为准。
 
@@ -75,7 +75,7 @@
 
 `check_design.py` 退出码：0 无 FAIL 且无 critical/major NOT_ASSESSED；2 有 FAIL；3 无 FAIL 但关键证据缺失；1 程序错误。`run_all.py` 原样传播退出码并停止，直接导出也检查门禁。缺仿真、缺器件或缺参数会保留 NOT_ASSESSED；未配置输入缓升时 SR88 明确为 N/A，浪涌实物关闭项 SR53 仍然保留。
 
-状态策略对任务书作显式澄清：基线 SR38（内部纹波目标）和 SR44（部分误差预算）原本就是 automatic 的 minor WARN，继续作为公开的建议项，基线保持 conditional_review。automatic 的 critical/major WARN 会进入 needs_rework。不能把自动检查重新标成实测来绕过状态策略。检查退出码为 0 也不等于硬件已验证或允许制作。审计范围、规则来源及未完成的原厂手册复核见 [sdrc_audit.md](.agents/skills/boost-system-design/knowledge/sdrc_audit.md)。
+状态策略对任务书作显式澄清：SR38（内部纹波目标）和 SR44（部分误差预算）的 automatic/minor WARN 可作为公开建议进入 conditional_review；automatic critical/major WARN 会进入 needs_rework。2026-11-12 手册审计发现真实 r6 缺 LDO 最大压差与保险丝最大电阻，SR70/SR71 改为 NOT_ASSESSED：85 PASS / 8 WARN / 0 FAIL / 2 NOT_ASSESSED / 1 N/A，状态 needs_rework、退出码 3，导出被阻止。此前 87 PASS 的计数已被此审计更正；不改器件、不编造 max 值。测试中的 qualified_supply 是合成夹具，只验证成功路径，不是 r6 合格证据。审计范围、来源、缺口见 [sdrc_audit.md](.agents/skills/boost-system-design/knowledge/sdrc_audit.md)。
 
 ### T1 开关级仿真
 

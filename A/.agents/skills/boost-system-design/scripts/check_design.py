@@ -277,26 +277,45 @@ def run(req, ch, calc, sel, loss, loop, db, sim=None):
     # --- 供电 ---
     ldo, _ = selected(sel, db, "ldo")
     drv, _ = selected(sel, db, "gate_driver")
-    vdo = param(ldo, "dropout_mv", ("max", "typ")) if ldo else None
+    # Both auxiliary loads are supplied after the fuse and reverse-polarity
+    # MOSFET. Nominal fuse resistance and typical dropout are useful estimates,
+    # but cannot close a check that requires maximum parameter values.
+    pm, _ = selected(sel, db, "pmos")
+    fu, _ = selected(sel, db, "fuse")
+    def bound(part, name, field):
+        # An unqualified scalar is not evidence of a guaranteed limit.
+        value = (part or {}).get("params", {}).get(name)
+        return value.get(field) if isinstance(value, dict) else None
+
+    rpm = bound(pm, "rds_on_mohm_vgs4v5", "max")
+    rfuse = bound(fu, "r_mohm", "max")
+    path_complete = rpm is not None and rfuse is not None
+    vbus = None
+    if path_complete:
+        r_path = (rpm * loss["model"]["rds_hot_factor"] + rfuse) / 1000
+        # Use the input-current envelope, not only the nominal min-Vin case.
+        iin = max(c["iin_avg_A"] for c in loss["corner_cases"])
+        vbus = min(env['driver_vdd_min_v'], vin["min"] - iin * r_path)
+    vdo = bound(ldo, "dropout_mv", "max")
+    vdo_typ = param(ldo, "dropout_mv", ("typ",)) if ldo else None
     K.add("SR70", "LDO 压差余量 ≥ 200 mV @Vin,min",
-          None if ldo is None or vdo is None else (vin["min"] - 3.3) * 1000 - vdo >= 200,
-          f"余量 {(vin['min']-3.3)*1000 - vdo:.0f} mV" if ldo and vdo is not None
-          else "未选 LDO 或 dropout 参数缺失", ref="PWR-AUX")
+          None if vdo is None or vbus is None else (vbus - 3.3) * 1000 - vdo >= 200,
+          f"保护后 VIN={vbus:.3f} V，压差余量 {(vbus-3.3)*1000-vdo:.0f} mV；"
+          "限已建模电流场景，温度系数和布线压降仍为模型假设"
+          if vdo is not None and vbus is not None else
+          f"缺少 LDO dropout.max 或输入路径电阻 max；dropout.typ={vdo_typ} mV，"
+          "典型值不构成保证；LDO 接保护后 VIN，不能直接用端子 Vin,min 判 PASS", ref="PWR-AUX")
     if drv:
-        uv = param(drv, "uvlo_on_v", ("max", "typ"))
-        vmin = param(drv, "vdd_min_v", ("min", "typ"))
-        pm, _ = selected(sel, db, "pmos")
-        fu, _ = selected(sel, db, "fuse")
-        r_path = ((param(pm, "rds_on_mohm_vgs4v5", ("max", "typ")) or 0) * loss["model"]["rds_hot_factor"]
-                  + (param(fu, "r_mohm", ("max", "typ")) or 0)) / 1000
-        iin = loss["cases"]["min"]["iin_avg_A"]
-        vdd = min(env['driver_vdd_min_v'], vin["min"] - iin * r_path)
-        path_params = [param(pm, "rds_on_mohm_vgs4v5", ("max", "typ")) if pm else None,
-                       param(fu, "r_mohm", ("max", "typ")) if fu else None]
-        need = max(uv, vmin) if uv is not None and vmin is not None and all(x is not None for x in path_params) else None
+        uv = bound(drv, "uvlo_on_v", "max")
+        vmin = bound(drv, "vdd_min_v", "min")
+        need = max(uv, vmin) if uv is not None and vmin is not None else None
         K.add("SR71", "驱动器最低供电 > max(UVLO 开启最大值, 保证工作下限) + 0.1 V",
-              None if need is None else vdd >= need + 0.1,
-              f"VDD,min = {vin['min']:.2f} − {iin:.2f} A×{r_path*1000:.0f} mΩ = {vdd:.2f} V vs {need} V", ref="PWR-AUX")
+              None if need is None or vbus is None else vbus >= need + 0.1,
+              f"保护后 VDD={vbus:.3f} V vs 工作下限 {need} V + 0.1 V；"
+              "限已建模电流场景，温度系数和布线压降仍为模型假设"
+              if need is not None and vbus is not None else
+              "缺少 UVLO.max、工作下限 min 或 PMOS/保险丝电阻 max；"
+              f"现有模型估算 {env['driver_vdd_min_v']} V 不构成最坏供电保证", ref="PWR-AUX")
     else:
         K.add("SR71", "驱动器最低供电 > max(UVLO 开启最大值, 保证工作下限) + 0.1 V",
               None, "未选栅极驱动器", ref="PWR-AUX")

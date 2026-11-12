@@ -421,23 +421,23 @@
     "id": "SR70",
     "layer": "rating",
     "severity": "major",
-    "title": "LDO dropout margin is at least 200 mV",
-    "rationale": "The auxiliary rail must remain regulated at minimum input voltage.",
-    "source": "parts_db.json ldo.params.dropout_mv (page/condition); design_rules.md §9.1",
+    "title": "Post-protection LDO margin is at least 200 mV using maximum dropout",
+    "rationale": "Use the modeled post-fuse/PMOS bus at minimum input and corner input-current envelope. Typical dropout and nominal resistance cannot establish a maximum-limit margin; temperature and wiring remain model assumptions.",
+    "source": "ME6211C33 V22 mirror PDF p9 (typ only, max blank); parts_db.json dropout_mv.max and PMOS/fuse resistance.max; design_rules.md §9.1; sdrc_audit.md",
     "verify": "automatic",
     "applies_when": "LDO selected",
-    "closure_if_fail": "Select a suitable LDO or revise auxiliary supply."
+    "closure_if_fail": "Obtain applicable maximum dropout and input-path resistance with current/temperature conditions; rerun S7/S8. If the resulting margin fails, revise the auxiliary supply. Do not substitute typical values."
   },
   {
     "id": "SR71",
     "layer": "rating",
     "severity": "major",
     "title": "Gate-driver supply exceeds UVLO and operating minimum",
-    "rationale": "The gate driver must remain operational at minimum input and load.",
-    "source": "parts_db.json gate_driver.params.uvlo_on_v/vdd_min_v and pmos/fuse resistance; design_rules.md §9.1",
+    "rationale": "The modeled post-protection supply must exceed max(UVLO-on maximum, operating minimum) by 0.1 V using maximum input-path resistance and the corner input-current envelope. Nominal fuse resistance cannot close this check.",
+    "source": "TI LM5114 SNVS790F p5 (UVLO-on max 4 V, operating min 4 V); AOS AO3401A Rev3.1 p2 (Rds max at -4.5 V); parts_db.json fuse.r_mohm.max; sdrc_audit.md",
     "verify": "automatic",
     "applies_when": "gate driver selected",
-    "closure_if_fail": "Select a driver with adequate supply margin or revise input path."
+    "closure_if_fail": "Obtain maximum PMOS/fuse resistance and applicable driver limits; rerun S7/S8. Review temperature, transient current and wiring separately; revise supply path if the margin fails."
   },
   {
     "id": "SR72",

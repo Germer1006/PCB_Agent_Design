@@ -58,6 +58,8 @@ SDRC 结果状态为 `PASS / WARN / FAIL / NOT_ASSESSED / N/A`。缺少证据不
 
 状态策略：FAIL、critical/major NOT_ASSESSED 或 automatic critical/major WARN → needs_rework；其余未关闭项 → conditional_review；无 WARN/NOT_ASSESSED → ready_for_downstream（有理由的 N/A 不阻塞）。现有 SR38/SR44 为 automatic/minor 建议，公开保留在 conditional_review，详见 `knowledge/sdrc_audit.md` 对任务书歧义的说明。退出码 0 也不代表实物验证完成。
 
+供电检查易错点：typ/nominal 或无上下界标签的数值不能替代 max/min 保证值。SR70 使用保护后 VIN、LDO dropout.max 及路径电阻 max；SR71 使用 UVLO.max、工作电压 min 和路径电阻 max。2026-11-12 审计后的真实 r6 因缺 LDO 压差 max、保险丝电阻 max，两项为 NOT_ASSESSED、状态 needs_rework；不能沿用旧的 87 PASS 作为可交接结论。温度系数、布线及瞬态条件另需验证。
+
 快速路径：用户只要结果时，S3/S4 采用模板默认决策，`python run_all.py <wd> --requirements <需求文件>` 一次跑完 S5–S9 的工具部分
 （含 η 自动迭代），然后由模型完成 S1–S4 的论证文字与报告。
 

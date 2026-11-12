@@ -14,12 +14,20 @@ HERE = Path(__file__).resolve().parent
 WORK = HERE.parents[3] / "outputs" / "r6"
 
 
-def baseline():
+def baseline(qualified_supply=False):
     req, choices, calc, selection, losses, loop = (
         load_json(WORK / name) for name in (
             "requirements.json", "design_choices.json", "calc.json",
             "selection.json", "losses.json", "loop.json"))
     db = load_json(KNOWLEDGE_DIR / "parts_db.json")
+    if qualified_supply:
+        # Deliberately synthetic limits for testing the successful gate path.
+        # These values are never written into the actual component database.
+        for category, field, value in (("ldo", "dropout_mv", 300),
+                                       ("fuse", "r_mohm", 40)):
+            pid = selection["categories"][category]["selected"]
+            part = next(p for p in db["parts"] if p["id"] == pid)
+            part["params"][field]["max"] = value
     # Synthetic success evidence exercises aggregation only; it is not a physical
     # simulation result. Real T1 evidence is checked separately with the CLI.
     checks = {key: True for key in ("SR80", "SR81", "SR82", "SR82-target", "SR83", "SR84", "SR85", "SR87")}
@@ -32,8 +40,16 @@ def baseline():
 
 
 class TestSdrc(unittest.TestCase):
-    def test_baseline_metadata_and_conditional_review(self):
+    def test_real_baseline_missing_supply_limits_blocks_readiness(self):
         result = run(*baseline())
+        self.assertEqual(result["status"], "needs_rework")
+        self.assertEqual(_exit_code(result), 3)
+        checks = {c["id"]: c for c in result["checks"]}
+        for rule in ("SR70", "SR71"):
+            self.assertEqual(checks[rule]["verdict"], "NOT_ASSESSED")
+
+    def test_qualified_fixture_metadata_and_conditional_review(self):
+        result = run(*baseline(qualified_supply=True))
         self.assertEqual(result["status"], "conditional_review")
         self.assertEqual(_exit_code(result), 0)
         self.assertTrue(all(all(key in item for key in (
@@ -115,7 +131,7 @@ class TestSdrc(unittest.TestCase):
             _decorate_checks([{"id": "SR01"}], rules)
 
     def test_cli_exit_codes_and_direct_export_gate(self):
-        args = list(baseline())
+        args = list(baseline(qualified_supply=True))
         with tempfile.TemporaryDirectory() as directory:
             work = Path(directory)
             names = ("requirements.json", "design_choices.json", "calc.json", "selection.json",
@@ -134,6 +150,33 @@ class TestSdrc(unittest.TestCase):
             args[2]["protection"]["ovp_hw"]["value"] = 100
             save_json(work / "calc.json", args[2])
             self.assertEqual(subprocess.run(command, capture_output=True).returncode, 2)
+
+    def test_post_protection_voltage_is_used_for_ldo(self):
+        args = list(baseline(qualified_supply=True))
+        # Raw input is adequate but the modeled post-protection rail is not.
+        args[4]["envelope"]["driver_vdd_min_v"] = 3.7
+        checks = {c["id"]: c for c in run(*args)["checks"]}
+        self.assertEqual(checks["SR70"]["verdict"], "FAIL")
+        self.assertEqual(checks["SR71"]["verdict"], "FAIL")
+
+    def test_typical_uvlo_cannot_replace_maximum(self):
+        args = list(baseline(qualified_supply=True))
+        pid = args[3]["categories"]["gate_driver"]["selected"]
+        part = next(p for p in args[6]["parts"] if p["id"] == pid)
+        part["params"]["uvlo_on_v"].pop("max")
+        checks = {c["id"]: c for c in run(*args)["checks"]}
+        self.assertEqual(checks["SR71"]["verdict"], "NOT_ASSESSED")
+
+    def test_unqualified_scalar_is_not_a_guaranteed_supply_limit(self):
+        args = list(baseline(qualified_supply=True))
+        for category, field, value in (("ldo", "dropout_mv", 120),
+                                       ("fuse", "r_mohm", 19)):
+            pid = args[3]["categories"][category]["selected"]
+            part = next(p for p in args[6]["parts"] if p["id"] == pid)
+            part["params"][field] = value
+        checks = {c["id"]: c for c in run(*args)["checks"]}
+        self.assertEqual(checks["SR70"]["verdict"], "NOT_ASSESSED")
+        self.assertEqual(checks["SR71"]["verdict"], "NOT_ASSESSED")
 
     def test_run_all_preserves_gate_exit_codes(self):
         from run_all import step
