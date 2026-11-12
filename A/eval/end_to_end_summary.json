@@ -1,0 +1,743 @@
+{
+  "schema": "boost-full-run-review/1",
+  "date": "2026-11-12",
+  "scope": "deterministic tool pipeline only; no LLM ablation or hardware measurements",
+  "hash_normalization": "CRLF_to_LF",
+  "exit_code_note": "The PowerShell tool reports native nonzero exits as 1 (also reproduced with sys.exit(3)). gate_cli_exit_code is captured separately with Python subprocess; run_all propagates this gate code after ledger generation.",
+  "db_sha256": "907a1fcfa0e992426214c6011bd028e90ae308514dee6a5c26025c640496ba44",
+  "source_sha256": {
+    "_common.py": "4e61a28073030d48018f1deb5c18e003169aaf335144b8abfac421b0ba0e80f9",
+    "boost_model.py": "2e2529b4c0bf0053f599273bdaf905ef24193a6e29aa9ca505cc67b690b6baf4",
+    "calc_boost.py": "431e7b4aaa74010724e8ede37c3128a53dbcae9c6b64ec60c6eeb2c9bb78320c",
+    "check_consistency.py": "820eeaa7138a1b6c7029864d6ec230d5e6ba064f019ddb27c2451f74b1bd5e6e",
+    "check_design.py": "4375f05bfac5759c4493973694be4e5f066a22827156ea1cd139efc167e75eda",
+    "draw_figures.py": "9bc43cbaa2cdd598156765c30ef6b490a13abedae015a0cdcb1d332ebf92f9af",
+    "export_handoff.py": "1ecf31b4036dc1077e19fd0789779ce431953fa6dc35f7485ca254bc33e3fa6b",
+    "handoff_contract.py": "220aa631e76ae7cb841f843442d4dc17dd7541040353cb002b4027c911e4ea0b",
+    "handoff_header.py": "afc5cd9095ec0b1b6ce104698d51799a3b9bce52bb65515b45b1570cd31921da",
+    "ledger.py": "ebcc30826e2c7d9f0d736f5f772f9f2723665b844b031049f3dfa2d08b7b57b1",
+    "loop_design.py": "182def8a5af0bab327c0786611d550b3ab33dd94e6edbc637dc796347ebbd322",
+    "loss_model.py": "9ca9e7ce75a348ce448814775ec9e48ab54f328a06f36b9a668bb55acd9e1ec3",
+    "loss_thermal.py": "8e249e5af85517cb070656b82c2b2365d56a94c803a7d49c0ca20c0df90a7e61",
+    "render_report.py": "61a0ff77b7426e8c2d35247c42ed1004b7e0c9482e1f373a1e70190064e50957",
+    "run_all.py": "49b2a3f9ace12b7cd766439c17d4b38fed2d68ea3a51eae3ee6556a0edb1acdf",
+    "select_parts.py": "5f091c0d3634262d1eb86dcebb9e6ed02645e51b7a46c473e38764169b9a1863",
+    "sim_control.py": "657fc09b95a2b2503172664bd15206589f09685e23034e77c21425810e442037",
+    "sim_scenarios.py": "c375157b93ca588b7a4adf37c4849a375097a52ddea7f4899d02b7de4f6c29b8",
+    "sim_switching.py": "8eaf5fec1092593e669102b6d63c7dec1f1f35be42fa69388129e29c2488b3c8",
+    "stage_params.py": "345228d4c1a22242bd0a001c8fcbc90ff85e47591e3ece9780ba40ac3ed4c48c",
+    "svgplot.py": "a6086395c574cabc202eb52ef7c85c267503403ebe97372afefb2af12be46098",
+    "test_agent_boundaries.py": "7d5e94213e61ab9ec45f75cdf7f9ec9333caa53223f12c284e1839c916fae72d",
+    "test_consistency.py": "441544e4f3d850133997c167ff4a4d45440f5fb26726ae76ccede68d97f8abfb",
+    "test_ledger.py": "74546d4e7df8f32431bb14f01cad4fd0877ea24dfc8a03dc84ec593086dc64cd",
+    "test_sdrc.py": "2806a88f4e4396f28ff0d0f93876e962b491ae260bcdb9bed2e74c0bb0eed5bf",
+    "test_sim_switching.py": "9665a5a5056da51bf0c53b9e5b5456b817b6c81df848a73bced3f9cf56801c4a",
+    "test_tools.py": "49b7dbfd9d6b614cafc9229acba073ba1fa3776b6bf3a1ef0c47a95bee1c8c40",
+    "trace_graph.py": "a01f9e772c09c7d98ce96c068c8a33743b4b26635aea76197176adb5e2cd31b5",
+    "validate_loop.py": "1929c4479c3a56e6d0fc8600676c1e91c0b93776c86c698df816d45ec64bf9ee"
+  },
+  "runs": [
+    {
+      "id": "r6",
+      "workdir": "A/outputs/test_agent_r6",
+      "command": "python A/.agents/skills/boost-system-design/scripts/run_all.py A/outputs/test_agent_r6",
+      "revision": "r6-agent-eval1",
+      "gate_cli_exit_code": 3,
+      "run_all_shell_tool_exit_code": 1,
+      "specification": {
+        "vin_nom_v": 5.0,
+        "vout_v": 12.0,
+        "iout_a": 0.5
+      },
+      "selection_status": "selected",
+      "nominal_efficiency_pct": 84.85000000000001,
+      "worst_ripple_pct": 0.7727,
+      "loop_validation": {
+        "ok": true,
+        "dc_points": 750,
+        "loops": {
+          "CV": {
+            "checked_ccm": 489,
+            "excluded_dcm": 36,
+            "fc_min_Hz": 198.73570821201508,
+            "PM_min_deg": 74.22107277250684,
+            "GM_min_dB": 6.118770760118291
+          },
+          "CC": {
+            "checked_ccm": 225,
+            "excluded_dcm": 0,
+            "fc_min_Hz": 145.19233516227155,
+            "PM_min_deg": 59.9895611046186,
+            "GM_min_dB": 6.184955308487384
+          }
+        }
+      },
+      "simulation": {
+        "case_count": 58,
+        "verdict_counts": {
+          "PASS": 54,
+          "WARN": 4
+        },
+        "reference_case_count": 0,
+        "elapsed_s": 709.95,
+        "non_pass_cases": [
+          {
+            "name": "S-plugin",
+            "vin_case": "min",
+            "variant": "nominal",
+            "verdict": "WARN",
+            "checks": {},
+            "metrics": {
+              "v_avg_v": 6.299222543360928,
+              "i_avg_a": 0.00011885325553511185,
+              "il_avg_a": 0.3582966198752977,
+              "duty_avg": 0.0,
+              "v_peak_v": 6.761125785966385,
+              "il_peak_a": 4.191110865479147,
+              "i_peak_a": 0.00012756841105596953,
+              "v_error_pct": -47.5064788053256,
+              "i_error_pct": -99.97622934889297,
+              "ripple_vpp_v": 0.39502152840657745,
+              "ripple_pct": 3.291846070054812,
+              "dcm": true,
+              "fault": null,
+              "inductor_isat_a": 3.6,
+              "linear_model_beyond_isat": true,
+              "inrush_peak_time_ms": 0.14,
+              "linear_inrush_at_vin_max_a": 4.762,
+              "linear_reference_vin_v": 5.25
+            }
+          },
+          {
+            "name": "S-plugin",
+            "vin_case": "nom",
+            "variant": "nominal",
+            "verdict": "WARN",
+            "checks": {},
+            "metrics": {
+              "v_avg_v": 6.66695298955995,
+              "i_avg_a": 0.00012579156584075377,
+              "il_avg_a": 0.3792129432772894,
+              "duty_avg": 0.0,
+              "v_peak_v": 7.155820811418717,
+              "il_peak_a": 4.43577583135724,
+              "i_peak_a": 0.0001350154870079003,
+              "v_error_pct": -44.44205842033375,
+              "i_error_pct": -99.97484168683185,
+              "ripple_vpp_v": 0.4180817460602597,
+              "ripple_pct": 3.4840145505021645,
+              "dcm": true,
+              "fault": null,
+              "inductor_isat_a": 3.6,
+              "linear_model_beyond_isat": true,
+              "inrush_peak_time_ms": 0.14,
+              "linear_inrush_at_vin_max_a": 4.762,
+              "linear_reference_vin_v": 5.25
+            }
+          },
+          {
+            "name": "S-plugin",
+            "vin_case": "max",
+            "variant": "nominal",
+            "verdict": "WARN",
+            "checks": {},
+            "metrics": {
+              "v_avg_v": 7.034683435755934,
+              "i_avg_a": 0.00013272987614633836,
+              "il_avg_a": 0.40012926667927645,
+              "duty_avg": 0.0,
+              "v_peak_v": 7.550515836867686,
+              "il_peak_a": 4.680440797234556,
+              "i_peak_a": 0.00014246256295976766,
+              "v_error_pct": -41.37763803536721,
+              "i_error_pct": -99.97345402477073,
+              "ripple_vpp_v": 0.4411419637138172,
+              "ripple_pct": 3.676183030948477,
+              "dcm": true,
+              "fault": null,
+              "inductor_isat_a": 3.6,
+              "linear_model_beyond_isat": true,
+              "inrush_peak_time_ms": 0.14,
+              "linear_inrush_at_vin_max_a": 4.762,
+              "linear_reference_vin_v": 5.25,
+              "inrush_error_vs_linear_pct": -1.7127090038942416
+            }
+          },
+          {
+            "name": "S-plugin",
+            "vin_case": "max",
+            "variant": "tol_10",
+            "verdict": "WARN",
+            "checks": {},
+            "metrics": {
+              "v_avg_v": 6.80003067627085,
+              "i_avg_a": 0.00012830246559001604,
+              "il_avg_a": 0.46131718154208307,
+              "duty_avg": 0.0,
+              "v_peak_v": 7.288006985176877,
+              "il_peak_a": 5.505732201782096,
+              "i_peak_a": 0.00013750956575805427,
+              "v_error_pct": -43.333077697742915,
+              "i_error_pct": -99.97433950688199,
+              "ripple_vpp_v": 0.4346822494768552,
+              "ripple_pct": 3.6223520789737935,
+              "dcm": true,
+              "fault": null,
+              "inductor_isat_a": 3.6,
+              "linear_model_beyond_isat": true,
+              "inrush_peak_time_ms": 0.13,
+              "linear_inrush_at_vin_max_a": 5.563,
+              "linear_reference_vin_v": 5.25,
+              "inrush_error_vs_linear_pct": -1.0294409170933605
+            }
+          }
+        ],
+        "cross_validation": {
+          "duty": {
+            "simulated": 0.6288235294117668,
+            "reference": 0.6288,
+            "error_pct": 0.0037419547975092726,
+            "limit_pct": 2,
+            "passed": true
+          },
+          "il_avg": {
+            "simulated": 1.3466086399553199,
+            "reference": 1.347,
+            "error_pct": 0.029054197823319416,
+            "limit_pct": 2,
+            "passed": true
+          },
+          "ripple_mv": {
+            "simulated": 53.97193731185368,
+            "reference": 54.76,
+            "error_pct": 1.439121052129877,
+            "limit_pct": 20,
+            "passed": true
+          },
+          "worst_ripple_mv": {
+            "simulated": 91.4161725654914,
+            "reference": 92.72,
+            "error_pct": 1.4061986998582854,
+            "limit_pct": 20,
+            "passed": true
+          }
+        },
+        "model_limits": [
+          "理想开关沿，忽略布线寄生电感及温升动态",
+          "CC 电子负载假定已进入其工作电压范围",
+          "比较器按积分步采样，阈值与时延仍需实测",
+          "超过 Isat 的电流为线性模型结果，不是可靠故障电流上界",
+          "输入缓升假定由独立硬件在 Boost 输入端实现；实物电源、器件 SOA、容差和 PWM 使能仍须验证"
+        ]
+      },
+      "sdrc": {
+        "status": "needs_rework",
+        "summary": {
+          "PASS": 85,
+          "WARN": 8,
+          "FAIL": 0,
+          "NOT_ASSESSED": 2,
+          "N/A": 1
+        },
+        "non_pass_checks": [
+          {
+            "id": "SR35",
+            "verdict": "WARN",
+            "severity": "major",
+            "detail": "24.4V 仅对应手册16.4A、10/1000µs脉冲；25V电容裕量小。温度、布线寄生与故障能量未验证。"
+          },
+          {
+            "id": "SR34",
+            "verdict": "WARN",
+            "severity": "major",
+            "detail": "输出 OCP 仿真 12/12 通过。仅稳态换算输出OCPhw对应IL≈2.86 A vs Isat=3.6 A；不是故障上界。无电感逐周期限流，输出OCP不能保证避免电感饱和；独立输入限流的瞬态与短路耐受尚未验证。"
+          },
+          {
+            "id": "SR38",
+            "verdict": "WARN",
+            "severity": "minor",
+            "detail": "容差场景最大0.4293 vs 内部目标0.35；非课程硬指标"
+          },
+          {
+            "id": "SR44",
+            "verdict": "WARN",
+            "severity": "minor",
+            "detail": "失调 + 增益误差 + 分流 1% ≈ 4.00% vs ≤2.5%；失调条件为12V共模，未含ADC/基准/温漂/CMRR，非完整最坏保证；须在实际共模下标定。"
+          },
+          {
+            "id": "SR46",
+            "verdict": "WARN",
+            "severity": "major",
+            "detail": "ADC、基准、温漂、共模范围和阈值源须补预算；ADC等效码不是DAC码；独立DAC/COMP/BKIN及ADC并用路由尚待核实。"
+          },
+          {
+            "id": "SR53",
+            "verdict": "WARN",
+            "severity": "major",
+            "detail": "无保护线性峰值5.563A，超过Isat时不是可靠上界。待验证独立缓升硬件斜率、电源释放能量、PWM禁止及SOA。"
+          },
+          {
+            "id": "SR65",
+            "verdict": "WARN",
+            "severity": "major",
+            "detail": "CV有36个DCM点排除于CCM搜索；开关仿真覆盖 11 个轻载/切换工况，11 个通过；仍需实测。"
+          },
+          {
+            "id": "SR88",
+            "verdict": "N/A",
+            "severity": "major",
+            "detail": "design_choices.protection 未配置 input_ramp；未验证缓升保护，另见 SR53"
+          },
+          {
+            "id": "SR70",
+            "verdict": "NOT_ASSESSED",
+            "severity": "major",
+            "detail": "缺少 LDO dropout.max 或输入路径电阻 max；dropout.typ=120.0 mV，典型值不构成保证；LDO 接保护后 VIN，不能直接用端子 Vin,min 判 PASS"
+          },
+          {
+            "id": "SR71",
+            "verdict": "NOT_ASSESSED",
+            "severity": "major",
+            "detail": "缺少 UVLO.max、工作下限 min 或 PMOS/保险丝电阻 max；现有模型估算 4.611 V 不构成最坏供电保证"
+          },
+          {
+            "id": "SR73",
+            "verdict": "WARN",
+            "severity": "major",
+            "detail": "开关/磁损、热Rds系数、MLCC保持率、陶瓷ESR、ESR敏感性范围及热布局均为估计；放大器典型带宽非最坏保证；ADC窗口/CPU最坏执行时间需B/C/D实测。"
+          }
+        ]
+      },
+      "ledger_coverage": {
+        "traced": 80,
+        "total": 80
+      },
+      "handoff_written": false,
+      "artifact_sha256": {
+        "calc.json": "288c4731f274c7115a70fdeb3151a65cb995c926c939da70fa3822d862eeec70",
+        "check.json": "c768b17f3fd2e5599b970975e3b2de19aec983a128e128db76d3907cb50d1434",
+        "design_choices.json": "a8c36562abf4049293ec03c978848a6cb892516aaf7474cd99233a9c0a493ad1",
+        "ledger.json": "62da99cc714ed140206ebf2fa83125e8b48d35ea76ca17795cbd633e28a3a330",
+        "loop.json": "4976390f1c2f215ab9fb987fa19d995b3549a05bece60ce89b91b920d9d14a07",
+        "loop_validation.json": "ad0d93021b3a89cc0a3c774bedb392cfb4421ed6b4d2202af21b0b713446a672",
+        "losses.json": "dfd779ac5ec174ac26b08e5169bf106ecbe5a2d12dbead178b498183f3232bd9",
+        "requirements.json": "1925f8993d42dc6927b61cdb248b701962ae4c6ea93664744a0b6d759d943892",
+        "selection.json": "2b5410fd139650b070691b0b5e356c588f8471c89f05d68d67c321d65f093f73",
+        "sim.json": "8a7567573290e4fa61e73eb3a3cb1bc24d93290bc4fa540927db28529db296c5"
+      },
+      "unchanged_numerical_data_vs_original_r6": {
+        "calc": true,
+        "selection": true,
+        "losses": true,
+        "loop": true
+      },
+      "comparison_ignores_fields": [
+        "steps",
+        "revision",
+        "status",
+        "missing_categories"
+      ]
+    },
+    {
+      "id": "easy03",
+      "workdir": "A/outputs/test_agent_easy03",
+      "command": "python A/.agents/skills/boost-system-design/scripts/run_all.py A/outputs/test_agent_easy03",
+      "revision": "eval-easy03",
+      "gate_cli_exit_code": 2,
+      "run_all_shell_tool_exit_code": 1,
+      "specification": {
+        "vin_nom_v": 5.5,
+        "vout_v": 9,
+        "iout_a": 0.5
+      },
+      "selection_status": "selected",
+      "nominal_efficiency_pct": 84.6,
+      "worst_ripple_pct": 0.728,
+      "loop_validation": {
+        "ok": true,
+        "dc_points": 750,
+        "loops": {
+          "CV": {
+            "checked_ccm": 525,
+            "excluded_dcm": 0,
+            "fc_min_Hz": 153.5835024637466,
+            "PM_min_deg": 82.13884969569706,
+            "GM_min_dB": 6.047040010155227
+          },
+          "CC": {
+            "checked_ccm": 225,
+            "excluded_dcm": 0,
+            "fc_min_Hz": 159.50064575419955,
+            "PM_min_deg": 78.74926920664707,
+            "GM_min_dB": 6.126593338454803
+          }
+        }
+      },
+      "simulation": {
+        "case_count": 81,
+        "verdict_counts": {
+          "PASS": 75,
+          "FAIL": 6
+        },
+        "reference_case_count": 4,
+        "elapsed_s": 616.13,
+        "non_pass_cases": [
+          {
+            "name": "S-ocp",
+            "vin_case": "min",
+            "variant": "nominal",
+            "verdict": "FAIL",
+            "checks": {
+              "SR87": false
+            },
+            "metrics": {
+              "v_avg_v": 4.485700544853953,
+              "i_avg_a": 0.7477288999892806,
+              "il_avg_a": 0.7477288999890754,
+              "duty_avg": 0.0,
+              "v_peak_v": 9.012084251879896,
+              "il_peak_a": 1.25700319533323,
+              "i_peak_a": 0.9987309775708184,
+              "v_error_pct": -50.15888283495609,
+              "i_error_pct": 49.54577999785612,
+              "ripple_vpp_v": 1.7763568394002505e-15,
+              "ripple_pct": 1.9737298215558338e-14,
+              "dcm": false,
+              "fault": {
+                "time_s": 0.0251,
+                "reason": "OCP_SW"
+              },
+              "inductor_isat_a": 2.8,
+              "linear_model_beyond_isat": false,
+              "ocp_action_observed": true,
+              "ocp_sw_a": 0.6,
+              "ocp_hw_a": 1.0,
+              "ocp_sw_delay_ms": 10.0,
+              "expected_fault": null,
+              "filtered_iout_peak_a": 0.9650717096507028,
+              "max_sw_dwell_s": 0.010048894117647058,
+              "pwm_resumed_after_fault": false,
+              "ocp_action_ms_from_load_step": 10.100000000000001
+            }
+          },
+          {
+            "name": "S-ocp",
+            "vin_case": "nom",
+            "variant": "nominal",
+            "verdict": "FAIL",
+            "checks": {
+              "SR87": false
+            },
+            "metrics": {
+              "v_avg_v": 4.744989593689409,
+              "i_avg_a": 0.790950223688078,
+              "il_avg_a": 0.7909502236876367,
+              "duty_avg": 0.0,
+              "v_peak_v": 9.010361203457029,
+              "il_peak_a": 1.2003824759317614,
+              "i_peak_a": 0.9992512518253194,
+              "v_error_pct": -47.27789340345101,
+              "i_error_pct": 58.1900447376156,
+              "ripple_vpp_v": 3.019806626980426e-14,
+              "ripple_pct": 3.3553406966449175e-13,
+              "dcm": false,
+              "fault": {
+                "time_s": 0.0251,
+                "reason": "OCP_SW"
+              },
+              "inductor_isat_a": 2.8,
+              "linear_model_beyond_isat": false,
+              "ocp_action_observed": true,
+              "ocp_sw_a": 0.6,
+              "ocp_hw_a": 1.0,
+              "ocp_sw_delay_ms": 10.0,
+              "expected_fault": null,
+              "filtered_iout_peak_a": 0.9657054105934602,
+              "max_sw_dwell_s": 0.01004910294117647,
+              "pwm_resumed_after_fault": false,
+              "ocp_action_ms_from_load_step": 10.100000000000001
+            }
+          },
+          {
+            "name": "S-ocp",
+            "vin_case": "max",
+            "variant": "nominal",
+            "verdict": "FAIL",
+            "checks": {
+              "SR87": false
+            },
+            "metrics": {
+              "v_avg_v": 5.004278642524964,
+              "i_avg_a": 0.8341715473868908,
+              "il_avg_a": 0.8341715473862801,
+              "duty_avg": 0.0,
+              "v_peak_v": 9.01109121300268,
+              "il_peak_a": 1.1502816934046993,
+              "i_peak_a": 0.9994599928199447,
+              "v_error_pct": -44.396903971944845,
+              "i_error_pct": 66.83430947737816,
+              "ripple_vpp_v": 0.0,
+              "ripple_pct": 0.0,
+              "dcm": false,
+              "fault": {
+                "time_s": 0.0251,
+                "reason": "OCP_SW"
+              },
+              "inductor_isat_a": 2.8,
+              "linear_model_beyond_isat": false,
+              "ocp_action_observed": true,
+              "ocp_sw_a": 0.6,
+              "ocp_hw_a": 1.0,
+              "ocp_sw_delay_ms": 10.0,
+              "expected_fault": null,
+              "filtered_iout_peak_a": 0.9661350791436386,
+              "max_sw_dwell_s": 0.010049308823529411,
+              "pwm_resumed_after_fault": false,
+              "ocp_action_ms_from_load_step": 10.100000000000001
+            }
+          },
+          {
+            "name": "S-ocp__sw_trip",
+            "vin_case": "nom",
+            "variant": "nominal",
+            "verdict": "FAIL",
+            "checks": {
+              "SR87": false
+            },
+            "metrics": {
+              "v_avg_v": 5.045484765437536,
+              "i_avg_a": 0.14027849171462306,
+              "il_avg_a": 0.15024251893206608,
+              "duty_avg": 0.0,
+              "v_peak_v": 5.610044056121322,
+              "il_peak_a": 2.035217677196907,
+              "i_peak_a": 1.0517671378186535,
+              "v_error_pct": -43.93905816180516,
+              "i_error_pct": -71.9443016570754,
+              "ripple_vpp_v": 0.10185786724989043,
+              "ripple_pct": 1.1317540805543382,
+              "dcm": true,
+              "fault": {
+                "time_s": 0.0030181592039800996,
+                "reason": "OCP_HW"
+              },
+              "inductor_isat_a": 2.8,
+              "linear_model_beyond_isat": false,
+              "ocp_action_observed": true,
+              "ocp_sw_a": 0.6,
+              "ocp_hw_a": 1.0,
+              "ocp_sw_delay_ms": 10.0,
+              "expected_fault": "OCP_SW",
+              "filtered_iout_peak_a": 1.048450570665285,
+              "max_sw_dwell_s": 0.00285,
+              "pwm_resumed_after_fault": false,
+              "ocp_action_ms_from_load_step": 0.018159203980099736
+            }
+          },
+          {
+            "name": "S-ocp__sw_trip",
+            "vin_case": "max",
+            "variant": "nominal",
+            "verdict": "FAIL",
+            "checks": {
+              "SR87": false
+            },
+            "metrics": {
+              "v_avg_v": 5.321194315461552,
+              "i_avg_a": 0.1479439830651519,
+              "il_avg_a": 0.1584524926439721,
+              "duty_avg": 0.0,
+              "v_peak_v": 5.916603840608742,
+              "il_peak_a": 2.263277787730855,
+              "i_peak_a": 1.1092626518323085,
+              "v_error_pct": -40.875618717093865,
+              "i_error_pct": -70.41120338696962,
+              "ripple_vpp_v": 0.10742387092472239,
+              "ripple_pct": 1.1935985658302488,
+              "dcm": true,
+              "fault": {
+                "time_s": 0.0030102985074626867,
+                "reason": "OCP_HW"
+              },
+              "inductor_isat_a": 2.8,
+              "linear_model_beyond_isat": false,
+              "ocp_action_observed": true,
+              "ocp_sw_a": 0.6,
+              "ocp_hw_a": 1.0,
+              "ocp_sw_delay_ms": 10.0,
+              "expected_fault": "OCP_SW",
+              "filtered_iout_peak_a": 1.1057457548154075,
+              "max_sw_dwell_s": 0.0029000000000000002,
+              "pwm_resumed_after_fault": false,
+              "ocp_action_ms_from_load_step": 0.010298507462686679
+            }
+          },
+          {
+            "name": "S-ocp",
+            "vin_case": "min",
+            "variant": "tol_03",
+            "verdict": "FAIL",
+            "checks": {
+              "SR87": false
+            },
+            "metrics": {
+              "v_avg_v": 4.485700544854454,
+              "i_avg_a": 0.7477288999893639,
+              "il_avg_a": 0.7477288999876582,
+              "duty_avg": 0.0,
+              "v_peak_v": 9.013859270548158,
+              "il_peak_a": 1.2236292306808307,
+              "i_peak_a": 0.9991144334260118,
+              "v_error_pct": -50.15888283495051,
+              "i_error_pct": 49.54577999787277,
+              "ripple_vpp_v": 0.0,
+              "ripple_pct": 0.0,
+              "dcm": false,
+              "fault": {
+                "time_s": 0.0251,
+                "reason": "OCP_SW"
+              },
+              "inductor_isat_a": 2.8,
+              "linear_model_beyond_isat": false,
+              "ocp_action_observed": true,
+              "ocp_sw_a": 0.6,
+              "ocp_hw_a": 1.0,
+              "ocp_sw_delay_ms": 10.0,
+              "expected_fault": null,
+              "filtered_iout_peak_a": 0.9587093595732309,
+              "max_sw_dwell_s": 0.010048894117647058,
+              "pwm_resumed_after_fault": false,
+              "ocp_action_ms_from_load_step": 10.100000000000001
+            }
+          }
+        ],
+        "cross_validation": {
+          "duty": {
+            "simulated": 0.451764705882352,
+            "reference": 0.4518,
+            "error_pct": 0.00781188969631863,
+            "limit_pct": 2,
+            "passed": true
+          },
+          "il_avg": {
+            "simulated": 0.9117267633083369,
+            "reference": 0.9121,
+            "error_pct": 0.040920588933568425,
+            "limit_pct": 2,
+            "passed": true
+          },
+          "ripple_mv": {
+            "simulated": 38.2191602182651,
+            "reference": 38.78,
+            "error_pct": 1.4462088234525439,
+            "limit_pct": 20,
+            "passed": true
+          },
+          "worst_ripple_mv": {
+            "simulated": 64.78963553905004,
+            "reference": 65.52,
+            "error_pct": 1.1147198732447405,
+            "limit_pct": 20,
+            "passed": true
+          }
+        },
+        "model_limits": [
+          "理想开关沿，忽略布线寄生电感及温升动态",
+          "CC 电子负载假定已进入其工作电压范围",
+          "比较器按积分步采样，阈值与时延仍需实测",
+          "超过 Isat 的电流为线性模型结果，不是可靠故障电流上界",
+          "输入缓升假定由独立硬件在 Boost 输入端实现；实物电源、器件 SOA、容差和 PWM 使能仍须验证"
+        ]
+      },
+      "sdrc": {
+        "status": "needs_rework",
+        "summary": {
+          "PASS": 86,
+          "WARN": 7,
+          "FAIL": 1,
+          "NOT_ASSESSED": 2,
+          "N/A": 0
+        },
+        "non_pass_checks": [
+          {
+            "id": "SR35",
+            "verdict": "WARN",
+            "severity": "major",
+            "detail": "24.4V 仅对应手册16.4A、10/1000µs脉冲；25V电容裕量小。温度、布线寄生与故障能量未验证。"
+          },
+          {
+            "id": "SR34",
+            "verdict": "WARN",
+            "severity": "major",
+            "detail": "输出 OCP 仿真 6/12 通过。仅稳态换算输出OCPhw对应IL≈1.93 A vs Isat=2.8 A；不是故障上界。无电感逐周期限流，输出OCP不能保证避免电感饱和；独立输入限流的瞬态与短路耐受尚未验证。"
+          },
+          {
+            "id": "SR44",
+            "verdict": "WARN",
+            "severity": "minor",
+            "detail": "失调 + 增益误差 + 分流 1% ≈ 4.00% vs ≤2.5%；失调条件为12V共模，未含ADC/基准/温漂/CMRR，非完整最坏保证；须在实际共模下标定。"
+          },
+          {
+            "id": "SR46",
+            "verdict": "WARN",
+            "severity": "major",
+            "detail": "ADC、基准、温漂、共模范围和阈值源须补预算；ADC等效码不是DAC码；独立DAC/COMP/BKIN及ADC并用路由尚待核实。"
+          },
+          {
+            "id": "SR53",
+            "verdict": "WARN",
+            "severity": "major",
+            "detail": "独立输入缓升仿真 27/27 通过，电源峰值预算估算最高 0.411 A。无保护线性峰值5.066A，超过Isat时不是可靠上界。待验证独立缓升硬件斜率、电源释放能量、PWM禁止及SOA。"
+          },
+          {
+            "id": "SR65",
+            "verdict": "WARN",
+            "severity": "major",
+            "detail": "CV有0个DCM点排除于CCM搜索；开关仿真覆盖 11 个轻载/切换工况，11 个通过；仍需实测。"
+          },
+          {
+            "id": "SR87",
+            "verdict": "FAIL",
+            "severity": "major",
+            "detail": "12 个工况，失败 6，缺数据 0；sim_S-ocp_min_nominal.csv、sim_S-ocp_nom_nominal.csv、sim_S-ocp_max_nominal.csv、sim_S-ocp__sw_trip_nom_nominal.csv、sim_S-ocp__sw_trip_max_nominal.csv、sim_S-ocp_min_tol_03.csv"
+          },
+          {
+            "id": "SR70",
+            "verdict": "NOT_ASSESSED",
+            "severity": "major",
+            "detail": "缺少 LDO dropout.max 或输入路径电阻 max；dropout.typ=250.0 mV，典型值不构成保证；LDO 接保护后 VIN，不能直接用端子 Vin,min 判 PASS"
+          },
+          {
+            "id": "SR71",
+            "verdict": "NOT_ASSESSED",
+            "severity": "major",
+            "detail": "缺少 UVLO.max、工作下限 min 或 PMOS/保险丝电阻 max；现有模型估算 5.131 V 不构成最坏供电保证"
+          },
+          {
+            "id": "SR73",
+            "verdict": "WARN",
+            "severity": "major",
+            "detail": "开关/磁损、热Rds系数、MLCC保持率、陶瓷ESR、ESR敏感性范围及热布局均为估计；放大器典型带宽非最坏保证；ADC窗口/CPU最坏执行时间需B/C/D实测。"
+          }
+        ]
+      },
+      "ledger_coverage": {
+        "traced": 80,
+        "total": 80
+      },
+      "handoff_written": false,
+      "artifact_sha256": {
+        "calc.json": "b9619f93b5e77f7ed8dea9d092880030656cb2a637c204471dea044991fb8bd5",
+        "check.json": "1cb9294e2404f8ab578ff86d8c56e1961c4e2cdaa4f1c3d9cc7b147cea9a993c",
+        "design_choices.json": "6d284e080ccb63c8fdf632aad02fc2948e93ad2d19ea82e396c7ccf2bea8996b",
+        "ledger.json": "49b99515180b2654a6681dfb51c6af5891edb28af96db88f22757a834e0dcc3a",
+        "loop.json": "1597e69f3fe86076aa1407caf1bab04d5be9529efe3ca05619484c0fada5f3a3",
+        "loop_validation.json": "695e8ee9f45936f35b6e30269a4d52c5278866698203047f2f3883dbeed561e1",
+        "losses.json": "e3e5ba7930b7536e27ea2cd469bc522f45ffdb657821437fcc6935400df5e064",
+        "requirements.json": "186c90aef6bd97ba2cc29e372bb8f82979dea380cb41847182bb953ea704141a",
+        "selection.json": "33c6e35fca98bdf0d6d8d6ae75fe49f12f720ff2282d8836c1b5b34a2c831fa3",
+        "sim.json": "dd063254c23cf20b9ba1a340778e5adb730e51d1dc823b54490a1a0aef777cf3"
+      }
+    }
+  ]
+}

@@ -334,7 +334,7 @@ def select(calc, choices, db):
             if chosen is None:
                 out.setdefault("errors", []).append(f"{cat}: override {overrides[cat]} 未通过硬性规则或不存在")
         tie_note = ""
-        if chosen is None and passing:
+        if chosen is None and passing and cat not in overrides:
             best = min(passing, key=lambda e: e["score"])
             band = [e for e in passing if e["score"] <= best["score"] * (1 + TIE_BAND) + 1e-12]
             chosen = min(band, key=lambda e: (e["stock_risk"], e["price_cny_approx"] if e["price_cny_approx"] is not None else 99, e["score"]))
@@ -348,6 +348,12 @@ def select(calc, choices, db):
                                   "reason": (f"通过全部硬性规则；评分（{chosen['score']}，{chosen['score_note']}）"
                                              + tie_note + ("；由 overrides 指定" if cat in overrides and chosen else ""))
                                   if chosen else "无候选通过 — 需补充器件库或修改设计决策"}
+    unknown = sorted(set(overrides) - set(RULESETS))
+    for cat in unknown:
+        out.setdefault("errors", []).append(f"未知 overrides 类别: {cat}")
+    missing = [cat for cat, item in out["categories"].items() if item["selected"] is None]
+    out["missing_categories"] = missing
+    out["status"] = "needs_rework" if missing or out.get("errors") else "selected"
     return out
 
 
@@ -365,6 +371,8 @@ def main():
         print(f"{cat:13s} {ok}/{n} 通过 → {v['selected']}" + (f" ×{v['selected_qty']}" if (v['selected_qty'] or 1) > 1 else ""))
     for e in res.get("errors", []):
         print("ERROR:", e)
+    if res["status"] == "needs_rework":
+        ap.exit(2, "选型未完成；查看 selection.json 的缺件类别与淘汰原因，返回 S6。\n")
 
 
 if __name__ == "__main__":

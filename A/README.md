@@ -1,6 +1,6 @@
 # A：系统总体设计智能体（模块一）
 
-把课程需求“MCU 控制的 Boost 恒流恒压电源（5 V → 12 V / 0.5 A）”转化为一套**有依据、可复算、可交接**的工程方案，作为 B（原理图）、C（PCB）、D（程序）的输入。
+A 的交付物是系统设计智能体的技能、知识库和工具链，输出供 B（原理图）、C（PCB）、D（程序）使用的**有依据、可复算、可交接**方案。当前实现非同步 Boost 设计流程；5 V → 12 V / 0.5 A 是验证案例。其他电路类型尚需对应的模型、器件规则与验证流程。
 
 ## 在 Codex 中使用
 
@@ -67,7 +67,7 @@
 
 ## 后续改进
 
-见 [docs/改进任务书_v3.md](docs/改进任务书_v3.md)。T1 已接入工具链；T4 已增加结构化规则与自动门禁，原厂手册独立复核的边界见下文。后续还有消融评测、计算依据账本和 skill 规范化。
+见 [docs/改进任务书_v3.md](docs/改进任务书_v3.md)。本验证分支整合 T1/T3/T4；A 的交付目标是设计智能体及其工具链，r6 电源方案仅为验证案例。模型消融实验另行记录，不以脚本回归代替。
 
 ### T4 规则检查与门禁
 
@@ -76,6 +76,27 @@
 `check_design.py` 退出码：0 无 FAIL 且无 critical/major NOT_ASSESSED；2 有 FAIL；3 无 FAIL 但关键证据缺失；1 程序错误。`run_all.py` 原样传播退出码并停止，直接导出也检查门禁。缺仿真、缺器件或缺参数会保留 NOT_ASSESSED；未配置输入缓升时 SR88 明确为 N/A，浪涌实物关闭项 SR53 仍然保留。
 
 状态策略对任务书作显式澄清：SR38（内部纹波目标）和 SR44（部分误差预算）的 automatic/minor WARN 可作为公开建议进入 conditional_review；automatic critical/major WARN 会进入 needs_rework。2026-11-12 手册审计发现真实 r6 缺 LDO 最大压差与保险丝最大电阻，SR70/SR71 改为 NOT_ASSESSED：85 PASS / 8 WARN / 0 FAIL / 2 NOT_ASSESSED / 1 N/A，状态 needs_rework、退出码 3，导出被阻止。此前 87 PASS 的计数已被此审计更正；不改器件、不编造 max 值。测试中的 qualified_supply 是合成夹具，只验证成功路径，不是 r6 合格证据。审计范围、来源、缺口见 [sdrc_audit.md](.agents/skills/boost-system-design/knowledge/sdrc_audit.md)。
+
+### T3 计算依据账本与一致性校验
+
+`run_all.py` 在规则检查后生成 `ledger.json` / `ledger.md`，导出交接文件后执行一致性校验。有报告占位符模板时先渲染正文。账本校验来源是否存在、记录值是否过期、各阶段 revision 是否一致；交接校验覆盖设计规格、BOM、固件参数头文件和报告表格。
+
+整合后即使 SDRC 返回 2/3，也会先保留账本用于诊断，再停止交接。选型无候选、override 不合法或类别拼写错误返回 2；显式指定的型号不合格时不会偷偷改选其他器件。
+
+```text
+python ledger.py <workdir>
+python ledger.py <workdir> --stale L_MWSA1206S_680MT
+python ledger.py <workdir> --stale ao3400a
+python ledger.py <workdir> --stale inductor_ripple_ratio
+python check_consistency.py <workdir>
+python -m unittest test_tools test_sim_switching test_ledger test_consistency -v
+```
+
+旧版中间产物没有结构化来源，需要重跑计算、损耗和环路阶段。r6 迁移范围与验证边界见 [T3 验证说明](docs/T3-r6-validation.md)。来源记录不能代替公式审计或原厂数据手册审计。
+
+### 智能体能力回归
+
+[eval/README.md](eval/README.md) 提供 12 组需求变体及一键 S5/S6 回归。当前快照中 5 组完成初算与选型，6 组被当前库缺件拦截，1 组不满足升压条件被拒绝。行为验证通过不等于完整设计合格；C0–C3 真实模型消融、完整标准答案和评分器尚未完成。整体验收与下一步见 [A 智能体能力检查](docs/A-agent-validation.md)。
 
 ### T1 开关级仿真
 

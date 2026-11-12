@@ -29,6 +29,7 @@ scripts/      calc_boost.py  select_parts.py  loss_thermal.py(+loss_model.py)  l
               draw_figures.py（框图/工作区图）  md2docx.mjs（报告转 Word，可选）  test_tools.py（单元测试）
               sim_switching.py（T1 开关级仿真）  sim_control.py（采样与控制）
               sim_scenarios.py（工况和指标）  test_sim_switching.py
+              ledger.py  trace_graph.py（来源账本与变更影响）  check_consistency.py  render_report.py
               _common.py  boost_model.py  stage_params.py（含容差场景 variants）  svgplot.py
 knowledge/    parts_db.json（结构化器件库，含出处）  design_rules.md（工程规则与常见错误，按需检索）
 templates/    design_choices.default.json（设计决策模板）  report_outline.md（报告结构）
@@ -50,13 +51,15 @@ Windows 下建议设置 `PYTHONIOENCODING=utf-8`。只用 Python 标准库。
 | S6 器件选型 📋 | `python select_parts.py <wd>`；逐类阅读淘汰原因；某类无候选 → 扩充器件库或回 S3/S4 | `parts_db.json` | `selection.json` | 每类有入选器件 |
 | S7 复核 | `python loss_thermal.py <wd>` 复核损耗和容差，η 偏差过大则回 S5；`python loop_design.py <wd>` 设计 PI；`python validate_loop.py <wd>` 独立复核 CCM 环路；`python sim_switching.py <wd>` 执行 T1 场景及额定点交叉验证 | 工具 | `losses.json`, `loop.json`, `loop_validation.json`, `bode_*.csv`, `bode_loops.svg`, `sim.json`, `sim_*.csv`, `sim_waveforms.svg` | η 一致；环路复核 PASS；T1 失败回溯对应阶段 |
 | S8 设计规则检查 | `python check_design.py <wd>` | `sdrc_rules.json` | `check.json` | 所有规则含依据与严重度；FAIL = 0 且关键 NOT_ASSESSED = 0。`conditional_review` 的仿真/实测 WARN 逐条交接，不得宣称“已实测合格” |
-| S9 交接与报告 ⏸ | `python export_handoff.py <wd>`；按 `templates/report_outline.md` 写 `system_design_report.md`（论证文字由模型写，数字只引用工具输出与 `report_tables.md`） | 工具 + 模板 | `design_spec.json`, `bom_module1.csv`, `boost_params.h`, `report_tables.md`, `system_design_report.md` | 报告与 JSON 版本号一致 |
+| S9 交接与报告 ⏸ | `python ledger.py <wd>`；`python export_handoff.py <wd>`；按模板写报告。数字可在 `system_design_report.template.md` 中用占位符引用，执行 `python render_report.py <wd>`；最后 `python check_consistency.py <wd>` | 工具 + 模板 | `ledger.json`, `ledger.md`, `design_spec.json`, `bom_module1.csv`, `boost_params.h`, `report_tables.md`, `system_design_report.md` | 来源可解析、记录未过期、交接关键值与版本一致 |
 
 ⏸ = 必须停下等用户确认；📋 = 用白话汇报后继续（若本阶段出现 A 类问题或无法消除的 FAIL，则升级为 ⏸）。详见下一节。
 
 SDRC 结果状态为 `PASS / WARN / FAIL / NOT_ASSESSED / N/A`。缺少证据不得判 PASS；未选中器件或缺少参数时必须产生 `NOT_ASSESSED`，并说明缺项。退出码：`0` = 无 FAIL 且无 critical/major NOT_ASSESSED；`2` = 存在 FAIL；`3` = 存在 critical/major NOT_ASSESSED；`1` = 程序错误。`run_all.py` 遇到 2/3 会停止并给出回溯提示。规则定义、严重度、依据和关闭方法见 `knowledge/sdrc_rules.json`。
 
 状态策略：FAIL、critical/major NOT_ASSESSED 或 automatic critical/major WARN → needs_rework；其余未关闭项 → conditional_review；无 WARN/NOT_ASSESSED → ready_for_downstream（有理由的 N/A 不阻塞）。现有 SR38/SR44 为 automatic/minor 建议，公开保留在 conditional_review，详见 `knowledge/sdrc_audit.md` 对任务书歧义的说明。退出码 0 也不代表实物验证完成。
+
+工具失败路径：`calc_boost.py` 对不支持的拓扑、非法基础数值、非升压需求或无匹配标准电感返回 2，并保存 `calc_error.json`。`select_parts.py` 无候选、无效 override 或未知 override 类别返回 2 并保留淘汰原因；不得把不合格的显式指定器件偷偷替换成另一型号。`run_all.py` 在 SDRC 2/3 时仍生成来源账本用于诊断，然后保留原退出码停止交接；替换器件库通过 `--db` 同步传给各器件相关阶段（含环路独立复核）。
 
 供电检查易错点：typ/nominal 或无上下界标签的数值不能替代 max/min 保证值。SR70 使用保护后 VIN、LDO dropout.max 及路径电阻 max；SR71 使用 UVLO.max、工作电压 min 和路径电阻 max。2026-11-12 审计后的真实 r6 因缺 LDO 压差 max、保险丝电阻 max，两项为 NOT_ASSESSED、状态 needs_rework；不能沿用旧的 87 PASS 作为可交接结论。温度系数、布线及瞬态条件另需验证。
 
