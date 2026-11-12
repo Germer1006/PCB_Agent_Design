@@ -18,6 +18,7 @@ from _common import KNOWLEDGE_DIR, load_json, param, r3, save_json, workdir_path
 from stage_params import selected
 from handoff_header import write_header
 from handoff_contract import issues, proposed_pin_plan, requirement_rows, traceability, verification_plan
+from trace_graph import extend_traceability
 
 ROLE_META = {  # role → (位号前缀/位号, 功能块, 网络连接说明)
     "terminal": ("J1", "MOD-IN/MOD-OUT", "J1=输入 VIN_RAW/GND，J2=输出 VOUT/GND"),
@@ -152,6 +153,7 @@ def run(req, ch, calc, sel, loss, loop, chk, db):
     tests = verification_plan(req, calc)
     blocks = [{"id": b[0], "name": b[1], "function": b[2], "impl": b[3], "requirements": b[4]} for b in BLOCKS]
     trace = traceability(reqs, blocks, tests, chk)
+    extend_traceability(trace, calc, loss, loop, sel, chk)
 
     spec = {
         "schema": "boost-design-spec/1", "revision": ch.get("revision"), "date": date.today().isoformat(),
@@ -202,9 +204,9 @@ def md_table(head, rows):
 def write_tables(path, spec, calc, sel, loss, loop, chk):
     T = [f"# 模块一 自动生成数据表（revision {spec['revision']}，{spec['date']}）", "",
          "> 由 export_handoff.py 生成，勿手改。报告正文引用本文件中的表格。", ""]
-    T += ["## 表 A 需求追踪矩阵", md_table(["需求", "内容", "约束", "功能块", "检查项", "测试"],
-          [(t["req"], t["text"], t["level"], ", ".join(t["blocks"]), ", ".join(t["checks"][:4]) + ("…" if len(t["checks"]) > 4 else ""),
-            ", ".join(t["tests"])) for t in spec["traceability"]]), ""]
+    T += ["## 表 A 需求追踪矩阵", md_table(["需求", "内容", "约束", "功能块", "计算步", "器件 ID", "检查项", "测试"],
+          [(t["req"], t["text"], t["level"], ", ".join(t["blocks"]), ", ".join(t["calculation_steps"]),
+            ", ".join(t["parts"]), ", ".join(t["checks"]), ", ".join(t["tests"])) for t in spec["traceability"]]), ""]
     T += ["## 表 B 关键参数计算（初算）", md_table(["编号", "参数", "公式", "代入", "结果", "单位", "说明"],
           [(x["id"], x["name"], x["formula"], x["substitution"], x["value"], x["unit"], x["note"]) for x in calc["steps"]]), ""]
     T += ["## 表 C 器件复核计算", md_table(["编号", "参数", "公式", "代入", "结果", "单位", "说明"],
@@ -223,6 +225,8 @@ def write_tables(path, spec, calc, sel, loss, loop, chk):
     for m in ("CV", "CC"):
         r = loop[m]
         T += [f"## 表 F-{m} {m} 环路各工况角（Kp={r.get('Kp')}, Ki={r.get('Ki')}）",
+              md_table(["编号", "参数", "结果", "单位"], [(x["id"], x["name"], x["value"], x["unit"])
+                       for x in loop.get("steps", []) if x["id"].startswith(m + "_")]),
               md_table(["模型", "Vin/V", "负载", "Vout/V", "D", "f0/Hz", "fRHPZ/Hz", "fc/Hz", "PM/°", "GM/dB"],
                        [(c.get('variant'), c.get('vin'), c["load"], c.get('vo'), c.get("D"), c.get("f0_Hz"), c.get("fRHPZ_Hz"), c.get("fc_Hz"), c.get("PM_deg"), c.get("GM_dB"))
                         for c in r["corners"]]), ""]
@@ -237,22 +241,23 @@ def write_tables(path, spec, calc, sel, loss, loop, chk):
     Path(path).write_text("\n".join(T), encoding="utf-8")
 
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("workdir")
-    ap.add_argument("--db", default=str(KNOWLEDGE_DIR / "parts_db.json"))
-    a = ap.parse_args()
-    p = workdir_paths(a.workdir)
-    J = {k: load_json(p[k]) for k in ("requirements", "choices", "calc", "selection", "losses", "loop", "check")}
+def handoff_inputs(workdir):
+    p = workdir_paths(workdir)
+    keys = ("requirements", "choices", "calc", "selection", "losses", "loop", "check")
+    J = {key: load_json(p[key]) for key in keys}
+    J["sim"] = load_json(p["sim"]) if p["sim"].exists() else None
+    return J
+
+
+def prepare_handoff(J, db):
     revisions = {J[k]['revision'] for k in ('choices', 'calc', 'selection', 'losses', 'loop', 'check')}
     if len(revisions) != 1 or J['check']['summary']['FAIL'] != 0:
         raise ValueError('交接禁止：版本不一致或 SDRC 有 FAIL')
     if not all(J['loop'][mode]['ok'] for mode in ('CV', 'CC')):
         raise ValueError('交接禁止：环路初值复核未通过')
-    db = load_json(a.db)
-    spec, parts, passives = run(J["requirements"], J["choices"], J["calc"], J["selection"], J["losses"], J["loop"], J["check"], db)
-    if p["sim"].exists():
-        simulation = load_json(p["sim"])
+    spec, _, _ = run(J["requirements"], J["choices"], J["calc"], J["selection"], J["losses"], J["loop"], J["check"], db)
+    simulation = J["sim"]
+    if simulation is not None:
         if simulation.get("revision") != spec["revision"]:
             raise ValueError("交接禁止：仿真报告版本不一致")
         spec["source_documents"].append("sim.json")
@@ -265,14 +270,28 @@ def main():
         }
     if not all(x['blocks'] and x['tests'] for x in spec['traceability']):
         raise ValueError('需求缺少功能块或验证计划')
-    w = Path(a.workdir)
-    save_json(w / "design_spec.json", spec)
-    with open(w / "bom_module1.csv", "w", newline="", encoding="utf-8-sig") as f:
+    return spec
+
+
+def write_bom(path, spec):
+    with open(path, "w", newline="", encoding="utf-8-sig") as f:
         wr = csv.writer(f)
         wr.writerow(["位号", "名称/值", "封装", "数量", "制造商料号", "制造商", "立创编号", "功能块", "连接说明", "设计版本", "清单范围", "状态"])
-        for x in parts:
+        for x in spec["components"]:
             wr.writerow([x["designator"], x["value"], x["package"], x["qty"], x["mpn"], x["manufacturer"], x["lcsc"] or "待核实",
                          x["block"], x["connection"], spec['revision'], '主要器件，配套物料待补齐', spec['status']])
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("workdir", type=Path)
+    ap.add_argument("--db", default=str(KNOWLEDGE_DIR / "parts_db.json"))
+    a = ap.parse_args()
+    w = a.workdir
+    J = handoff_inputs(w)
+    spec = prepare_handoff(J, load_json(a.db))
+    save_json(w / "design_spec.json", spec)
+    write_bom(w / "bom_module1.csv", spec)
     write_header(w / "boost_params.h", J["calc"], J["loop"], J["choices"])
     write_tables(w / "report_tables.md", spec, J["calc"], J["selection"], J["losses"], J["loop"], J["check"])
     print(f"design_spec.json / bom_module1.csv / boost_params.h / report_tables.md written; status={spec['status']}, "
