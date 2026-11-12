@@ -1,0 +1,99 @@
+{
+  "schema": "boost-requirements/1",
+  "project": "A agent synthetic evaluation easy03",
+  "source_document": "Synthetic evaluation variant; not a change to the course or group requirements",
+  "notes": "Software evaluation only. Other constraints retained from course schema.",
+  "vin": {
+    "nom_v": 5.5,
+    "tol_pct": 5,
+    "level": "must",
+    "origin": "Synthetic evaluation variant easy03"
+  },
+  "vout": {
+    "set_v": 9,
+    "steady_err_pct": 5,
+    "level": "must",
+    "origin": "Synthetic evaluation variant easy03"
+  },
+  "iout": {
+    "cc_set_a": 0.5,
+    "steady_err_pct": 5,
+    "level": "must",
+    "origin": "Synthetic evaluation variant easy03"
+  },
+  "pout": {
+    "rated_w": 4.5,
+    "level": "must",
+    "origin": "Synthetic evaluation variant easy03"
+  },
+  "fsw": {
+    "range_hz": [
+      50000,
+      100000
+    ],
+    "suggested_hz": 100000,
+    "level": "must",
+    "origin": "四、开关频率 50～100kHz，建议统一 100kHz"
+  },
+  "ripple": {
+    "max_pct": 5,
+    "target_pct": 3,
+    "level": "must",
+    "origin": "Synthetic evaluation variant easy03"
+  },
+  "controller": {
+    "type": "32-bit MCU",
+    "preferred": "STM32",
+    "level": "must",
+    "origin": "四、控制器 32 位 MCU，推荐 STM32"
+  },
+  "control": {
+    "method": "digital PI",
+    "modes": [
+      "CC",
+      "CV"
+    ],
+    "level": "must",
+    "origin": "四、控制方式数字 PI，实现 CC/CV 控制"
+  },
+  "protection": {
+    "required": [
+      "OVP",
+      "OCP",
+      "duty_limit"
+    ],
+    "suggested": [
+      "soft_start"
+    ],
+    "level": "must",
+    "origin": "四、保护功能：过压、过流、占空比限幅；建议增加软启动"
+  },
+  "efficiency": {
+    "target_pct": 75,
+    "measure": false,
+    "level": "target",
+    "origin": "四、效率完成实测，额定点尽量 ≥75%"
+  },
+  "test_load": {
+    "type": "electronic load",
+    "modes": [
+      "CC",
+      "CR"
+    ],
+    "level": "must",
+    "origin": "四、调试负载：电子负载，支持 CC/CR 模式"
+  },
+  "pcb": {
+    "layers": 2,
+    "note": "功率级与控制级布局合理",
+    "level": "must",
+    "origin": "四、PCB 两层板即可"
+  },
+  "project_constraints": {
+    "build_physical": false,
+    "assembly": "hand-soldered",
+    "eda": "嘉立创EDA",
+    "sourcing": "立创商城 (LCSC)",
+    "origin": "Synthetic software test, no procurement commitment"
+  }
+}

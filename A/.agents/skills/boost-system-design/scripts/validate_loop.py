@@ -6,16 +6,17 @@
 import argparse
 import math
 from pathlib import Path
-from _common import load_json, save_json, param
+from _common import KNOWLEDGE_DIR, load_json, save_json, param
 from stage_params import variants, selected
 from boost_model import Boost, logspace
 from loop_design import corners, ctrl_resp, margins
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument('workdir'); a=ap.parse_args()
+    ap=argparse.ArgumentParser(); ap.add_argument('workdir')
+    ap.add_argument('--db', default=str(KNOWLEDGE_DIR/'parts_db.json')); a=ap.parse_args()
     w=Path(a.workdir)
     ch,ca,se,lo,lp=(load_json(w/n) for n in ('design_choices.json','calc.json','selection.json','losses.json','loop.json'))
-    db=load_json(Path(__file__).resolve().parents[1]/'knowledge/parts_db.json')
+    db=load_json(a.db)
     assert all(x['revision']==ch['revision'] for x in (ca,se,lo,lp))
     Tc=1/ch['control']['f_ctrl_hz']; lc=ch['losses']
     csa,_=selected(se,db,'csa'); rs=ca['sensing']['iout']['shunt_ohm']
