@@ -3,7 +3,7 @@
 import csv
 import math
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from html import escape
 from typing import NamedTuple
 
@@ -21,6 +21,55 @@ class Scenario:
     load_a: float = 0.0
     target: str = "CV"
     changes: tuple = ()
+    stimulus: dict | None = None
+
+
+def _ocp_stimulus(scenario, settings, model, vin, cc_min, bleed):
+    """按模型和阈值生成激励；不修改控制器或放宽动作/Isat 判据。"""
+    rated = settings.v_set / settings.i_set
+    parallel = lambda r: 1 / (1 / r + 1 / bleed)
+    path = model.dcr + model.rd + settings.shunt_ohm
+    passive_v = max(0.0, vin - model.vf0)
+    floor_r = passive_v / settings.i_set - path
+    # 全局 CC 下限之外再留一点距离，避免把直通区误当作可控恒流区。
+    cc_low = max(cc_min * 1.05, floor_r * 1.1)
+    valid = 0 < settings.i_set < settings.ocp_sw < settings.ocp_hw
+    valid = valid and cc_low < .98 * rated and passive_v > 0
+    evidence = {"valid": valid, "vin_v": vin, "passive_source_v": passive_v,
+                "passive_path_ohm": path, "cc_min_ohm": cc_min,
+                "controlled_load_min_ohm": cc_low,
+                "basis": "DC passive path + computed CC range; transient checks remain mandatory"}
+    if not valid:
+        evidence["reason"] = "没有可分辨的 CC 负载区间或 i_set < OCP_SW < OCP_HW 前提不满足"
+        return replace(scenario, stimulus=evidence)
+    cc_r = (cc_low + .98 * rated) / 2
+    if scenario.name == "S-ocp":
+        # 正常 CC 加载，禁止跨入无法由 PWM 降流的区域。
+        changes = ((5, parallel(rated)), (10, parallel(cc_r)), (15, parallel(cc_low)))
+        return replace(scenario, changes=changes, stimulus=evidence)
+    if scenario.name == "S-ocp__sw_trip":
+        # PWM 关断后的被动电流落在软/硬阈值之间。缓慢加载让控制器有机会
+        # 降低输出电压，避免从高输出电压一步短接而只测到硬件快断。
+        target = (settings.ocp_sw + settings.ocp_hw) / 2
+        fault_r = passive_v / target - path
+        if fault_r <= 0:
+            evidence.update(valid=False, reason="路径电阻过大，无法构造软件过流测试负载")
+            return replace(scenario, stimulus=evidence)
+        start, end, steps = 3.0, 9.0, 60
+        changes = tuple((start + (end-start)*n/steps,
+                         cc_r + (fault_r-cc_r)*n/steps) for n in range(1, steps+1))
+        release = end + settings.ocp_delay_s*1000 + 3
+        evidence.update(passive_target_a=target, fault_total_load_ohm=fault_r,
+                        load_ramp_start_ms=start, load_ramp_end_ms=end)
+        return replace(scenario, load_ohm=cc_r, target="CC", duration_ms=release+3,
+                       changes=changes + ((release, parallel(2*rated)),), stimulus=evidence)
+    if scenario.name == "S-ocp__hw_trip":
+        # 从正常 CV 电压突加负载，目标瞬时电流超过硬阈值 40%。
+        fault_r = settings.v_set / (1.4 * settings.ocp_hw)
+        evidence.update(initial_step_target_a=1.4 * settings.ocp_hw)
+        return replace(scenario, changes=((2, parallel(fault_r)), (5, parallel(2*rated))),
+                       stimulus=evidence)
+    return scenario
 
 
 class Cycle(NamedTuple):
@@ -231,16 +280,23 @@ def _case_metrics(scenario, rows, control, fault, protection, settings, req, tvs
             else:
                 action_ok = action_ok and protection["filtered_iout_peak_a"] < settings.ocp_hw \
                     and protection["max_sw_dwell_s"] < settings.ocp_delay_s
-            checks["SR87"] = action_ok and il_peak < isat if isat else None
+            if scenario.stimulus is not None:
+                metrics["ocp_stimulus"] = scenario.stimulus
+            checks["SR87"] = (action_ok and il_peak < isat
+                              if isat and (scenario.stimulus or {}).get("valid", True) else None)
             if observed:
                 fault_ms = fault["time_s"]*1000
                 step_ms = max((ms for ms, _ in scenario.changes if ms <= fault_ms), default=0)
                 metrics["ocp_action_ms_from_load_step"] = fault_ms - step_ms
+            if scenario.name.endswith("__uncontrolled_reference"):
+                # 原固定比例激励保留为越界故障对照，不能证明不误触发或保护合格。
+                checks.pop("SR87")
+                metrics["reference_only"] = "固定比例负载可能超出 CC 可控范围，不参与 SR87"
         if name == "S-plugin":
             metrics["inrush_peak_time_ms"] = max(rows, key=lambda r: r.il_max).t * 1000
     if any(result is False and key != "SR82-target" for key, result in checks.items()):
         verdict = "FAIL"
-    elif (metrics.get("linear_model_beyond_isat") or any(result is None or result is False for result in checks.values())
+    elif (metrics.get("reference_only") or metrics.get("linear_model_beyond_isat") or any(result is None or result is False for result in checks.values())
           or (name == "S-step" and (fault or any(p["settle_ms"] is None for p in metrics["phases"])))):
         verdict = "WARN"
     else:
@@ -248,7 +304,7 @@ def _case_metrics(scenario, rows, control, fault, protection, settings, req, tvs
     return metrics, checks, verdict
 
 
-def run_suite(workdir, req, calc, selection, choices, loop, loss, db):
+def run_suite(workdir, req, calc, selection, choices, loop, loss, db, *, scenario_prefix=None):
     from sim_switching import OperatingPoint, simulate_closed_loop, simulate_fixed_duty, simulate_input_ramp
 
     start_time = time.perf_counter()
@@ -318,6 +374,9 @@ def run_suite(workdir, req, calc, selection, choices, loop, loss, db):
         Scenario("S-ocp__sw_trip", 12 + settings.ocp_delay_s*1000, parallel(rated_r/3),
                  target="CC", changes=((3, parallel(rated_r/4)),
                                        (9 + settings.ocp_delay_s*1000, parallel(2*rated_r)))),
+        Scenario("S-ocp__uncontrolled_reference", 20 + settings.ocp_delay_s*1000, parallel(2*rated_r),
+                 changes=((5, parallel(rated_r)), (10, parallel(rated_r*2/3)),
+                          (15, parallel(rated_r/3)))),
         Scenario("S-plugin__protected" if ramp else "S-plugin", vi["max"]/slew + 2 if ramp else 2, bleed),
     ]
     cases = [(s, "nominal", key) for s in scenarios for key in ("min", "nom", "max")]
@@ -331,6 +390,7 @@ def run_suite(workdir, req, calc, selection, choices, loop, loss, db):
                            ("S-ocp", worst_eff, worst_eff_vin),
                            ("S-ocp__hw_trip", worst_eff, worst_eff_vin),
                            ("S-ocp__sw_trip", worst_eff, worst_eff_vin),
+                           ("S-ocp__uncontrolled_reference", worst_eff, worst_eff_vin),
                            ("S-plugin__protected" if ramp else "S-plugin", worst_inrush, "max")):
         item = (next(s for s in scenarios if s.name == name), var, key)
         if item not in cases:
@@ -344,11 +404,17 @@ def run_suite(workdir, req, calc, selection, choices, loop, loss, db):
             cases.append((direct, worst_inrush, "max"))
     cases += [(Scenario("S-rated", 8, parallel(rated_r)), "nominal", "nom"),
               (Scenario("S-ripple-corner", 8, parallel(rated_r)), worst_ripple, worst_ripple_vin)]
+    if scenario_prefix:
+        cases = [case for case in cases if case[0].name.startswith(scenario_prefix)]
+        if not cases:
+            raise ValueError(f"没有匹配的仿真场景：{scenario_prefix}")
 
     traces, results, references = [], [], []
     for scenario, variant, key in cases:
         case_start = time.perf_counter()
         model, vin = model_set[variant], vi[key]
+        if scenario.name in {"S-ocp", "S-ocp__sw_trip", "S-ocp__hw_trip"}:
+            scenario = _ocp_stimulus(scenario, settings, model, vin, calc["cc_range"]["r_min_ohm"], bleed)
         total_cycles = math.ceil(scenario.duration_ms*fsw/1000 - 1e-12)
         common = dict(vin_v=vin, load_ohm=scenario.load_ohm,
                       cycles=total_cycles, load_current_a=scenario.load_a)
@@ -377,7 +443,7 @@ def run_suite(workdir, req, calc, selection, choices, loop, loss, db):
                                         initial_vout_v=vo, initial_i_l_a=max(0, valley), initial_duty=duty)
 
         label = f"{scenario.name}_{key}_{variant}"
-        filename = f"sim_{label}.csv"
+        filename = f"sim_subset_{label}.csv" if scenario_prefix else f"sim_{label}.csv"
         with (workdir / filename).open("w", encoding="utf-8", newline="") as stream:
             rows, mode_history, fault, protection = _collect(wave, fsw, stream)
         metrics, checks, verdict = _case_metrics(scenario, rows, mode_history, fault, protection,
@@ -404,17 +470,20 @@ def run_suite(workdir, req, calc, selection, choices, loop, loss, db):
                   "elapsed_s": round(time.perf_counter() - case_start, 2),
                   "profile": {"duration_ms": scenario.duration_ms, "initial_load_ohm": scenario.load_ohm,
                               "cc_load_a": scenario.load_a, "load_steps_ms_ohm": scenario.changes}}
-        (references if scenario.name == "S-plugin__direct_reference" else results).append(record)
+        (references if scenario.name.endswith(("__direct_reference", "__uncontrolled_reference"))
+         else results).append(record)
         if key == "nom" and variant == "nominal" and scenario.name in {
             "S-start", "S-step", "S-handover", "S-light__no_load", "S-plugin",
             "S-plugin__protected", "S-plugin__direct_reference",
         }:
             field, unit = ("il", "A") if scenario.name.startswith("S-plugin") else ("v", "V")
             traces.append((scenario.name, rows, field, unit))
+        elif scenario_prefix and key == "nom" and variant == "nominal":
+            traces.append((scenario.name, rows, "i", "A"))
         print(f"T1 {label}: {verdict}", flush=True)
 
-    rated = next(case["metrics"] for case in results if case["name"] == "S-rated")
-    ripple_corner = next(case["metrics"] for case in results if case["name"] == "S-ripple-corner")
+    rated = next((case["metrics"] for case in results if case["name"] == "S-rated"), None)
+    ripple_corner = next((case["metrics"] for case in results if case["name"] == "S-ripple-corner"), None)
     nominal = loss["cases"]["nom"]
     cross = {}
     for name, actual, expected, limit in (
@@ -422,13 +491,14 @@ def run_suite(workdir, req, calc, selection, choices, loop, loss, db):
         ("il_avg", rated["il_avg_a"], nominal["IL_avg_A"], 2),
         ("ripple_mv", 1000*rated["ripple_vpp_v"], nominal["vpp_harmonic_mv"], 20),
         ("worst_ripple_mv", 1000*ripple_corner["ripple_vpp_v"], loss["ripple"]["vpp_harmonic_mv"], 20),
-    ):
+    ) if rated is not None and ripple_corner is not None else ():
         error = abs(actual/expected - 1)*100
         cross[name] = {"simulated": actual, "reference": expected, "error_pct": error,
                        "limit_pct": limit, "passed": error < limit}
-    _wave_svg(traces, workdir / "sim_waveforms.svg")
+    _wave_svg(traces, workdir / ("sim_subset_waveforms.svg" if scenario_prefix else "sim_waveforms.svg"))
     report = {
         "schema": "boost-switching-sim/1", "revision": choices["revision"],
+        "scope": "subset" if scenario_prefix else "full", "scenario_prefix": scenario_prefix,
         "cross_validation": cross, "cases": results, "reference_cases": references,
         "input_ramp": ramp,
         "elapsed_s": round(time.perf_counter() - start_time, 2),
@@ -438,5 +508,5 @@ def run_suite(workdir, req, calc, selection, choices, loop, loss, db):
                          "超过 Isat 的电流为线性模型结果，不是可靠故障电流上界",
                          "输入缓升假定由独立硬件在 Boost 输入端实现；实物电源、器件 SOA、容差和 PWM 使能仍须验证"],
     }
-    save_json(workdir / "sim.json", report)
+    save_json(workdir / ("sim_subset.json" if scenario_prefix else "sim.json"), report)
     return report

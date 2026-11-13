@@ -104,6 +104,10 @@ python -m unittest test_tools test_sim_switching test_ledger test_consistency -v
 
 r2 将过流工况分为不过阈值、软件延时动作及硬件快速动作，并增加独立输入缓升工况。带缓升的工况参与 SR88，未加保护的直插波形在 `sim.json` 的 `reference_cases` 中保留。验证方法及实物边界见 [T1 保护验证](docs/T1-protection-validation.md)。
 
+2026-11-13 起，正常 CC 加载依据计算的可控下限生成，软件过流激励依据各输入/容差模型的被动直通电流和软/硬阈值生成，并用渐变负载避免先触发硬件保护。保护阈值、延时、Isat 和动作判据不变；无有效激励前提时 SR87 缺评估，不能判 PASS。旧固定比例加载保留为 `S-ocp__uncontrolled_reference`，仅作故障对照，不计入 SR87。
+
+排查可运行 `python sim_switching.py <workdir> --scenario-prefix S-ocp`：只写 `sim_subset.json` 和对应波形，不覆盖完整 `sim.json`，不作为完整门禁证据。正式回归仍使用不带筛选参数的命令。
+
 在 `scripts/` 中，对已完成参数计算和选型的试验工作目录运行：
 
 ```bash

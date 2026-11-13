@@ -1,0 +1,445 @@
+{
+  "schema": "boost-ocp-adaptation-review/1",
+  "date": "2026-11-13",
+  "scope": "Full switching simulation, SDRC and ledger rerun with reused upstream design results; no fresh PI search, LLM ablation or hardware measurements.",
+  "hash_normalization": "CRLF_to_LF",
+  "unit_tests": {
+    "command": "python -m unittest discover -s A/.agents/skills/boost-system-design/scripts -p 'test_*.py'",
+    "run": 63,
+    "passed": 63
+  },
+  "changes": [
+    "Generate OCP stimuli using CC range, input/variant model and existing thresholds.",
+    "Keep fixed-ratio overload as a separate WARN reference, retaining original failure snapshots.",
+    "Keep subset reports and waveforms separate and reject them as full SDRC evidence."
+  ],
+  "runs": [
+    {
+      "id": "r6",
+      "workdir": "A/outputs/test_ocp_full_r6",
+      "revision": "r6-agent-eval1",
+      "specification": {
+        "vin_nom_v": 5.0,
+        "vout_v": 12.0,
+        "iout_a": 0.5
+      },
+      "provenance": {
+        "upstream_source": "A\\outputs\\test_agent_r6",
+        "reused_upstream": [
+          "requirements.json",
+          "design_choices.json",
+          "calc.json",
+          "selection.json",
+          "losses.json",
+          "loop.json",
+          "loop_validation.json"
+        ],
+        "recomputed": [
+          "switching_simulation",
+          "check",
+          "ledger"
+        ],
+        "source_sha256": {
+          "boost_model.py": "2e2529b4c0bf0053f599273bdaf905ef24193a6e29aa9ca505cc67b690b6baf4",
+          "calc_boost.py": "431e7b4aaa74010724e8ede37c3128a53dbcae9c6b64ec60c6eeb2c9bb78320c",
+          "check_consistency.py": "820eeaa7138a1b6c7029864d6ec230d5e6ba064f019ddb27c2451f74b1bd5e6e",
+          "check_design.py": "2206c56882182aa8ab6242f9bc94df0c47f0ce4f1efdc1e7a75f6ac7e6453cb8",
+          "draw_figures.py": "9bc43cbaa2cdd598156765c30ef6b490a13abedae015a0cdcb1d332ebf92f9af",
+          "export_handoff.py": "1ecf31b4036dc1077e19fd0789779ce431953fa6dc35f7485ca254bc33e3fa6b",
+          "handoff_contract.py": "220aa631e76ae7cb841f843442d4dc17dd7541040353cb002b4027c911e4ea0b",
+          "handoff_header.py": "afc5cd9095ec0b1b6ce104698d51799a3b9bce52bb65515b45b1570cd31921da",
+          "ledger.py": "ebcc30826e2c7d9f0d736f5f772f9f2723665b844b031049f3dfa2d08b7b57b1",
+          "loop_design.py": "182def8a5af0bab327c0786611d550b3ab33dd94e6edbc637dc796347ebbd322",
+          "loss_model.py": "9ca9e7ce75a348ce448814775ec9e48ab54f328a06f36b9a668bb55acd9e1ec3",
+          "loss_thermal.py": "8e249e5af85517cb070656b82c2b2365d56a94c803a7d49c0ca20c0df90a7e61",
+          "render_report.py": "61a0ff77b7426e8c2d35247c42ed1004b7e0c9482e1f373a1e70190064e50957",
+          "run_all.py": "49b2a3f9ace12b7cd766439c17d4b38fed2d68ea3a51eae3ee6556a0edb1acdf",
+          "select_parts.py": "5f091c0d3634262d1eb86dcebb9e6ed02645e51b7a46c473e38764169b9a1863",
+          "sim_control.py": "657fc09b95a2b2503172664bd15206589f09685e23034e77c21425810e442037",
+          "sim_scenarios.py": "dcb1657d1de845b1feaae0d3773dfd5d307ff6013cefb5df6ffe92054e29d4b1",
+          "sim_switching.py": "f4a82b74af15b181d74b5075c8c207fc8c70a790cafb09adeb33d3f142408e65",
+          "stage_params.py": "345228d4c1a22242bd0a001c8fcbc90ff85e47591e3ece9780ba40ac3ed4c48c",
+          "svgplot.py": "a6086395c574cabc202eb52ef7c85c267503403ebe97372afefb2af12be46098",
+          "test_agent_boundaries.py": "7d5e94213e61ab9ec45f75cdf7f9ec9333caa53223f12c284e1839c916fae72d",
+          "test_consistency.py": "441544e4f3d850133997c167ff4a4d45440f5fb26726ae76ccede68d97f8abfb",
+          "test_ledger.py": "74546d4e7df8f32431bb14f01cad4fd0877ea24dfc8a03dc84ec593086dc64cd",
+          "test_sdrc.py": "58f973acdce2009c066b811759ab616b981af3c52c70a08af6a3f7f3a63ca541",
+          "test_sim_switching.py": "69ed9e01c74d282a2167f5188e25506cf6c045ff68f5c289970dc474cfce3dcb",
+          "test_tools.py": "49b7dbfd9d6b614cafc9229acba073ba1fa3776b6bf3a1ef0c47a95bee1c8c40",
+          "trace_graph.py": "a01f9e772c09c7d98ce96c068c8a33743b4b26635aea76197176adb5e2cd31b5",
+          "validate_loop.py": "1929c4479c3a56e6d0fc8600676c1e91c0b93776c86c698df816d45ec64bf9ee",
+          "_common.py": "4e61a28073030d48018f1deb5c18e003169aaf335144b8abfac421b0ba0e80f9"
+        },
+        "db_sha256": "907a1fcfa0e992426214c6011bd028e90ae308514dee6a5c26025c640496ba44",
+        "upstream_sha256": {
+          "requirements.json": "1925f8993d42dc6927b61cdb248b701962ae4c6ea93664744a0b6d759d943892",
+          "design_choices.json": "a8c36562abf4049293ec03c978848a6cb892516aaf7474cd99233a9c0a493ad1",
+          "calc.json": "288c4731f274c7115a70fdeb3151a65cb995c926c939da70fa3822d862eeec70",
+          "selection.json": "2b5410fd139650b070691b0b5e356c588f8471c89f05d68d67c321d65f093f73",
+          "losses.json": "dfd779ac5ec174ac26b08e5169bf106ecbe5a2d12dbead178b498183f3232bd9",
+          "loop.json": "4976390f1c2f215ab9fb987fa19d995b3549a05bece60ce89b91b920d9d14a07",
+          "loop_validation.json": "ad0d93021b3a89cc0a3c774bedb392cfb4421ed6b4d2202af21b0b713446a672"
+        },
+        "commands": [
+          {
+            "script": "sim_switching.py",
+            "returncode": 0
+          },
+          {
+            "script": "check_design.py",
+            "returncode": 3
+          },
+          {
+            "script": "ledger.py",
+            "returncode": 0
+          }
+        ],
+        "handoff_generated": false
+      },
+      "commands": [
+        "python A/.agents/skills/boost-system-design/scripts/sim_switching.py A/outputs/test_ocp_full_r6",
+        "python A/.agents/skills/boost-system-design/scripts/check_design.py A/outputs/test_ocp_full_r6",
+        "python A/.agents/skills/boost-system-design/scripts/ledger.py A/outputs/test_ocp_full_r6"
+      ],
+      "simulation": {
+        "case_count": 58,
+        "verdict_counts": {
+          "PASS": 54,
+          "WARN": 4
+        },
+        "ocp_passed": 12,
+        "ocp_total": 12,
+        "reference_case_count": 4,
+        "reference_verdict_counts": {
+          "WARN": 4
+        },
+        "cross_validation": {
+          "duty": {
+            "simulated": 0.6288235294117668,
+            "reference": 0.6288,
+            "error_pct": 0.0037419547975092726,
+            "limit_pct": 2,
+            "passed": true
+          },
+          "il_avg": {
+            "simulated": 1.3466086399553199,
+            "reference": 1.347,
+            "error_pct": 0.029054197823319416,
+            "limit_pct": 2,
+            "passed": true
+          },
+          "ripple_mv": {
+            "simulated": 53.97193731185368,
+            "reference": 54.76,
+            "error_pct": 1.439121052129877,
+            "limit_pct": 20,
+            "passed": true
+          },
+          "worst_ripple_mv": {
+            "simulated": 91.4161725654914,
+            "reference": 92.72,
+            "error_pct": 1.4061986998582854,
+            "limit_pct": 20,
+            "passed": true
+          }
+        },
+        "elapsed_s": 770.16,
+        "non_pass_cases": [
+          {
+            "name": "S-plugin",
+            "vin_case": "min",
+            "variant": "nominal",
+            "verdict": "WARN",
+            "checks": {}
+          },
+          {
+            "name": "S-plugin",
+            "vin_case": "nom",
+            "variant": "nominal",
+            "verdict": "WARN",
+            "checks": {}
+          },
+          {
+            "name": "S-plugin",
+            "vin_case": "max",
+            "variant": "nominal",
+            "verdict": "WARN",
+            "checks": {}
+          },
+          {
+            "name": "S-plugin",
+            "vin_case": "max",
+            "variant": "tol_10",
+            "verdict": "WARN",
+            "checks": {}
+          }
+        ]
+      },
+      "non_ocp_comparison": {
+        "source": "A/outputs/test_agent_r6/sim.json",
+        "case_count": 46,
+        "fields": [
+          "metrics",
+          "checks",
+          "verdict",
+          "profile"
+        ],
+        "changed_cases": []
+      },
+      "sdrc": {
+        "summary": {
+          "PASS": 85,
+          "WARN": 8,
+          "FAIL": 0,
+          "NOT_ASSESSED": 2,
+          "N/A": 1
+        },
+        "status": "needs_rework",
+        "blockers": [
+          {
+            "id": "SR70",
+            "rule": "LDO 压差余量 ≥ 200 mV @Vin,min",
+            "verdict": "NOT_ASSESSED",
+            "detail": "缺少 LDO dropout.max 或输入路径电阻 max；dropout.typ=120.0 mV，典型值不构成保证；LDO 接保护后 VIN，不能直接用端子 Vin,min 判 PASS",
+            "ref": "PWR-AUX",
+            "title": "Post-protection LDO margin is at least 200 mV using maximum dropout",
+            "layer": "rating",
+            "severity": "major",
+            "rationale": "Use the modeled post-fuse/PMOS bus at minimum input and corner input-current envelope. Typical dropout and nominal resistance cannot establish a maximum-limit margin; temperature and wiring remain model assumptions.",
+            "source": "ME6211C33 V22 mirror PDF p9 (typ only, max blank); parts_db.json dropout_mv.max and PMOS/fuse resistance.max; design_rules.md §9.1; sdrc_audit.md",
+            "verify": "automatic",
+            "applies_when": "LDO selected",
+            "closure_if_fail": "Obtain applicable maximum dropout and input-path resistance with current/temperature conditions; rerun S7/S8. If the resulting margin fails, revise the auxiliary supply. Do not substitute typical values."
+          },
+          {
+            "id": "SR71",
+            "rule": "驱动器最低供电 > max(UVLO 开启最大值, 保证工作下限) + 0.1 V",
+            "verdict": "NOT_ASSESSED",
+            "detail": "缺少 UVLO.max、工作下限 min 或 PMOS/保险丝电阻 max；现有模型估算 4.611 V 不构成最坏供电保证",
+            "ref": "PWR-AUX",
+            "title": "Gate-driver supply exceeds UVLO and operating minimum",
+            "layer": "rating",
+            "severity": "major",
+            "rationale": "The modeled post-protection supply must exceed max(UVLO-on maximum, operating minimum) by 0.1 V using maximum input-path resistance and the corner input-current envelope. Nominal fuse resistance cannot close this check.",
+            "source": "TI LM5114 SNVS790F p5 (UVLO-on max 4 V, operating min 4 V); AOS AO3401A Rev3.1 p2 (Rds max at -4.5 V); parts_db.json fuse.r_mohm.max; sdrc_audit.md",
+            "verify": "automatic",
+            "applies_when": "gate driver selected",
+            "closure_if_fail": "Obtain maximum PMOS/fuse resistance and applicable driver limits; rerun S7/S8. Review temperature, transient current and wiring separately; revise supply path if the margin fails."
+          }
+        ]
+      },
+      "ledger_coverage": {
+        "traced": 80,
+        "total": 80
+      },
+      "result_sha256": {
+        "sim.json": "b3bb869bee060cd585fc4ffcada4bb2d5f522bdbfd87b77e6d387e0901a95264",
+        "check.json": "c768b17f3fd2e5599b970975e3b2de19aec983a128e128db76d3907cb50d1434",
+        "ledger.json": "62da99cc714ed140206ebf2fa83125e8b48d35ea76ca17795cbd633e28a3a330",
+        "validation_provenance.json": "2b7b9ff73babc13088ddf893b6756bd4e1f398075495346a55b162a60e022346"
+      },
+      "handoff_generated": false
+    },
+    {
+      "id": "easy03",
+      "workdir": "A/outputs/test_ocp_full_easy03",
+      "revision": "eval-easy03",
+      "specification": {
+        "vin_nom_v": 5.5,
+        "vout_v": 9,
+        "iout_a": 0.5
+      },
+      "provenance": {
+        "upstream_source": "A\\outputs\\test_agent_easy03",
+        "reused_upstream": [
+          "requirements.json",
+          "design_choices.json",
+          "calc.json",
+          "selection.json",
+          "losses.json",
+          "loop.json",
+          "loop_validation.json"
+        ],
+        "recomputed": [
+          "switching_simulation",
+          "check",
+          "ledger"
+        ],
+        "source_sha256": {
+          "boost_model.py": "2e2529b4c0bf0053f599273bdaf905ef24193a6e29aa9ca505cc67b690b6baf4",
+          "calc_boost.py": "431e7b4aaa74010724e8ede37c3128a53dbcae9c6b64ec60c6eeb2c9bb78320c",
+          "check_consistency.py": "820eeaa7138a1b6c7029864d6ec230d5e6ba064f019ddb27c2451f74b1bd5e6e",
+          "check_design.py": "2206c56882182aa8ab6242f9bc94df0c47f0ce4f1efdc1e7a75f6ac7e6453cb8",
+          "draw_figures.py": "9bc43cbaa2cdd598156765c30ef6b490a13abedae015a0cdcb1d332ebf92f9af",
+          "export_handoff.py": "1ecf31b4036dc1077e19fd0789779ce431953fa6dc35f7485ca254bc33e3fa6b",
+          "handoff_contract.py": "220aa631e76ae7cb841f843442d4dc17dd7541040353cb002b4027c911e4ea0b",
+          "handoff_header.py": "afc5cd9095ec0b1b6ce104698d51799a3b9bce52bb65515b45b1570cd31921da",
+          "ledger.py": "ebcc30826e2c7d9f0d736f5f772f9f2723665b844b031049f3dfa2d08b7b57b1",
+          "loop_design.py": "182def8a5af0bab327c0786611d550b3ab33dd94e6edbc637dc796347ebbd322",
+          "loss_model.py": "9ca9e7ce75a348ce448814775ec9e48ab54f328a06f36b9a668bb55acd9e1ec3",
+          "loss_thermal.py": "8e249e5af85517cb070656b82c2b2365d56a94c803a7d49c0ca20c0df90a7e61",
+          "render_report.py": "61a0ff77b7426e8c2d35247c42ed1004b7e0c9482e1f373a1e70190064e50957",
+          "run_all.py": "49b2a3f9ace12b7cd766439c17d4b38fed2d68ea3a51eae3ee6556a0edb1acdf",
+          "select_parts.py": "5f091c0d3634262d1eb86dcebb9e6ed02645e51b7a46c473e38764169b9a1863",
+          "sim_control.py": "657fc09b95a2b2503172664bd15206589f09685e23034e77c21425810e442037",
+          "sim_scenarios.py": "dcb1657d1de845b1feaae0d3773dfd5d307ff6013cefb5df6ffe92054e29d4b1",
+          "sim_switching.py": "f4a82b74af15b181d74b5075c8c207fc8c70a790cafb09adeb33d3f142408e65",
+          "stage_params.py": "345228d4c1a22242bd0a001c8fcbc90ff85e47591e3ece9780ba40ac3ed4c48c",
+          "svgplot.py": "a6086395c574cabc202eb52ef7c85c267503403ebe97372afefb2af12be46098",
+          "test_agent_boundaries.py": "7d5e94213e61ab9ec45f75cdf7f9ec9333caa53223f12c284e1839c916fae72d",
+          "test_consistency.py": "441544e4f3d850133997c167ff4a4d45440f5fb26726ae76ccede68d97f8abfb",
+          "test_ledger.py": "74546d4e7df8f32431bb14f01cad4fd0877ea24dfc8a03dc84ec593086dc64cd",
+          "test_sdrc.py": "58f973acdce2009c066b811759ab616b981af3c52c70a08af6a3f7f3a63ca541",
+          "test_sim_switching.py": "69ed9e01c74d282a2167f5188e25506cf6c045ff68f5c289970dc474cfce3dcb",
+          "test_tools.py": "49b7dbfd9d6b614cafc9229acba073ba1fa3776b6bf3a1ef0c47a95bee1c8c40",
+          "trace_graph.py": "a01f9e772c09c7d98ce96c068c8a33743b4b26635aea76197176adb5e2cd31b5",
+          "validate_loop.py": "1929c4479c3a56e6d0fc8600676c1e91c0b93776c86c698df816d45ec64bf9ee",
+          "_common.py": "4e61a28073030d48018f1deb5c18e003169aaf335144b8abfac421b0ba0e80f9"
+        },
+        "db_sha256": "907a1fcfa0e992426214c6011bd028e90ae308514dee6a5c26025c640496ba44",
+        "upstream_sha256": {
+          "requirements.json": "186c90aef6bd97ba2cc29e372bb8f82979dea380cb41847182bb953ea704141a",
+          "design_choices.json": "6d284e080ccb63c8fdf632aad02fc2948e93ad2d19ea82e396c7ccf2bea8996b",
+          "calc.json": "b9619f93b5e77f7ed8dea9d092880030656cb2a637c204471dea044991fb8bd5",
+          "selection.json": "33c6e35fca98bdf0d6d8d6ae75fe49f12f720ff2282d8836c1b5b34a2c831fa3",
+          "losses.json": "e3e5ba7930b7536e27ea2cd469bc522f45ffdb657821437fcc6935400df5e064",
+          "loop.json": "1597e69f3fe86076aa1407caf1bab04d5be9529efe3ca05619484c0fada5f3a3",
+          "loop_validation.json": "695e8ee9f45936f35b6e30269a4d52c5278866698203047f2f3883dbeed561e1"
+        },
+        "commands": [
+          {
+            "script": "sim_switching.py",
+            "returncode": 0
+          },
+          {
+            "script": "check_design.py",
+            "returncode": 3
+          },
+          {
+            "script": "ledger.py",
+            "returncode": 0
+          }
+        ],
+        "handoff_generated": false
+      },
+      "commands": [
+        "python A/.agents/skills/boost-system-design/scripts/sim_switching.py A/outputs/test_ocp_full_easy03",
+        "python A/.agents/skills/boost-system-design/scripts/check_design.py A/outputs/test_ocp_full_easy03",
+        "python A/.agents/skills/boost-system-design/scripts/ledger.py A/outputs/test_ocp_full_easy03"
+      ],
+      "simulation": {
+        "case_count": 81,
+        "verdict_counts": {
+          "PASS": 81
+        },
+        "ocp_passed": 12,
+        "ocp_total": 12,
+        "reference_case_count": 8,
+        "reference_verdict_counts": {
+          "WARN": 8
+        },
+        "cross_validation": {
+          "duty": {
+            "simulated": 0.451764705882352,
+            "reference": 0.4518,
+            "error_pct": 0.00781188969631863,
+            "limit_pct": 2,
+            "passed": true
+          },
+          "il_avg": {
+            "simulated": 0.9117267633083369,
+            "reference": 0.9121,
+            "error_pct": 0.040920588933568425,
+            "limit_pct": 2,
+            "passed": true
+          },
+          "ripple_mv": {
+            "simulated": 38.2191602182651,
+            "reference": 38.78,
+            "error_pct": 1.4462088234525439,
+            "limit_pct": 20,
+            "passed": true
+          },
+          "worst_ripple_mv": {
+            "simulated": 64.78963553905004,
+            "reference": 65.52,
+            "error_pct": 1.1147198732447405,
+            "limit_pct": 20,
+            "passed": true
+          }
+        },
+        "elapsed_s": 1005.18,
+        "non_pass_cases": []
+      },
+      "non_ocp_comparison": {
+        "source": "A/outputs/test_agent_easy03/sim.json",
+        "case_count": 73,
+        "fields": [
+          "metrics",
+          "checks",
+          "verdict",
+          "profile"
+        ],
+        "changed_cases": []
+      },
+      "sdrc": {
+        "summary": {
+          "PASS": 87,
+          "WARN": 7,
+          "FAIL": 0,
+          "NOT_ASSESSED": 2,
+          "N/A": 0
+        },
+        "status": "needs_rework",
+        "blockers": [
+          {
+            "id": "SR70",
+            "rule": "LDO 压差余量 ≥ 200 mV @Vin,min",
+            "verdict": "NOT_ASSESSED",
+            "detail": "缺少 LDO dropout.max 或输入路径电阻 max；dropout.typ=250.0 mV，典型值不构成保证；LDO 接保护后 VIN，不能直接用端子 Vin,min 判 PASS",
+            "ref": "PWR-AUX",
+            "title": "Post-protection LDO margin is at least 200 mV using maximum dropout",
+            "layer": "rating",
+            "severity": "major",
+            "rationale": "Use the modeled post-fuse/PMOS bus at minimum input and corner input-current envelope. Typical dropout and nominal resistance cannot establish a maximum-limit margin; temperature and wiring remain model assumptions.",
+            "source": "ME6211C33 V22 mirror PDF p9 (typ only, max blank); parts_db.json dropout_mv.max and PMOS/fuse resistance.max; design_rules.md §9.1; sdrc_audit.md",
+            "verify": "automatic",
+            "applies_when": "LDO selected",
+            "closure_if_fail": "Obtain applicable maximum dropout and input-path resistance with current/temperature conditions; rerun S7/S8. If the resulting margin fails, revise the auxiliary supply. Do not substitute typical values."
+          },
+          {
+            "id": "SR71",
+            "rule": "驱动器最低供电 > max(UVLO 开启最大值, 保证工作下限) + 0.1 V",
+            "verdict": "NOT_ASSESSED",
+            "detail": "缺少 UVLO.max、工作下限 min 或 PMOS/保险丝电阻 max；现有模型估算 5.131 V 不构成最坏供电保证",
+            "ref": "PWR-AUX",
+            "title": "Gate-driver supply exceeds UVLO and operating minimum",
+            "layer": "rating",
+            "severity": "major",
+            "rationale": "The modeled post-protection supply must exceed max(UVLO-on maximum, operating minimum) by 0.1 V using maximum input-path resistance and the corner input-current envelope. Nominal fuse resistance cannot close this check.",
+            "source": "TI LM5114 SNVS790F p5 (UVLO-on max 4 V, operating min 4 V); AOS AO3401A Rev3.1 p2 (Rds max at -4.5 V); parts_db.json fuse.r_mohm.max; sdrc_audit.md",
+            "verify": "automatic",
+            "applies_when": "gate driver selected",
+            "closure_if_fail": "Obtain maximum PMOS/fuse resistance and applicable driver limits; rerun S7/S8. Review temperature, transient current and wiring separately; revise supply path if the margin fails."
+          }
+        ]
+      },
+      "ledger_coverage": {
+        "traced": 80,
+        "total": 80
+      },
+      "result_sha256": {
+        "sim.json": "f88e05da5a49a4f79602216f91e9853ca391a999dee014dc5e5458c72ed00dd7",
+        "check.json": "a5307dbaff07acf9bea4f4999a6addb3bc2ae40854664150f824df2458fc0efa",
+        "ledger.json": "985f31c9f5045122a401f511d02474c38bd1cda4c2ca3dcfb088e4006f7af539",
+        "validation_provenance.json": "c73fd42ac5a74813acf0ef316601b04f538e0b21aa7ae5de6139f2ceb3826fdf"
+      },
+      "handoff_generated": false
+    }
+  ],
+  "remaining": [
+    "T4: SR70/SR71 guaranteed supply evidence is still missing; both designs remain needs_rework.",
+    "T2: unified answer extraction/scoring and 144 real C0-C3 model answers/ablation statistics remain incomplete.",
+    "Two Boost specifications do not establish support for every specification or other circuit topologies."
+  ]
+}

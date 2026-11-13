@@ -28,6 +28,10 @@ python A/eval/run_eval.py --output A/outputs/eval_preflight_new
 
 `end_to_end_summary.json` 另记录 r6 与 easy03 的完整工具复跑。两组均被门禁拦截并保留 80/80 步账本；easy03 的 6 个过流失败暴露固定负载比例/固定预期在新规格下的适用性问题，不能直接归因于控制器误触发。详见 [完整验证与失败定位](../docs/A-agent-validation.md)。这些仍是确定性工具记录，不是完整智能体模型评测。
 
+2026-11-13 已修复 T1 的过流激励适配，原失败快照不覆盖。新激励依据 CC 可控下限和软/硬阈值生成；旧固定比例负载仅作为故障对照保留。局部复测写 `sim_subset.json`，不得替代完整 `sim.json` 或模型对照评测。
+
+修复后的 [ocp_adaptation_summary.json](ocp_adaptation_summary.json) 保存两组完整仿真、SDRC 和账本复测证据；复用的 7 份上游设计 JSON 与此次实际重跑阶段分别列出。r6 有效工况 54 PASS / 4 WARN / 0 FAIL，easy03 为 81 PASS / 0 FAIL，另分别保留 4/8 个 WARN 故障对照；两组过流均 12/12、交叉验证均 4/4 通过。非过流的 46/73 项数值、判据、判定和激励轨迹与旧结果一致。两组 SDRC 均因 SR70/SR71 缺保证值而退出 3，未生成交接文件；这仍不是模型消融数据。
+
 ## 尚未完成的 T2 内容
 
 这只是任务书 T2 的评测输入与工具回归基础，**T2 整体未验收**：
