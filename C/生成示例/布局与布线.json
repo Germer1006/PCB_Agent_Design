@@ -1,0 +1,1271 @@
+{
+  "source": "C:\\Users\\15839\\Documents\\Codex\\2026-11-02\\de\\outputs\\KiCad_自动设计助手\\demo\\Boost练习.kicad_sch",
+  "board_dimensions_mm": [
+    38,
+    30
+  ],
+  "component_count": 9,
+  "routable_net_count": 5,
+  "strategy": {
+    "mode": "strategy_file",
+    "notes": "读取策略文件 布局策略.json。",
+    "ordered_nets": [
+      "/SW",
+      "/FB",
+      "/VOUT",
+      "/GND",
+      "/VIN"
+    ],
+    "layout_pairs": [
+      [
+        [
+          "U1",
+          "1"
+        ],
+        [
+          "D1",
+          "2"
+        ],
+        1.3
+      ],
+      [
+        [
+          "L1",
+          "2"
+        ],
+        [
+          "U1",
+          "1"
+        ],
+        1.3
+      ],
+      [
+        [
+          "D1",
+          "1"
+        ],
+        [
+          "C2",
+          "1"
+        ],
+        1.3
+      ],
+      [
+        [
+          "C2",
+          "2"
+        ],
+        [
+          "U1",
+          "2"
+        ],
+        1.3
+      ],
+      [
+        [
+          "U1",
+          "3"
+        ],
+        [
+          "R2",
+          "1"
+        ],
+        1.3
+      ],
+      [
+        [
+          "C1",
+          "1"
+        ],
+        [
+          "U1",
+          "5"
+        ],
+        1.3
+      ]
+    ]
+  },
+  "detected_roles": {
+    "FB": "/FB",
+    "GND": "/GND",
+    "SW": "/SW",
+    "VIN": "/VIN",
+    "VOUT": "/VOUT"
+  },
+  "widths_mm": {
+    "/FB": 0.25,
+    "/GND": 0.45,
+    "/SW": 0.45,
+    "/VIN": 0.45,
+    "/VOUT": 0.45,
+    "unconnected-(U1-NC-Pad6)": 0.25
+  },
+  "route_clearance_mm": 0.2,
+  "placement": {
+    "U1": {
+      "x": 19,
+      "y": 15,
+      "angle": 0
+    },
+    "L1": {
+      "x": 12.5,
+      "y": 14.5,
+      "angle": 90
+    },
+    "D1": {
+      "x": 21.0,
+      "y": 10.0,
+      "angle": 180
+    },
+    "R1": {
+      "x": 23.0,
+      "y": 15.0,
+      "angle": 270
+    },
+    "R2": {
+      "x": 19.5,
+      "y": 19.5,
+      "angle": 270
+    },
+    "J2": {
+      "x": 27.0,
+      "y": 15.0,
+      "angle": 0
+    },
+    "C2": {
+      "x": 27.0,
+      "y": 10.0,
+      "angle": 270
+    },
+    "J1": {
+      "x": 13.0,
+      "y": 21.0,
+      "angle": 90
+    },
+    "C1": {
+      "x": 23.0,
+      "y": 20.0,
+      "angle": 270
+    }
+  },
+  "route": {
+    "segments": [
+      {
+        "net": "/SW",
+        "layer": 0,
+        "start": [
+          17.8625,
+          14.05
+        ],
+        "end": [
+          17.9,
+          14.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/SW",
+        "layer": 0,
+        "start": [
+          19.0,
+          10.0
+        ],
+        "end": [
+          17.9,
+          11.1
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/SW",
+        "layer": 0,
+        "start": [
+          17.9,
+          11.1
+        ],
+        "end": [
+          17.9,
+          14.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/SW",
+        "layer": 0,
+        "start": [
+          12.5,
+          11.75
+        ],
+        "end": [
+          12.5,
+          11.7
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/SW",
+        "layer": 0,
+        "start": [
+          12.5,
+          11.7
+        ],
+        "end": [
+          17.9,
+          11.7
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/FB",
+        "layer": 0,
+        "start": [
+          17.8625,
+          15.95
+        ],
+        "end": [
+          17.9,
+          15.9
+        ],
+        "width": 0.25
+      },
+      {
+        "net": "/FB",
+        "layer": 0,
+        "start": [
+          19.5,
+          18.5875
+        ],
+        "end": [
+          19.5,
+          18.6
+        ],
+        "width": 0.25
+      },
+      {
+        "net": "/FB",
+        "layer": 0,
+        "start": [
+          19.5,
+          18.6
+        ],
+        "end": [
+          17.9,
+          17.0
+        ],
+        "width": 0.25
+      },
+      {
+        "net": "/FB",
+        "layer": 0,
+        "start": [
+          17.9,
+          17.0
+        ],
+        "end": [
+          17.9,
+          15.9
+        ],
+        "width": 0.25
+      },
+      {
+        "net": "/FB",
+        "layer": 0,
+        "start": [
+          23.0,
+          15.9125
+        ],
+        "end": [
+          23.0,
+          15.9
+        ],
+        "width": 0.25
+      },
+      {
+        "net": "/FB",
+        "layer": 0,
+        "start": [
+          23.0,
+          15.9
+        ],
+        "end": [
+          22.7,
+          15.9
+        ],
+        "width": 0.25
+      },
+      {
+        "net": "/FB",
+        "layer": 0,
+        "start": [
+          22.7,
+          15.9
+        ],
+        "end": [
+          22.4,
+          16.2
+        ],
+        "width": 0.25
+      },
+      {
+        "net": "/FB",
+        "layer": 0,
+        "start": [
+          22.4,
+          16.2
+        ],
+        "end": [
+          21.9,
+          16.2
+        ],
+        "width": 0.25
+      },
+      {
+        "net": "/FB",
+        "layer": 0,
+        "start": [
+          21.9,
+          16.2
+        ],
+        "end": [
+          19.5,
+          18.6
+        ],
+        "width": 0.25
+      },
+      {
+        "net": "/VOUT",
+        "layer": 0,
+        "start": [
+          23.0,
+          14.0875
+        ],
+        "end": [
+          23.0,
+          14.1
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VOUT",
+        "layer": 0,
+        "start": [
+          23.0,
+          10.0
+        ],
+        "end": [
+          23.0,
+          14.1
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VOUT",
+        "layer": 0,
+        "start": [
+          27.0,
+          15.0
+        ],
+        "end": [
+          26.1,
+          14.1
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VOUT",
+        "layer": 0,
+        "start": [
+          26.1,
+          14.1
+        ],
+        "end": [
+          23.0,
+          14.1
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VOUT",
+        "layer": 0,
+        "start": [
+          27.0,
+          8.525
+        ],
+        "end": [
+          27.0,
+          8.5
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VOUT",
+        "layer": 0,
+        "start": [
+          27.0,
+          8.5
+        ],
+        "end": [
+          26.4,
+          9.1
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VOUT",
+        "layer": 0,
+        "start": [
+          26.4,
+          9.1
+        ],
+        "end": [
+          24.0,
+          9.1
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VOUT",
+        "layer": 0,
+        "start": [
+          24.0,
+          9.1
+        ],
+        "end": [
+          23.1,
+          10.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VOUT",
+        "layer": 0,
+        "start": [
+          23.1,
+          10.0
+        ],
+        "end": [
+          23.0,
+          10.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          17.8625,
+          15.0
+        ],
+        "end": [
+          17.9,
+          15.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          19.5,
+          20.4125
+        ],
+        "end": [
+          19.5,
+          20.4
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          19.5,
+          20.4
+        ],
+        "end": [
+          18.7,
+          19.6
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          18.7,
+          19.6
+        ],
+        "end": [
+          18.5,
+          19.6
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          18.5,
+          19.6
+        ],
+        "end": [
+          17.9,
+          19.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          17.9,
+          19.0
+        ],
+        "end": [
+          17.9,
+          17.9
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          17.9,
+          17.9
+        ],
+        "end": [
+          17.3,
+          17.3
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          17.3,
+          17.3
+        ],
+        "end": [
+          17.3,
+          17.2
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          17.3,
+          17.2
+        ],
+        "end": [
+          17.2,
+          17.1
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          17.2,
+          17.1
+        ],
+        "end": [
+          17.2,
+          17.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          17.2,
+          17.0
+        ],
+        "end": [
+          16.7,
+          16.5
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          16.7,
+          16.5
+        ],
+        "end": [
+          16.7,
+          16.3
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          16.7,
+          16.3
+        ],
+        "end": [
+          16.6,
+          16.2
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          16.6,
+          16.2
+        ],
+        "end": [
+          16.6,
+          15.7
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          16.6,
+          15.7
+        ],
+        "end": [
+          16.7,
+          15.6
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          16.7,
+          15.6
+        ],
+        "end": [
+          16.7,
+          15.4
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          16.7,
+          15.4
+        ],
+        "end": [
+          17.1,
+          15.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          17.1,
+          15.0
+        ],
+        "end": [
+          17.9,
+          15.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          15.54,
+          21.0
+        ],
+        "end": [
+          15.5,
+          21.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 1,
+        "start": [
+          15.54,
+          21.0
+        ],
+        "end": [
+          15.5,
+          21.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          15.5,
+          21.0
+        ],
+        "end": [
+          16.1,
+          20.4
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          16.1,
+          20.4
+        ],
+        "end": [
+          16.5,
+          20.4
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          16.5,
+          20.4
+        ],
+        "end": [
+          17.9,
+          19.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          23.0,
+          21.475
+        ],
+        "end": [
+          23.0,
+          21.5
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          23.0,
+          21.5
+        ],
+        "end": [
+          22.5,
+          21.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          22.5,
+          21.0
+        ],
+        "end": [
+          20.1,
+          21.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          20.1,
+          21.0
+        ],
+        "end": [
+          19.5,
+          20.4
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          27.0,
+          17.54
+        ],
+        "end": [
+          27.0,
+          17.5
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 1,
+        "start": [
+          27.0,
+          17.54
+        ],
+        "end": [
+          27.0,
+          17.5
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          27.0,
+          17.5
+        ],
+        "end": [
+          23.0,
+          21.5
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          27.0,
+          11.475
+        ],
+        "end": [
+          27.0,
+          11.5
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          27.0,
+          11.5
+        ],
+        "end": [
+          27.0,
+          11.8
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          27.0,
+          11.8
+        ],
+        "end": [
+          27.3,
+          12.1
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          27.3,
+          12.1
+        ],
+        "end": [
+          27.3,
+          12.8
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          27.3,
+          12.8
+        ],
+        "end": [
+          28.3,
+          13.8
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          28.3,
+          13.8
+        ],
+        "end": [
+          28.3,
+          13.9
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          28.3,
+          13.9
+        ],
+        "end": [
+          28.4,
+          14.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          28.4,
+          14.0
+        ],
+        "end": [
+          28.4,
+          16.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          28.4,
+          16.0
+        ],
+        "end": [
+          28.3,
+          16.1
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          28.3,
+          16.1
+        ],
+        "end": [
+          28.3,
+          16.2
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/GND",
+        "layer": 0,
+        "start": [
+          28.3,
+          16.2
+        ],
+        "end": [
+          27.0,
+          17.5
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 0,
+        "start": [
+          20.1375,
+          15.95
+        ],
+        "end": [
+          20.1,
+          15.9
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 0,
+        "start": [
+          20.1375,
+          15.0
+        ],
+        "end": [
+          20.1,
+          15.0
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 0,
+        "start": [
+          20.1,
+          15.0
+        ],
+        "end": [
+          20.1,
+          15.9
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 0,
+        "start": [
+          23.0,
+          18.525
+        ],
+        "end": [
+          23.0,
+          18.5
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 0,
+        "start": [
+          23.0,
+          18.5
+        ],
+        "end": [
+          22.2,
+          17.7
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 0,
+        "start": [
+          22.2,
+          17.7
+        ],
+        "end": [
+          21.4,
+          17.7
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 1,
+        "start": [
+          21.4,
+          17.7
+        ],
+        "end": [
+          20.4,
+          16.7
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 0,
+        "start": [
+          20.4,
+          16.7
+        ],
+        "end": [
+          20.1,
+          16.4
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 0,
+        "start": [
+          20.1,
+          16.4
+        ],
+        "end": [
+          20.1,
+          15.9
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 0,
+        "start": [
+          12.5,
+          17.25
+        ],
+        "end": [
+          12.5,
+          17.2
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 0,
+        "start": [
+          12.5,
+          17.2
+        ],
+        "end": [
+          16.3,
+          17.2
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 1,
+        "start": [
+          16.3,
+          17.2
+        ],
+        "end": [
+          16.6,
+          17.2
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 1,
+        "start": [
+          16.6,
+          17.2
+        ],
+        "end": [
+          17.0,
+          16.8
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 1,
+        "start": [
+          17.0,
+          16.8
+        ],
+        "end": [
+          20.3,
+          16.8
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 1,
+        "start": [
+          20.3,
+          16.8
+        ],
+        "end": [
+          20.4,
+          16.7
+        ],
+        "width": 0.45
+      },
+      {
+        "net": "/VIN",
+        "layer": 0,
+        "start": [
+          13.0,
+          21.0
+        ],
+        "end": [
+          13.0,
+          17.2
+        ],
+        "width": 0.45
+      }
+    ],
+    "vias": [
+      {
+        "net": "/VIN",
+        "x": 21.4,
+        "y": 17.7,
+        "size": 0.65,
+        "drill": 0.3
+      },
+      {
+        "net": "/VIN",
+        "x": 20.4,
+        "y": 16.7,
+        "size": 0.65,
+        "drill": 0.3
+      },
+      {
+        "net": "/VIN",
+        "x": 16.3,
+        "y": 17.2,
+        "size": 0.65,
+        "drill": 0.3
+      }
+    ],
+    "unrouted": []
+  },
+  "attempts": [
+    {
+      "candidate": 1,
+      "router_unrouted": [],
+      "drc_unconnected": 0,
+      "drc_errors": 0,
+      "drc_warnings": 0,
+      "drc_status": "passed"
+    }
+  ],
+  "drc": {
+    "status": "passed",
+    "violations": 0,
+    "unconnected": 0,
+    "errors": 0,
+    "warnings": 0,
+    "excluded": 0,
+    "schematic_parity": 0,
+    "schematic_parity_requested": true,
+    "refill_zones": false,
+    "report": "C:\\Users\\15839\\Documents\\Codex\\2026-11-02\\de\\work\\autopcb_root\\final_demo\\PCB-20261114-104444-wuma5frf\\DRC.json",
+    "returncode": 0,
+    "types": {},
+    "ignored_checks": [
+      {
+        "description": "Footprint has no courtyard defined",
+        "key": "missing_courtyard"
+      },
+      {
+        "description": "Track endpoint not centered on via",
+        "key": "track_not_centered_on_via"
+      },
+      {
+        "description": "Tuning profile track geometries",
+        "key": "tuning_profile_track_geometries"
+      },
+      {
+        "description": "Footprint doesn't match symbol's footprint filters",
+        "key": "footprint_filters_mismatch"
+      },
+      {
+        "description": "Footprint component type doesn't match footprint pads",
+        "key": "footprint_type_mismatch"
+      }
+    ],
+    "included_severities": [
+      "error",
+      "warning",
+      "exclusion"
+    ],
+    "kicad_version": "10.0.8"
+  }
+}
