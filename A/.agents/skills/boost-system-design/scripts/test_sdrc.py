@@ -40,6 +40,15 @@ def baseline(qualified_supply=False):
 
 
 class TestSdrc(unittest.TestCase):
+    def test_subset_simulation_cannot_be_used_as_full_gate_evidence(self):
+        args = list(baseline(qualified_supply=True))
+        args[7]["scope"] = "subset"
+        result = run(*args)
+        self.assertEqual(_exit_code(result), 2)
+        checks = {c["id"]: c for c in result["checks"]}
+        self.assertEqual(checks["SR79"]["verdict"], "FAIL")
+        self.assertEqual(checks["SR87"]["verdict"], "NOT_ASSESSED")
+
     def test_real_baseline_missing_supply_limits_blocks_readiness(self):
         result = run(*baseline())
         self.assertEqual(result["status"], "needs_rework")
