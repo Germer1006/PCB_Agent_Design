@@ -68,8 +68,11 @@ def _exit_code(res):
 
 def run(req, ch, calc, sel, loss, loop, db, sim=None):
     K = Checks()
-    if sim is not None and (sim.get("schema") != "boost-switching-sim/1" or sim.get("revision") != ch.get("revision")):
-        K.add("SR79", "T1 仿真报告对应本次设计版本", False, "sim.json 版本或格式不一致；重新运行 T1", ref="SIM")
+    if sim is not None and (sim.get("schema") != "boost-switching-sim/1"
+                            or sim.get("revision") != ch.get("revision")
+                            or sim.get("scope", "full") != "full"):
+        K.add("SR79", "T1 仿真报告对应本次设计版本", False,
+              "sim.json 版本、格式或完整矩阵范围不一致；重新运行完整 T1", ref="SIM")
         sim = None
     sim_cases = sim["cases"] if sim else []
     vo, io = calc["inputs"]["vout_v"], calc["inputs"]["iout_cc_a"]

@@ -18,10 +18,10 @@ import cmath
 import math
 from pathlib import Path
 
-from _common import KNOWLEDGE_DIR, load_json, r3, save_json, workdir_paths
+from _common import (CALC_CONSTANTS, KNOWLEDGE_DIR, Steps, constant_input, load_json, part_input,
+                     r3, save_json, source_input, step_input, workdir_paths)
 from boost_model import Boost, logspace, unwrap_deg
 from stage_params import build, variants, selected
-from _common import param
 from svgplot import bode_svg
 
 
@@ -30,12 +30,13 @@ def corners(calc):
     vo, io = calc["inputs"]["vout_v"], calc["inputs"]["iout_cc_a"]
     rl = vo / io
     cv, cc = [], []
+    half_load, light_load, low_cc, mid_cc, high_cc = CALC_CONSTANTS["loop_cv_loads"]
     for k in ("min", "nom", "max"):
-        for name, I0, Rac in (("满载 R=24Ω", 0.0, rl), ("半载 R=48Ω", 0.0, 2 * rl),
-                              ("轻载 R=100Ω", 0.0, 100.0),
-                              (f"电子负载 CC {0.2*io:g}A", 0.2*io, None),
-                              (f"电子负载 CC {0.5*io:g}A", 0.5*io, None),
-                              (f"电子负载 CC {0.9*io:g}A", 0.9*io, None),
+        for name, I0, Rac in (("满载 R=24Ω", 0.0, rl), ("半载 R=48Ω", 0.0, half_load * rl),
+                              ("轻载 R=100Ω", 0.0, light_load),
+                              (f"电子负载 CC {low_cc*io:g}A", low_cc*io, None),
+                              (f"电子负载 CC {mid_cc*io:g}A", mid_cc*io, None),
+                              (f"电子负载 CC {high_cc*io:g}A", high_cc*io, None),
                               (f"电子负载 CC {io:g}A（交界）", io, None)):
             cv.append({"vin_key": k, "vin": vin[k], "load": name.replace("24", f"{rl:.0f}").replace("48", f"{2*rl:.0f}"),
                        "vo": vo, "I0": I0, "Rac": Rac})
@@ -115,8 +116,8 @@ def design_mode(model, cs, mode, Tc, ffilt, pm_min, gm_min, freqs):
         return {'mode':mode,'ok':False,'corners':info,'excluded_corners':excluded}
     g0 = max(abs(g[0]) for g in plants)
     best = None
-    for kp_n in logspace(1e-3, 1.0, 31):
-        for ki_n in logspace(5, 2e4, 41):
+    for kp_n in logspace(*CALC_CONSTANTS["loop_kp_grid"]):
+        for ki_n in logspace(*CALC_CONSTANTS["loop_ki_grid"]):
             kp, ki = kp_n / g0, ki_n / g0
             res = []
             ok = True
@@ -164,17 +165,32 @@ def main():
     a = ap.parse_args()
     p = workdir_paths(a.workdir)
     calc, ch = load_json(p["calc"]), load_json(p["choices"])
-    model, minfo = build(load_json(p["selection"]), load_json(a.db), calc, ch)
+    selection, db = load_json(p["selection"]), load_json(a.db)
+    model, minfo = build(selection, db, calc, ch)
     ctl = ch["control"]
     Tc = 1 / ctl["f_ctrl_hz"]
     ffilt = calc["sensing"]["vout"]["filter_fc_hz"]
     lc = ch['losses']
-    csa,_ = selected(load_json(p['selection']),load_json(a.db),'csa')
+    csa,_ = selected(selection, db, 'csa')
+    bandwidth = part_input(csa, 'bandwidth_khz', ('typ','max'))
+    if bandwidth is None:
+        raise ValueError("电流采样放大器缺少带宽参数")
     current_poles = [1/(2*math.pi*lc['current_filter_r_ohm']*lc['current_filter_c_f']),
-                     param(csa,'bandwidth_khz',('typ','max'))*1000]
-    freqs = logspace(0.1, 0.98 * ctl["f_ctrl_hz"] / 2, 420)
+                     bandwidth["value"]*1000]
+    f_low, nyquist_fraction, bins = CALC_CONSTANTS["loop_frequency_grid"]
+    freqs = logspace(f_low, nyquist_fraction * ctl["f_ctrl_hz"] / 2, bins)
     cv_c, cc_c = corners(calc)
-    model_set=list(variants(load_json(p['selection']),load_json(a.db),calc,ch))
+    model_inputs = []
+    model_set=list(variants(selection, db, calc, ch, evidence=model_inputs))
+    ctrl_freq = source_input("choice", ch, "control.f_ctrl_hz")
+    search_inputs = [
+        *model_inputs, ctrl_freq,
+        *(source_input("choice", ch, "control." + key) for key in ("pm_min_deg", "gm_min_db")),
+        *(source_input("calc", calc, path) for path in
+          ("inputs.vin", "inputs.vout_v", "inputs.iout_cc_a", "inputs.fsw_hz", "sensing.iout.shunt_ohm")),
+        *(constant_input(k) for k in ("loop_frequency_grid", "loop_kp_grid", "loop_ki_grid")),
+    ]
+    S = Steps()
     def expanded(cs):
         return [{**c,'variant':name,'factors':mi['factors'],'_model':m,
                  '_shunt':calc['sensing']['iout']['shunt_ohm'],'_fsw':calc['inputs']['fsw_hz']} for name,m,mi in model_set for c in cs]
@@ -189,6 +205,22 @@ def main():
         r = design_mode(model, expanded(cs), mode, Tc, poles, ctl["pm_min_deg"], ctl["gm_min_db"], freqs)
         plants = r.pop("_plants", None)
         out[mode] = r
+        if "Kp" in r:
+            if mode == "CV":
+                mode_inputs = [source_input("calc", calc, "sensing.vout.filter_fc_hz"),
+                               constant_input("loop_cv_loads")]
+            else:
+                mode_inputs = [
+                    bandwidth, source_input("calc", calc, "cc_range.r_min_ohm"),
+                    source_input("choice", ch, "losses.current_filter_r_ohm"),
+                    source_input("choice", ch, "losses.current_filter_c_f"),
+                ]
+            unit = "V" if mode == "CV" else "A"
+            for field, key, coeff_unit in (("Kp", "KP", f"1/{unit}"), ("Ki", "KI", f"1/({unit}·s)")):
+                S.add(f"{mode}_{key}", f"{mode} {field} 初值", "工况角网格搜索，最大化最差角穿越频率",
+                      "", r[field], coeff_unit, "结果供仿真与联调复核", inputs=[*search_inputs, *mode_inputs])
+            S.add(f"{mode}_KI_TS", f"{mode} 每拍积分增益", "Ki/fctrl", "", r["Ki_Tc"], f"1/{unit}",
+                  inputs=[step_input("Ki", r["Ki"], f"step:{mode}_KI"), ctrl_freq])
         if r["ok"]:
             worst = min(range(len(plants)), key=lambda i: r["corners"][i]["PM_deg"])
             plots[mode] = (bode_rows(freqs, plants[worst], r["Kp"], r["Ki"], Tc, poles), r["corners"][worst])
@@ -198,6 +230,7 @@ def main():
                 f"{f:.4g},{a1:.3f},{b1:.2f},{c1:.3f},{d1:.2f}" for f, a1, b1, c1, d1 in plots[mode][0]), encoding="utf-8")
         print(f"{mode}: " + (f"Kp={r['Kp']}, Ki={r['Ki']} → 最差角 fc={r['fc_min_Hz']} Hz, "
                              f"PM≥{min(c['PM_deg'] for c in r['corners'] if 'PM_deg' in c)}°" if r["ok"] else "未找到满足裕度的 PI"))
+    out["steps"] = S.items
     save_json(p["loop"], out)
     if plots:
         series = [{"label": f"{m} 环路 (Vin_{c['vin_key']}, {c['load']})", "f": [x[0] for x in rows],

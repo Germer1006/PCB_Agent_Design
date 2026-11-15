@@ -12,6 +12,27 @@ TEMPLATE_DIR = SKILL_DIR / "templates"
 E24 = [1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0,
        3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1]
 E6 = [1.0, 1.5, 2.2, 3.3, 4.7, 6.8]
+CALC_CONSTANTS = {
+    "percent_divisor": 100, "uh_per_h": 1e6, "milli_per_unit": 1e3,
+    "default_inductor_rounding": 0.0, "half_cycle": 2, "triangle_rms_divisor": 12,
+    "input_ripple_divisor": 8, "uart_bits_per_byte": 10, "aux_rail_v": 3.3,
+    "e24": E24, "e6": E6, "pi": math.pi,
+    "ceramic_esr_ohm": 0.005, "default_hot_factor": 1.3,
+    "default_inductor_dcr_mohm": 100, "default_mosfet_rds_mohm": 50,
+    "default_capacitor_esr_mohm": 150, "default_output_esr_ohm": 0.01,
+    "zero": 0, "default_diode_vf0_v": 0.45, "default_diode_rd_ohm": 0.05,
+    "default_inductor_tolerance": .2, "default_bulk_cap_tolerance": .2,
+    "default_ceramic_cap_tolerance": .1, "default_bulk_esr_sensitivity_factors": [.5, 1., 2.],
+    "diode_fit_current_a": [0.5, 1.0, 2.0, 3.0, 5.0], "single_point_diode_split": [.85, .15],
+    "loss_default": {"qg_nc": 8, "qgd_nc": 2, "qgs_nc": 1.3, "coss_pf": 80, "rg_ohm": 4.5,
+                     "cj_pf": 500, "iq_ma": 1.9, "i_source_a": 1.3, "i_sink_a": 7.6,
+                     "mosfet": 125, "diode": 80, "pmos": 125,
+                     "rds_on_mohm_vgs4v5": 60, "r_mohm": 19},
+    "ripple_harmonics": 60, "ripple_time_samples": 1024,
+    "loop_frequency_grid": [0.1, .98, 420],
+    "loop_kp_grid": [1e-3, 1.0, 31], "loop_ki_grid": [5, 2e4, 41],
+    "loop_cv_loads": [2, 100.0, .2, .5, .9],
+}
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -58,10 +79,29 @@ class Steps:
     def __init__(self):
         self.items = []
 
-    def add(self, sid, name, formula, subst, value, unit, note=""):
-        self.items.append({"id": sid, "name": name, "formula": formula,
-                           "substitution": subst, "value": r3(value), "unit": unit, "note": note})
+    def add(self, sid, name, formula, subst, value, unit, note="", *, inputs=None):
+        item = {"id": sid, "name": name, "formula": formula,
+                "substitution": subst, "value": r3(value), "unit": unit, "note": note}
+        if inputs is not None:
+            item["inputs"] = list(inputs)
+            item["value_exact"] = value
+        self.items.append(item)
         return value
+
+
+def step_input(name, value, source):
+    return {"name": name, "value": value, "source": source}
+
+
+def source_input(kind, root, path, name=None):
+    value = root
+    for key in path.split("."):
+        value = value[key]
+    return step_input(name or path.rsplit(".", 1)[-1], value, f"{kind}:{path}")
+
+
+def constant_input(name):
+    return source_input("const", CALC_CONSTANTS, name)
 
 
 class Checks:
@@ -90,7 +130,7 @@ class Checks:
 
 def param(part, name, field=("typ", "max", "min")):
     """Read a numeric parameter from a parts_db entry, preferring the given field order."""
-    p = part.get("params", {}).get(name)
+    p = (part or {}).get("params", {}).get(name)
     if p is None:
         return None
     if isinstance(p, (int, float)):
@@ -99,6 +139,21 @@ def param(part, name, field=("typ", "max", "min")):
         if p.get(f) is not None:
             return p[f]
     return None
+
+
+def part_input(part, name, fields=("typ", "max", "min")):
+    """Record the actual typ/max/min column, page and measurement condition."""
+    value = param(part, name, fields)
+    if value is None:
+        return None
+    raw = part["params"][name]
+    if isinstance(raw, dict):
+        field = next(f for f in fields if raw.get(f) is not None)
+        record = step_input(name, value, f"part:{part['id']}.{name}.{field}@{raw.get('page') or '未标注'}")
+        record["condition"] = raw.get("condition")
+    else:
+        record = step_input(name, value, f"part:{part['id']}.{name}@未标注")
+    return record
 
 
 def workdir_paths(workdir):

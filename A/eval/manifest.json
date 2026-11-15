@@ -1,0 +1,66 @@
+{
+  "schema": "boost-eval-manifest/1",
+  "scope": "deterministic tool regression; genuine LLM runs pending",
+  "cases": [
+    {
+      "id": "easy01",
+      "difficulty": "easy",
+      "expected": "calculate_then_select"
+    },
+    {
+      "id": "easy02",
+      "difficulty": "easy",
+      "expected": "calculate_then_select"
+    },
+    {
+      "id": "easy03",
+      "difficulty": "easy",
+      "expected": "calculate_then_select"
+    },
+    {
+      "id": "typical01",
+      "difficulty": "typical",
+      "expected": "calculate_then_select"
+    },
+    {
+      "id": "typical02",
+      "difficulty": "typical",
+      "expected": "calculate_then_select"
+    },
+    {
+      "id": "typical03",
+      "difficulty": "typical",
+      "expected": "calculate_then_select"
+    },
+    {
+      "id": "typical04",
+      "difficulty": "typical",
+      "expected": "calculate_then_select"
+    },
+    {
+      "id": "hard01",
+      "difficulty": "hard",
+      "expected": "calculate_then_select"
+    },
+    {
+      "id": "hard02",
+      "difficulty": "hard",
+      "expected": "calculate_then_select"
+    },
+    {
+      "id": "hard03",
+      "difficulty": "hard",
+      "expected": "calculate_then_select"
+    },
+    {
+      "id": "hard04",
+      "difficulty": "hard",
+      "expected": "calculate_then_select"
+    },
+    {
+      "id": "impossible01",
+      "difficulty": "impossible",
+      "expected": "reject_topology"
+    }
+  ]
+}

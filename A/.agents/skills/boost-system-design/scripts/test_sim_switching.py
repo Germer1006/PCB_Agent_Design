@@ -1,12 +1,16 @@
 """功率级及闭环控制的验证，不依赖课程基线器件。"""
 
 import unittest
+import tempfile
 from dataclasses import replace
 from io import StringIO
+from pathlib import Path
+from unittest.mock import patch
 
+from _common import KNOWLEDGE_DIR, load_json
 from boost_model import Boost
 from sim_control import AnalogSense, ControlSettings, DigitalControl, Signals
-from sim_scenarios import _collect
+from sim_scenarios import Cycle, Scenario, _case_metrics, _collect, _ocp_stimulus, run_suite
 from sim_switching import (OperatingPoint, Sample, simulate_closed_loop,
                            simulate_fixed_duty, simulate_input_ramp)
 
@@ -108,6 +112,83 @@ def settings():
         ovp_sw=9, ovp_hw=10, ocp_sw=1.2, ocp_hw=2, ocp_delay_s=100e-6,
         uvlo_on=3.5, uvlo_off=3,
     )
+
+
+class TestOcpStimulus(unittest.TestCase):
+    def test_subset_report_preserves_full_report_and_waveforms(self):
+        work = Path(__file__).resolve().parents[4] / "outputs/r6"
+        req, choices, calc, selection, loss, loop = (
+            load_json(work / name) for name in ("requirements.json", "design_choices.json",
+                                                "calc.json", "selection.json", "losses.json", "loop.json"))
+        db = load_json(KNOWLEDGE_DIR / "parts_db.json")
+        rows = [Cycle(.001, 12, .25, .6, .6, 11.99, 12.01, .24, .26, .7, False)]
+        protection = {"pwm_resumed_after_fault": False, "max_sw_dwell_s": 0,
+                      "filtered_iout_peak_a": .25}
+        # Synthetic waveform statistics exercise file isolation only, not protection success.
+        with tempfile.TemporaryDirectory() as tmp, \
+                patch("sim_scenarios._collect", return_value=(rows, [], None, protection)), \
+                patch("sim_switching.simulate_closed_loop", return_value=iter(())), \
+                patch("builtins.print"):
+            dest = Path(tmp)
+            full_csv = dest / "sim_S-ocp__hw_trip_nom_nominal.csv"
+            full_csv.write_text("original waveform", encoding="utf-8")
+            (dest / "sim.json").write_text("original full report", encoding="utf-8")
+            report = run_suite(dest, req, calc, selection, choices, loop, loss, db,
+                               scenario_prefix="S-ocp__hw_trip")
+            self.assertEqual(full_csv.read_text(encoding="utf-8"), "original waveform")
+            self.assertEqual((dest / "sim.json").read_text(encoding="utf-8"), "original full report")
+            self.assertTrue((dest / "sim_subset.json").exists())
+            self.assertEqual(report["scope"], "subset")
+            self.assertEqual(report["cross_validation"], {})
+            self.assertTrue(report["cases"])
+            self.assertTrue(all(c["waveform"].startswith("sim_subset_") for c in report["cases"]))
+
+    def test_normal_cc_load_stays_above_controllable_floor(self):
+        model = Boost(82e-6, .2, .03, .4, .02, [(100e-6, .02)])
+        cfg = replace(settings(), v_set=9, i_set=.5, ocp_sw=.6, ocp_hw=1)
+        scenario = _ocp_stimulus(Scenario("S-ocp", 25, 36), cfg, model, 5.775, 13.55, 100_000)
+        self.assertTrue(scenario.stimulus["valid"])
+        # 旧 Rrated/3=6 Ω 已低于物理直通下限，不能用于“不误触发”断言。
+        self.assertLess(6, (5.775-model.vf0)/cfg.i_set-model.dcr-model.rd-cfg.shunt_ohm)
+        self.assertTrue(all(13.55 < r < 18 for _, r in scenario.changes))
+
+    def test_software_stimulus_uses_passive_current_between_real_thresholds(self):
+        model = Boost(82e-6, .2, .03, .4, .02, [(100e-6, .02)])
+        for vin, vout in ((4.75, 12), (5.5, 9), (5.775, 9)):
+            cfg = replace(settings(), v_set=vout, i_set=.5, ocp_sw=.6, ocp_hw=1)
+            scenario = _ocp_stimulus(Scenario("S-ocp__sw_trip", 20, 6), cfg, model, vin, 13.55, 100_000)
+            resistance = scenario.changes[-2][1]
+            passive_i = (vin-model.vf0)/(resistance+model.dcr+model.rd+cfg.shunt_ohm)
+            self.assertGreater(passive_i, cfg.ocp_sw)
+            self.assertLess(passive_i, cfg.ocp_hw)
+            self.assertGreater(scenario.changes[-1][0]-scenario.changes[-2][0], cfg.ocp_delay_s*1000)
+            self.assertTrue(all(a[1] > b[1] for a, b in zip(scenario.changes[:-2], scenario.changes[1:-1])))
+
+    def test_no_valid_cc_interval_is_not_assumed_pass(self):
+        model = Boost(82e-6, .2, .03, .4, .02, [(100e-6, .02)])
+        scenario = _ocp_stimulus(Scenario("S-ocp", 25, 36), settings(), model, 7.9, 9, 100_000)
+        self.assertFalse(scenario.stimulus["valid"])
+        _, checks, verdict = self.metrics(scenario)
+        self.assertIsNone(checks["SR87"])
+        self.assertEqual(verdict, "WARN")
+
+    @staticmethod
+    def metrics(scenario, fault=None):
+        rows = [Cycle(.001, 8, 1, 1.1, .4, 7.99, 8.01, .99, 1.01, 1.2, False)]
+        protection = {"pwm_resumed_after_fault": False, "max_sw_dwell_s": 0,
+                      "filtered_iout_peak_a": 2.1 if fault else 1.0}
+        return _case_metrics(scenario, rows, [], fault, protection, settings(), {}, 16, 4)
+
+    def test_early_hardware_trip_cannot_count_as_software_delay_pass(self):
+        _, checks, verdict = self.metrics(Scenario("S-ocp__sw_trip", 20, 6),
+                                         {"reason": "OCP_HW", "time_s": .001})
+        self.assertFalse(checks["SR87"])
+        self.assertEqual(verdict, "FAIL")
+
+    def test_uncontrolled_reference_never_counts_as_protection_pass(self):
+        _, checks, verdict = self.metrics(Scenario("S-ocp__uncontrolled_reference", 20, 6))
+        self.assertNotIn("SR87", checks)
+        self.assertEqual(verdict, "WARN")
 
 
 class TestClosedLoop(unittest.TestCase):

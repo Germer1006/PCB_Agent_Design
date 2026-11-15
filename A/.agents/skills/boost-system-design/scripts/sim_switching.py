@@ -302,6 +302,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("workdir", type=Path, help="含参数计算和选型结果的工作目录")
     parser.add_argument("--db", type=Path, default=KNOWLEDGE_DIR / "parts_db.json")
+    parser.add_argument("--scenario-prefix", help="仅复跑匹配前缀的场景，写 sim_subset.json，不作为完整门禁证据")
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--duty", type=float, help="固定占空比，0–1")
     mode.add_argument("--closed-loop", action="store_true", help="使用设计输出的数字控制参数")
@@ -311,6 +312,8 @@ def main():
     parser.add_argument("--initial-vout-v", type=float, default=0.0, help="输出电容初始电压")
     parser.add_argument("--output", type=Path, help="CSV 输出路径，默认写入工作目录")
     args = parser.parse_args()
+    if args.scenario_prefix and (args.duty is not None or args.closed_loop):
+        parser.error("--scenario-prefix 只适用于场景矩阵模式，不能与单工况模式组合")
     paths = workdir_paths(args.workdir)
     req, choices, calc, selection = (
         load_json(paths[k]) for k in ("requirements", "choices", "calc", "selection")
@@ -320,8 +323,10 @@ def main():
         from sim_scenarios import run_suite
 
         report = run_suite(args.workdir, req, calc, selection, choices,
-                           load_json(paths["loop"]), load_json(paths["losses"]), db)
-        print(f"T1 完成：{len(report['cases'])} 个工况，{report['elapsed_s']:g} s；详见 sim.json")
+                           load_json(paths["loop"]), load_json(paths["losses"]), db,
+                           scenario_prefix=args.scenario_prefix)
+        output_name = "sim_subset.json" if args.scenario_prefix else "sim.json"
+        print(f"T1 完成：{len(report['cases'])} 个工况，{report['elapsed_s']:g} s；详见 {output_name}")
         return
     if args.load_ohm is None:
         parser.error("单工况模式需要 --load-ohm")

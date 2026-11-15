@@ -1,0 +1,571 @@
+{
+  "schema": "boost-tool-eval/1",
+  "scope": "deterministic_S5_S6_only",
+  "hash_normalization": "CRLF_to_LF",
+  "db_sha256": "907a1fcfa0e992426214c6011bd028e90ae308514dee6a5c26025c640496ba44",
+  "source_sha256": {
+    "calc_boost.py": "431e7b4aaa74010724e8ede37c3128a53dbcae9c6b64ec60c6eeb2c9bb78320c",
+    "select_parts.py": "5f091c0d3634262d1eb86dcebb9e6ed02645e51b7a46c473e38764169b9a1863",
+    "_common.py": "4e61a28073030d48018f1deb5c18e003169aaf335144b8abfac421b0ba0e80f9"
+  },
+  "model_runs": 0,
+  "cases": [
+    {
+      "id": "easy01",
+      "difficulty": "easy",
+      "expected": "calculate_then_select",
+      "stages": [
+        {
+          "script": "calc_boost.py",
+          "returncode": 0
+        },
+        {
+          "script": "select_parts.py",
+          "returncode": 2
+        }
+      ],
+      "workdir": "easy01",
+      "specification": {
+        "vin_nom_v": 4.5,
+        "vout_v": 9,
+        "iout_a": 0.3,
+        "ripple_max_pct": 5
+      },
+      "outcome": "selection_blocked",
+      "verified": true,
+      "analytic_errors": [],
+      "missing_categories": [
+        "inductor"
+      ],
+      "selected": {
+        "mcu": "stm32g431cbt6",
+        "mosfet": "ao3400a",
+        "pmos": "ao3401a",
+        "diode": "ss54_mdd",
+        "inductor": null,
+        "cout_bulk": "C_out_polymer_25SVPF100M",
+        "cout_ceramic": "C_out_CL31B106KAHNNNE",
+        "cin_ceramic": "C_in_CL31A226KOHNNNE",
+        "cin_bulk": "C_in_EEEFK1C101P",
+        "gate_driver": "lm5114b",
+        "csa": "ina199a1",
+        "shunt": "R_shunt_PA2512FKE7W0R05E",
+        "ldo": "me6211c33",
+        "tvs": "smaj15a",
+        "fuse": "F_in_0466003NRHF",
+        "terminal": "J_KF301_5_0_2P",
+        "header_swd": "J_hdr_1x5_B2100S05P",
+        "header_uart": "J_hdr_1x4_B2100S04P"
+      }
+    },
+    {
+      "id": "easy02",
+      "difficulty": "easy",
+      "expected": "calculate_then_select",
+      "stages": [
+        {
+          "script": "calc_boost.py",
+          "returncode": 0
+        },
+        {
+          "script": "select_parts.py",
+          "returncode": 2
+        }
+      ],
+      "workdir": "easy02",
+      "specification": {
+        "vin_nom_v": 5,
+        "vout_v": 9,
+        "iout_a": 0.3,
+        "ripple_max_pct": 3
+      },
+      "outcome": "selection_blocked",
+      "verified": true,
+      "analytic_errors": [],
+      "missing_categories": [
+        "inductor"
+      ],
+      "selected": {
+        "mcu": "stm32g431cbt6",
+        "mosfet": "ao3400a",
+        "pmos": "ao3401a",
+        "diode": "ss54_mdd",
+        "inductor": null,
+        "cout_bulk": "C_out_polymer_25SVPF100M",
+        "cout_ceramic": "C_out_CL31B106KAHNNNE",
+        "cin_ceramic": "C_in_CL31A226KOHNNNE",
+        "cin_bulk": "C_in_EEEFK1C101P",
+        "gate_driver": "lm5114b",
+        "csa": "ina199a1",
+        "shunt": "R_shunt_PA2512FKE7W0R05E",
+        "ldo": "me6211c33",
+        "tvs": "smaj15a",
+        "fuse": "F_in_0466003NRHF",
+        "terminal": "J_KF301_5_0_2P",
+        "header_swd": "J_hdr_1x5_B2100S05P",
+        "header_uart": "J_hdr_1x4_B2100S04P"
+      }
+    },
+    {
+      "id": "easy03",
+      "difficulty": "easy",
+      "expected": "calculate_then_select",
+      "stages": [
+        {
+          "script": "calc_boost.py",
+          "returncode": 0
+        },
+        {
+          "script": "select_parts.py",
+          "returncode": 0
+        }
+      ],
+      "workdir": "easy03",
+      "specification": {
+        "vin_nom_v": 5.5,
+        "vout_v": 9,
+        "iout_a": 0.5,
+        "ripple_max_pct": 5
+      },
+      "outcome": "selected",
+      "verified": true,
+      "analytic_errors": [],
+      "missing_categories": [],
+      "selected": {
+        "mcu": "stm32g431cbt6",
+        "mosfet": "ao3400a",
+        "pmos": "ao3401a",
+        "diode": "ss54_mdd",
+        "inductor": "L_MWSA1206S_101MT",
+        "cout_bulk": "C_out_polymer_25SVPF100M",
+        "cout_ceramic": "C_out_CL31B106KAHNNNE",
+        "cin_ceramic": "C_in_CL31A226KOHNNNE",
+        "cin_bulk": "C_in_EEEFK1C101P",
+        "gate_driver": "ucc27517",
+        "csa": "ina180a2",
+        "shunt": "R_shunt_PA2512FKE7W0R05E",
+        "ldo": "xc6206p332mr",
+        "tvs": "smaj15a",
+        "fuse": "F_in_0466003NRHF",
+        "terminal": "J_KF301_5_0_2P",
+        "header_swd": "J_hdr_1x5_B2100S05P",
+        "header_uart": "J_hdr_1x4_B2100S04P"
+      }
+    },
+    {
+      "id": "typical01",
+      "difficulty": "typical",
+      "expected": "calculate_then_select",
+      "stages": [
+        {
+          "script": "calc_boost.py",
+          "returncode": 0
+        },
+        {
+          "script": "select_parts.py",
+          "returncode": 0
+        }
+      ],
+      "workdir": "typical01",
+      "specification": {
+        "vin_nom_v": 4.5,
+        "vout_v": 12,
+        "iout_a": 0.5,
+        "ripple_max_pct": 5
+      },
+      "outcome": "selected",
+      "verified": true,
+      "analytic_errors": [],
+      "missing_categories": [],
+      "selected": {
+        "mcu": "stm32g431cbt6",
+        "mosfet": "ao3400a",
+        "pmos": "ao3401a",
+        "diode": "ss54_mdd",
+        "inductor": "L_MWSA1206S_680MT",
+        "cout_bulk": "C_out_polymer_25SVPF100M",
+        "cout_ceramic": "C_out_CL31B106KAHNNNE",
+        "cin_ceramic": "C_in_CL31A226KOHNNNE",
+        "cin_bulk": "C_in_EEEFK1C101P",
+        "gate_driver": "lm5114b",
+        "csa": "ina180a2",
+        "shunt": "R_shunt_PA2512FKE7W0R05E",
+        "ldo": "me6211c33",
+        "tvs": "smaj15a",
+        "fuse": "F_in_0466003NRHF",
+        "terminal": "J_KF301_5_0_2P",
+        "header_swd": "J_hdr_1x5_B2100S05P",
+        "header_uart": "J_hdr_1x4_B2100S04P"
+      }
+    },
+    {
+      "id": "typical02",
+      "difficulty": "typical",
+      "expected": "calculate_then_select",
+      "stages": [
+        {
+          "script": "calc_boost.py",
+          "returncode": 0
+        },
+        {
+          "script": "select_parts.py",
+          "returncode": 0
+        }
+      ],
+      "workdir": "typical02",
+      "specification": {
+        "vin_nom_v": 5,
+        "vout_v": 12,
+        "iout_a": 0.5,
+        "ripple_max_pct": 5
+      },
+      "outcome": "selected",
+      "verified": true,
+      "analytic_errors": [],
+      "missing_categories": [],
+      "selected": {
+        "mcu": "stm32g431cbt6",
+        "mosfet": "ao3400a",
+        "pmos": "ao3401a",
+        "diode": "ss54_mdd",
+        "inductor": "L_MWSA1206S_680MT",
+        "cout_bulk": "C_out_polymer_25SVPF100M",
+        "cout_ceramic": "C_out_CL31B106KAHNNNE",
+        "cin_ceramic": "C_in_CL31A226KOHNNNE",
+        "cin_bulk": "C_in_EEEFK1C101P",
+        "gate_driver": "lm5114b",
+        "csa": "ina180a2",
+        "shunt": "R_shunt_PA2512FKE7W0R05E",
+        "ldo": "me6211c33",
+        "tvs": "smaj15a",
+        "fuse": "F_in_0466003NRHF",
+        "terminal": "J_KF301_5_0_2P",
+        "header_swd": "J_hdr_1x5_B2100S05P",
+        "header_uart": "J_hdr_1x4_B2100S04P"
+      }
+    },
+    {
+      "id": "typical03",
+      "difficulty": "typical",
+      "expected": "calculate_then_select",
+      "stages": [
+        {
+          "script": "calc_boost.py",
+          "returncode": 0
+        },
+        {
+          "script": "select_parts.py",
+          "returncode": 0
+        }
+      ],
+      "workdir": "typical03",
+      "specification": {
+        "vin_nom_v": 5.5,
+        "vout_v": 12,
+        "iout_a": 0.5,
+        "ripple_max_pct": 3
+      },
+      "outcome": "selected",
+      "verified": true,
+      "analytic_errors": [],
+      "missing_categories": [],
+      "selected": {
+        "mcu": "stm32g431cbt6",
+        "mosfet": "ao3400a",
+        "pmos": "ao3401a",
+        "diode": "ss54_mdd",
+        "inductor": "L_MWSA1206S_101MT",
+        "cout_bulk": "C_out_polymer_25SVPF100M",
+        "cout_ceramic": "C_out_CL31B106KAHNNNE",
+        "cin_ceramic": "C_in_CL31A226KOHNNNE",
+        "cin_bulk": "C_in_EEEFK1C101P",
+        "gate_driver": "ucc27517",
+        "csa": "ina180a2",
+        "shunt": "R_shunt_PA2512FKE7W0R05E",
+        "ldo": "xc6206p332mr",
+        "tvs": "smaj15a",
+        "fuse": "F_in_0466003NRHF",
+        "terminal": "J_KF301_5_0_2P",
+        "header_swd": "J_hdr_1x5_B2100S05P",
+        "header_uart": "J_hdr_1x4_B2100S04P"
+      }
+    },
+    {
+      "id": "typical04",
+      "difficulty": "typical",
+      "expected": "calculate_then_select",
+      "stages": [
+        {
+          "script": "calc_boost.py",
+          "returncode": 0
+        },
+        {
+          "script": "select_parts.py",
+          "returncode": 2
+        }
+      ],
+      "workdir": "typical04",
+      "specification": {
+        "vin_nom_v": 5,
+        "vout_v": 12,
+        "iout_a": 0.3,
+        "ripple_max_pct": 3
+      },
+      "outcome": "selection_blocked",
+      "verified": true,
+      "analytic_errors": [],
+      "missing_categories": [
+        "inductor"
+      ],
+      "selected": {
+        "mcu": "stm32g431cbt6",
+        "mosfet": "ao3400a",
+        "pmos": "ao3401a",
+        "diode": "ss54_mdd",
+        "inductor": null,
+        "cout_bulk": "C_out_polymer_25SVPF100M",
+        "cout_ceramic": "C_out_CL31B106KAHNNNE",
+        "cin_ceramic": "C_in_CL31A226KOHNNNE",
+        "cin_bulk": "C_in_EEEFK1C101P",
+        "gate_driver": "lm5114b",
+        "csa": "ina199a1",
+        "shunt": "R_shunt_PA2512FKE7W0R05E",
+        "ldo": "me6211c33",
+        "tvs": "smaj15a",
+        "fuse": "F_in_0466003NRHF",
+        "terminal": "J_KF301_5_0_2P",
+        "header_swd": "J_hdr_1x5_B2100S05P",
+        "header_uart": "J_hdr_1x4_B2100S04P"
+      }
+    },
+    {
+      "id": "hard01",
+      "difficulty": "hard",
+      "expected": "calculate_then_select",
+      "stages": [
+        {
+          "script": "calc_boost.py",
+          "returncode": 0
+        },
+        {
+          "script": "select_parts.py",
+          "returncode": 2
+        }
+      ],
+      "workdir": "hard01",
+      "specification": {
+        "vin_nom_v": 4.5,
+        "vout_v": 15,
+        "iout_a": 0.8,
+        "ripple_max_pct": 3
+      },
+      "outcome": "selection_blocked",
+      "verified": true,
+      "analytic_errors": [],
+      "missing_categories": [
+        "mosfet",
+        "pmos",
+        "inductor",
+        "cout_bulk",
+        "cout_ceramic",
+        "tvs",
+        "fuse"
+      ],
+      "selected": {
+        "mcu": "stm32g431cbt6",
+        "mosfet": null,
+        "pmos": null,
+        "diode": "ss54_mdd",
+        "inductor": null,
+        "cout_bulk": null,
+        "cout_ceramic": null,
+        "cin_ceramic": "C_in_CL31A226KOHNNNE",
+        "cin_bulk": "C_in_EEEFK1C101P",
+        "gate_driver": "lm5114b",
+        "csa": "ina180a2",
+        "shunt": "R_shunt_PA2512FKE7W0R05E",
+        "ldo": "me6211c33",
+        "tvs": null,
+        "fuse": null,
+        "terminal": "J_KF301_5_0_2P",
+        "header_swd": "J_hdr_1x5_B2100S05P",
+        "header_uart": "J_hdr_1x4_B2100S04P"
+      }
+    },
+    {
+      "id": "hard02",
+      "difficulty": "hard",
+      "expected": "calculate_then_select",
+      "stages": [
+        {
+          "script": "calc_boost.py",
+          "returncode": 0
+        },
+        {
+          "script": "select_parts.py",
+          "returncode": 2
+        }
+      ],
+      "workdir": "hard02",
+      "specification": {
+        "vin_nom_v": 5,
+        "vout_v": 15,
+        "iout_a": 0.8,
+        "ripple_max_pct": 5
+      },
+      "outcome": "selection_blocked",
+      "verified": true,
+      "analytic_errors": [],
+      "missing_categories": [
+        "mosfet",
+        "pmos",
+        "cout_bulk",
+        "cout_ceramic",
+        "tvs",
+        "fuse"
+      ],
+      "selected": {
+        "mcu": "stm32g431cbt6",
+        "mosfet": null,
+        "pmos": null,
+        "diode": "ss54_mdd",
+        "inductor": "L_MWSA1206S_470MT",
+        "cout_bulk": null,
+        "cout_ceramic": null,
+        "cin_ceramic": "C_in_CL31A226KOHNNNE",
+        "cin_bulk": "C_in_EEEFK1C101P",
+        "gate_driver": "lm5114b",
+        "csa": "ina180a2",
+        "shunt": "R_shunt_PA2512FKE7W0R05E",
+        "ldo": "me6211c33",
+        "tvs": null,
+        "fuse": null,
+        "terminal": "J_KF301_5_0_2P",
+        "header_swd": "J_hdr_1x5_B2100S05P",
+        "header_uart": "J_hdr_1x4_B2100S04P"
+      }
+    },
+    {
+      "id": "hard03",
+      "difficulty": "hard",
+      "expected": "calculate_then_select",
+      "stages": [
+        {
+          "script": "calc_boost.py",
+          "returncode": 0
+        },
+        {
+          "script": "select_parts.py",
+          "returncode": 2
+        }
+      ],
+      "workdir": "hard03",
+      "specification": {
+        "vin_nom_v": 5.5,
+        "vout_v": 15,
+        "iout_a": 0.8,
+        "ripple_max_pct": 3
+      },
+      "outcome": "selection_blocked",
+      "verified": true,
+      "analytic_errors": [],
+      "missing_categories": [
+        "mosfet",
+        "pmos",
+        "cout_bulk",
+        "cout_ceramic",
+        "tvs",
+        "fuse"
+      ],
+      "selected": {
+        "mcu": "stm32g431cbt6",
+        "mosfet": null,
+        "pmos": null,
+        "diode": "ss54_mdd",
+        "inductor": "L_MWSA1206S_470MT",
+        "cout_bulk": null,
+        "cout_ceramic": null,
+        "cin_ceramic": "C_in_CL31A226KOHNNNE",
+        "cin_bulk": "C_in_EEEFK1C101P",
+        "gate_driver": "ucc27517",
+        "csa": "ina180a2",
+        "shunt": "R_shunt_PA2512FKE7W0R05E",
+        "ldo": "xc6206p332mr",
+        "tvs": null,
+        "fuse": null,
+        "terminal": "J_KF301_5_0_2P",
+        "header_swd": "J_hdr_1x5_B2100S05P",
+        "header_uart": "J_hdr_1x4_B2100S04P"
+      }
+    },
+    {
+      "id": "hard04",
+      "difficulty": "hard",
+      "expected": "calculate_then_select",
+      "stages": [
+        {
+          "script": "calc_boost.py",
+          "returncode": 0
+        },
+        {
+          "script": "select_parts.py",
+          "returncode": 0
+        }
+      ],
+      "workdir": "hard04",
+      "specification": {
+        "vin_nom_v": 5,
+        "vout_v": 9,
+        "iout_a": 0.8,
+        "ripple_max_pct": 3
+      },
+      "outcome": "selected",
+      "verified": true,
+      "analytic_errors": [],
+      "missing_categories": [],
+      "selected": {
+        "mcu": "stm32g431cbt6",
+        "mosfet": "ao3400a",
+        "pmos": "ao3401a",
+        "diode": "ss54_mdd",
+        "inductor": "L_MWSA1206S_470MT",
+        "cout_bulk": "C_out_EEEFK1E101P",
+        "cout_ceramic": "C_out_CL31A226KAHNNNE",
+        "cin_ceramic": "C_in_CL31A226KOHNNNE",
+        "cin_bulk": "C_in_EEEFK1C101P",
+        "gate_driver": "lm5114b",
+        "csa": "ina180a2",
+        "shunt": "R_shunt_PA2512FKE7W0R05E",
+        "ldo": "me6211c33",
+        "tvs": "smaj15a",
+        "fuse": "F_in_0466003NRHF",
+        "terminal": "J_KF301_5_0_2P",
+        "header_swd": "J_hdr_1x5_B2100S05P",
+        "header_uart": "J_hdr_1x4_B2100S04P"
+      }
+    },
+    {
+      "id": "impossible01",
+      "difficulty": "impossible",
+      "expected": "reject_topology",
+      "stages": [
+        {
+          "script": "calc_boost.py",
+          "returncode": 2
+        }
+      ],
+      "workdir": "impossible01",
+      "specification": {
+        "vin_nom_v": 5.5,
+        "vout_v": 5.5,
+        "iout_a": 0.5,
+        "ripple_max_pct": 5
+      },
+      "outcome": "correct_rejection",
+      "verified": true,
+      "reason": "Boost requires Vin_max < Vout"
+    }
+  ],
+  "verified": 12,
+  "total": 12
+}
