@@ -14,9 +14,11 @@ description: Generate and verify native two-layer KiCad PCB drafts from complete
    to retain positions after checking pin access, courtyards and local return.
    Set numerical limits only from design evidence. Leave unsupported limits null.
 3. Run C/auto_pcb.py with the required KiCad version and explicit resource budgets
-   for designs above the defaults. Inspect the local-route results before
-   spending attempts on the rest of the board. For a failed pair, revise the
-   placement or intentionally route the pair in KiCad and recheck the board.
+   for designs above the defaults. Check `fanout` and `pad_failures` in the
+   routing diagnostics. For `no_landing`, inspect pin-row escape and nearby
+   placement. For `no_path`, inspect which existing tracks block completion.
+   Compare reruns with the same rules and plane fill settings. Verify ground
+   returns and keep critical copper checked after any local repair.
 4. Inspect `layout_check.json` and use `critical_routes.py` when reviewing an
    existing file. Check the actual driver path length and layer changes,
    both shunt takeoffs, power return, switch copper and supply decoupling.

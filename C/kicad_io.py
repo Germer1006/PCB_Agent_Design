@@ -408,6 +408,7 @@ def _place_reference_fields(pcb, footprints, width, height):
                         if field.IsVisible() and field.IsOnLayer(pcb.F_SilkS)
                         and field.GetText() != footprint.GetReference())
 
+    pending = []
     for footprint in sorted(footprints, key=lambda item: (len(item.GetReference()), item.GetReference())):
         reference = footprint.Reference()
         reference.SetVisible(True)
@@ -441,6 +442,24 @@ def _place_reference_fields(pcb, footprints, width, height):
                 break
         else:
             reference.SetPosition(original)
+            pending.append((reference, original, center_x, center_y))
+
+    # A dense placement can exhaust the nearby positions. Look for the nearest
+    # clear board space after placing the references that fit next to their parts.
+    for reference, original, x, y in pending:
+        old_x, old_y = pcb.ToMM(original.x), pcb.ToMM(original.y)
+        left, top, right, bottom = bounds(reference)
+        offsets = (left - old_x, top - old_y, right - old_x, bottom - old_y)
+        positions = sorted(((i / 2, j / 2)
+                            for i in range(1, int(2 * width)) for j in range(1, int(2 * height))),
+                           key=lambda point: (point[0] - x) ** 2 + (point[1] - y) ** 2)
+        for px, py in positions:
+            rectangle = tuple(origin + offset for origin, offset in zip((px, py, px, py), offsets))
+            if fits(rectangle, reserved):
+                reference.SetPosition(pcb.VECTOR2I(pcb.FromMM(px), pcb.FromMM(py)))
+                reserved.append(rectangle)
+                break
+        else:
             reserved.append(bounds(reference))
 
 

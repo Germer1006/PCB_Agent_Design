@@ -147,6 +147,127 @@ def _landings(grid, pad, blocked, limits):
     return [result[layer][1] for layer in sorted(result)]
 
 
+def _fanout_stubs(geometry, pads, segments, vias, widths, clearance, edge_margin, deadline,
+                  ground_escape_width, eligible_nets, priorities):
+    """Connect dense SMD rows to the routing grid with short, checked copper stubs."""
+    groups = defaultdict(list)
+    for pad in pads:
+        if pad.get("ref"):
+            groups[pad["ref"]].append(pad)
+    escapes = {}
+    # The coarse search also needs clearance around the hand-off node.
+    keep_landings = defaultdict(list)
+    guard = geometry.pitch * DIAGONAL / 2 + .006
+    for row in groups.values():
+        cx = (min(p["x"] for p in row) + max(p["x"] for p in row)) / 2
+        cy = (min(p["y"] for p in row) + max(p["y"] for p in row)) / 2
+        for pad in sorted(row, key=lambda p: priorities.get(p["net"], len(priorities))):
+            if monotonic() >= deadline:
+                return escapes
+            net = pad["net"]
+            if net not in eligible_nets or len(pad["layers"]) != 1 or pad.get("drill", 0):
+                continue
+            axis, cross = ("x", "y") if pad["w"] > pad["h"] else ("y", "x")
+            length, breadth = sorted((pad["h"], pad["w"]), reverse=True)
+            width = widths.get(net, .25)
+            if ground_escape_width is not None and net.rsplit("/", 1)[-1].upper() in {"GND", "PGND", "AGND"}:
+                width = min(width, ground_escape_width)
+            track_radius = width / 2 + clearance + guard
+            # Look for a neighbour in the same physical pad row, on a different net.
+            if length < 1.4 * breadth or not any(
+                other is not pad and other["net"] != net
+                and abs(other[axis] - pad[axis]) < .015
+                and _pad_distance(other, pad["x"], pad["y"]) < track_radius
+                for other in row
+            ):
+                continue
+            delta = pad[axis] - (cx if axis == "x" else cy)
+            if abs(delta) < length / 2:
+                continue
+            direction = 1 if delta > 0 else -1
+            layer = pad["layers"][0]
+            route_width = widths.get(net, .25)
+            sweep = length / 2 + 1.2 + 4 * geometry.pitch + route_width / 2
+            nearby = _nearby_copper(pad, pads, segments, vias, layer, clearance, sweep)
+            reserved = [(point, point, radius) for point, radius, owner in keep_landings[layer] if owner != net]
+            for node, points in _escape_options(geometry, pad, axis, cross, direction, length, edge_margin + route_width / 2):
+                end = points[-1]
+                if not _stub_clear([end, end], route_width / 2 + clearance + guard, nearby):
+                    continue
+                if not _stub_clear(points, width / 2 + clearance, (nearby[0], nearby[1] + reserved)):
+                    continue
+                trace = []
+                for a, b in zip(points, points[1:]):
+                    _add_segment(trace, net, layer, a, b, width)
+                segments.extend(trace)
+                escapes[id(pad)] = (node, trace)
+                keep_landings[layer].append((end, route_width / 2 + guard, net))
+                break
+    return escapes
+
+
+def _escape_options(geometry, pad, axis, cross, direction, length, inset):
+    pitch = geometry.pitch
+    tick = ceil if direction > 0 else floor
+    p = tick((pad[axis] + direction * (length / 2 + pitch)) / pitch)
+    q = round(pad[cross] / pitch)
+    xmin, xmax, ymin, ymax = geometry.limits(inset)
+    for steps in range(1 + ceil(1.2 / pitch)):
+        u = p + steps * direction
+        # Moving off the nearest grid column can leave the adjacent pin a clean channel.
+        for cross_index in (q, q - 1, q + 1):
+            ix, iy = (u, cross_index) if axis == "x" else (cross_index, u)
+            if not (xmin <= ix <= xmax and ymin <= iy <= ymax):
+                continue
+            node = geometry.node(ix, iy, pad["layers"][0])
+            end = geometry.point(node)
+            side_shift = abs(cross_index * pitch - pad[cross])
+            bend = [pad["x"], pad["y"]]
+            bend[0 if axis == "x" else 1] = round(u * pitch - direction * side_shift, 6)
+            if direction * (bend[0 if axis == "x" else 1] - pad[axis]) < length / 2:
+                continue
+            yield node, [[pad["x"], pad["y"]], bend, end]
+
+
+def _nearby_copper(pad, pads, segments, vias, layer, clearance, sweep):
+    px, py = pad["x"], pad["y"]
+    net = pad["net"]
+    near_pads, near_tracks = [], []
+    for other in pads:
+        if other["net"] != net and layer in (other["layers"] or (0, 1)):
+            limit = sweep + clearance + max(other["w"], other["h"]) / 2
+            if abs(other["x"] - px) <= limit and abs(other["y"] - py) <= limit:
+                near_pads.append(other)
+    for track in segments:
+        if track["layer"] == layer and track["net"] != net:
+            start, end, radius = track["start"], track["end"], track["width"] / 2
+            if _segment_distance(px, py, start, end) <= sweep + clearance + radius:
+                near_tracks.append((start, end, radius))
+    for via in vias:
+        if via["net"] != net:
+            point = (via["x"], via["y"])
+            radius = via["size"] / 2
+            if hypot(point[0] - px, point[1] - py) <= sweep + clearance + radius:
+                near_tracks.append((point, point, radius))
+    return near_pads, near_tracks
+
+
+def _stub_clear(points, track_clearance, nearby):
+    pads, tracks = nearby
+    for a, b in zip(points, points[1:]):
+        steps = max(1, ceil(hypot(b[0] - a[0], b[1] - a[1]) / .02))
+        # Distance changes by at most the distance to the nearest sampled point.
+        margin = track_clearance + .01
+        for i in range(steps + 1):
+            x = a[0] + (b[0] - a[0]) * i / steps
+            y = a[1] + (b[1] - a[1]) * i / steps
+            if any(_pad_distance(pad, x, y) < margin for pad in pads):
+                return False
+            if any(_segment_distance(x, y, start, end) < margin + radius for start, end, radius in tracks):
+                return False
+    return True
+
+
 def _search(grid, starts, goals, blocked, via_blocked, track_limits, via_limits, deadline):
     if not starts or not goals:
         return None
@@ -257,7 +378,7 @@ def _emit_path(grid, path, net, width, via_diameter, via_drill, segments, vias):
 def route_board(
     pads, board_width, board_height, *, widths=None, clearance=0.2, grid=0.15,
     via_diameter=0.65, via_drill=0.3, edge_margin=0.3, order=None, priority_pairs=(), timeout=18,
-    max_cells=650_000,
+    max_cells=650_000, ground_escape_width=None,
 ):
     """Route all multi-pad nets; return segments, vias and any incomplete net names."""
     dimensions = (board_width, board_height, grid, via_diameter, via_drill, timeout)
@@ -268,6 +389,8 @@ def route_board(
     if via_diameter <= via_drill:
         raise ValueError("过孔外径必须大于钻孔直径。")
     widths = widths or {}
+    if ground_escape_width is not None and (not isfinite(ground_escape_width) or ground_escape_width <= 0):
+        raise ValueError("接地扇出线宽需要为正数。")
     if not all(isfinite(value) and value > 0 for value in widths.values()):
         raise ValueError("走线宽度需要为正数。")
     geometry = _Grid(board_width, board_height, grid, max_cells)
@@ -288,6 +411,29 @@ def route_board(
     reserved = defaultdict(list)
     kelvin_paths = defaultdict(list)
     priority_results = []
+    fanouts = {}
+    unused_stubs = set()
+    failures = defaultdict(list)
+
+    def reserve_fanout():
+        nonlocal fanouts
+        fanouts = _fanout_stubs(geometry, pads, segments, vias, widths, clearance,
+                               edge_margin, deadline, ground_escape_width, multi.keys() - kelvin_paths.keys(), rank)
+        unused_stubs.update(id(track) for _, trace in fanouts.values() for track in trace)
+
+    def landings(pad, track_blocked, track_limits):
+        escape = fanouts.get(id(pad))
+        if escape is not None:
+            node, _ = escape
+            return [] if track_blocked[node] else [node]
+        return _landings(geometry, pad, track_blocked, track_limits)
+
+    def land(pad, node, net, width):
+        escape = fanouts.get(id(pad))
+        if escape is not None and node == escape[0]:
+            unused_stubs.difference_update(id(track) for track in escape[1])
+        else:
+            _land(geometry, pad, node, segments, net, width)
 
     def obstacles(net, width):
         track_blocked, via_blocked = _obstacles(
@@ -336,7 +482,11 @@ def route_board(
         return True
 
     # Reserve PCB space for short local links before completing shared rails and ordinary signals.
+    fanout_started = False
     for pair in priority_pairs:
+        if pair["kind"] == "decoupling" and not fanout_started:
+            reserve_fanout()
+            fanout_started = True
         net = pair["net"]
         first, second = (by_pin[tuple(pair[k])] for k in ("a", "b"))
         result = {"id": pair["id"], "net": net, "status": "not_routed"}
@@ -352,17 +502,20 @@ def route_board(
         width = widths.get(net, 0.25)
         track_limits = geometry.limits(edge_margin + width / 2)
         track_blocked, via_blocked = obstacles(net, width)
-        goals = _landings(geometry, first, track_blocked, track_limits)
-        starts = _landings(geometry, second, track_blocked, track_limits)
+        goals = landings(first, track_blocked, track_limits)
+        starts = landings(second, track_blocked, track_limits)
         # A stuck critical pair must not consume the entire normal routing budget.
         pair_deadline = min(deadline, monotonic() + max(0.15, timeout / max(4, len(priority_pairs))))
         path = _search(geometry, starts, goals, track_blocked, via_blocked,
                        track_limits, via_limits, pair_deadline)
         segment_start, via_start = len(segments), len(vias)
         if path is None or not emit(path, net, width, via_blocked):
+            result["reason"] = ("no_landing" if not starts or not goals else
+                                "net_budget" if monotonic() >= pair_deadline else
+                                "no_path" if path is None else "via_spacing")
             continue
-        _land(geometry, first, path[-1], segments, net, width)
-        _land(geometry, second, path[0], segments, net, width)
+        land(first, path[-1], net, width)
+        land(second, path[0], net, width)
         # A Kelvin branch terminates at the shunt; its sense trace must not seed a power tree.
         if pair["kind"] == "kelvin":
             kelvin_paths[net].append((first, second, segments[segment_start:], vias[via_start:]))
@@ -375,69 +528,118 @@ def route_board(
         fragments.append((members, nodes))
         result["status"] = "routed"
 
-    for index, net in enumerate(nets):
-        if monotonic() >= deadline:
-            unrouted.extend(n for n in nets[index:] if not any(
-                len(members) == len(multi[n]) for members, _ in reserved[n]))
-            break
+    if not fanout_started:
+        reserve_fanout()
+
+    def connect_net(net, connection_deadline, *, repair=False):
+        """Complete a net from its existing copper islands, retaining partial progress."""
+        fragments = reserved[net]
+        expected = len(multi[net])
+        if any(len(members) == expected for members, _ in fragments):
+            return False
         width = widths.get(net, 0.25)
         track_limits = geometry.limits(edge_margin + width / 2)
         track_blocked, via_blocked = obstacles(net, width)
-        fragments = reserved[net]
         fragment_by_pad = {key: (members, copper) for members, copper in fragments for key in members}
-        candidates = [(pad, _landings(geometry, pad, track_blocked, track_limits)) for pad in multi[net]]
-        missing_landing = any(not landings and id(pad) not in fragment_by_pad for pad, landings in candidates)
-        candidates = [(pad, landings) for pad, landings in candidates if landings or id(pad) in fragment_by_pad]
-        if len(candidates) < 2:
-            unrouted.append(net)
-            continue
+        candidates = [(pad, landings(pad, track_blocked, track_limits)) for pad in multi[net]]
+        failures.pop(net, None)
 
-        if any(len(members) == len(multi[net]) for members, _ in fragments):
-            continue
+        def record(pad, reason):
+            failures[net].append({"ref": pad.get("ref"), "pin": pad.get("number"), "reason": reason})
+
+        for pad, nodes in candidates:
+            if not nodes and id(pad) not in fragment_by_pad:
+                record(pad, "no_landing")
+        candidates = [(pad, nodes) for pad, nodes in candidates if nodes or id(pad) in fragment_by_pad]
+        if len(candidates) < 2:
+            return True
+
         if fragments:
-            linked, tree = max(fragments, key=lambda fragment: len(fragment[0]))
-            tree = set(tree)
-            connected_pads = [pad for pad, _ in candidates if id(pad) in linked]
-            candidates = [(pad, landings) for pad, landings in candidates if id(pad) not in linked]
+            members, copper = max(fragments, key=lambda fragment: len(fragment[0]))
+            other_fragments = [(linked, nodes) for linked, nodes in fragments if linked is not members]
+            connected = set(members)
+            tree = set(copper)
+            connected_pads = [pad for pad, _ in candidates if id(pad) in connected]
+            candidates = [(pad, nodes) for pad, nodes in candidates if id(pad) not in connected]
             seed = None
         else:
-            # Start at the most constrained pad. Connect subsequent pads to the routed tree.
             candidates.sort(key=lambda entry: (len(entry[1]), entry[0]["w"] * entry[0]["h"]))
             seed, seed_nodes = candidates.pop(0)
+            connected = {id(seed)}
             tree = set(seed_nodes)
             connected_pads = [seed]
-        net_failed = missing_landing
-        connection_deadline = min(deadline, monotonic() + max(1.0, (deadline - monotonic()) * 0.68))
+            other_fragments = []
+
         while candidates:
             if monotonic() >= connection_deadline:
-                net_failed = True
+                for pad, _ in candidates:
+                    record(pad, "net_budget")
                 break
-            best_index = min(range(len(candidates)), key=lambda i: min(
-                abs(candidates[i][0]["x"] - pad["x"]) + abs(candidates[i][0]["y"] - pad["y"])
-                for pad in connected_pads
-            ))
+
+            def rank_pad(entry):
+                pad, starts = entry
+                proximity = min(hypot(pad["x"] - p["x"], pad["y"] - p["y"]) for p in connected_pads)
+                return (len(starts), proximity) if repair else (proximity, len(starts))
+
+            best_index = min(range(len(candidates)), key=lambda i: rank_pad(candidates[i]))
             pad, starts = candidates.pop(best_index)
             linked, copper = fragment_by_pad.get(id(pad), (set(), set()))
             source = [node for node in sorted(copper) if not track_blocked[node]] if linked else starts
             path = _search(geometry, source, {node for node in tree if not track_blocked[node]}, track_blocked, via_blocked,
                            track_limits, via_limits, connection_deadline)
-            if path is None or not emit(path, net, width, via_blocked):
-                net_failed = True
+            if path is None:
+                record(pad, "net_budget" if monotonic() >= connection_deadline else "no_path")
+                continue
+            if not emit(path, net, width, via_blocked):
+                record(pad, "via_spacing")
                 continue
             if seed is not None:
                 for node in seed_nodes:
-                    _land(geometry, seed, node, segments, net, width)
+                    land(seed, node, net, width)
                 seed = None
-            if not linked:
-                for node in starts:
-                    _land(geometry, pad, node, segments, net, width)
-                tree.update(starts)
-            else:
+            if linked:
                 tree.update(copper)
+                connected.update(linked)
+                other_fragments.remove((linked, copper))
                 connected_pads.extend(other for other, _ in candidates if id(other) in linked)
                 candidates = [(other, nodes) for other, nodes in candidates if id(other) not in linked]
+            else:
+                for node in starts:
+                    land(pad, node, net, width)
+                tree.update(starts)
+                connected.add(id(pad))
             tree.update(path)
             connected_pads.append(pad)
-        if net_failed:
+
+        if seed is None:
+            reserved[net] = [(connected, tree), *other_fragments]
+        return len(connected) < expected
+
+    start = monotonic()
+    pass_deadline = start + .82 * max(0, deadline - start)
+    for index, net in enumerate(nets):
+        available = pass_deadline - monotonic()
+        if available <= 0:
+            unrouted.extend(n for n in nets[index:] if not any(
+                len(members) == len(multi[n]) for members, _ in reserved[n]))
+            break
+        share = available / (len(nets) - index)
+        limit = monotonic() + max(.6, share * (1 + min(len(multi[net]), 9) / 3))
+        if connect_net(net, min(pass_deadline, limit)):
             unrouted.append(net)
-    return {"segments": segments, "vias": vias, "unrouted": unrouted, "priority_pairs": priority_results}
+
+    remaining = []
+    for index, net in enumerate(unrouted):
+        available = deadline - monotonic()
+        if available <= 0:
+            remaining.extend(unrouted[index:])
+            break
+        share = available / (len(unrouted) - index)
+        if connect_net(net, min(deadline, monotonic() + max(.4, 2 * share)), repair=True):
+            remaining.append(net)
+    unrouted = remaining
+    return {"segments": [track for track in segments if id(track) not in unused_stubs],
+            "vias": vias, "unrouted": unrouted, "priority_pairs": priority_results, "failures": dict(failures),
+            "fanout": [{"ref": p.get("ref"), "pin": p.get("number"), "net": p["net"],
+                        "used": not any(id(track) in unused_stubs for track in fanouts[id(p)][1])}
+                       for p in pads if id(p) in fanouts]}

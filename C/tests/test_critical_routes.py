@@ -6,7 +6,7 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from critical_routes import check_routes, plan_pairs
-from router import route_board
+from router import _Grid, _landings, _obstacles, route_board
 
 
 def board_text(pads, segments, vias=(), *, old=False):
@@ -78,3 +78,20 @@ class CriticalRouteTests(unittest.TestCase):
         self.assertEqual(result["unrouted"], [])
         finding = self.checks(pads, result["segments"], c, result["vias"])["copper:sense"]
         self.assertEqual(finding["status"], "passed", finding)
+
+
+    def test_dense_pad_fanout_reaches_coarse_grid_without_routing_unused_pins(self):
+        pads = [
+            {**pad("U", 4, 5, "signal"), "w": 1.4, "h": .3},
+            {**pad("U", 4, 4.5, "unused_1"), "number": "2", "w": 1.4, "h": .3},
+            {**pad("U", 4, 5.5, "unused_2"), "number": "3", "w": 1.4, "h": .3},
+            {**pad("U", 8, 5, "unused_3"), "number": "4", "w": 1.4, "h": .3},
+            pad("J", 2, 5, "signal"),
+        ]
+        grid = _Grid(10, 10, .15)
+        blocked, _ = _obstacles(grid, pads, [], [], "signal", .2, .2, .65)
+        self.assertFalse(_landings(grid, pads[0], blocked, grid.limits(.4)))
+        result = route_board(pads, 10, 10, widths={"signal": .2}, grid=.15)
+        self.assertEqual(result["unrouted"], [], result)
+        self.assertEqual(result["fanout"], [{"ref": "U", "pin": "1", "net": "signal", "used": True}])
+        self.assertEqual({track["net"] for track in result["segments"]}, {"signal"})

@@ -148,8 +148,25 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
     power.update(n for n in design["nets"] if n.strip("/").rsplit("/", 1)[-1].upper() in {"GND", "PGND", "VBOOST", "VIN_RAW", "VIN_F"})
     widths = {n: power_width if n in power else signal_width for n in design["nets"]}
     counts = Counter(p["net"] for c in design["components"] for p in c["pads"] if p["net"])
-    order = list(dict.fromkeys([*priority, *(roles[r] for r in ("SW", "LX", "FB", "VOUT", "VIN") if r in roles),
+    role_priority = {"+3V3": 0, "3V3": 0, "VDD": 0, "VDDA": 0, "VREF+": 0,
+                     "PWM_SW": 1, "SWDIO": 1, "SWCLK": 1, "NRST": 1, "BOOT0": 1}
+    ground = roles.get("GND")
+    if ground_planes and not ground:
+        raise ValueError("Cannot add ground planes without an unambiguous GND net")
+    fill_candidates = ground_planes and not freerouting_jar
+
+    def add_planes(board, work_dir):
+        native_operation(design, "planes", {"board": str(board), "ground": ground,
+            "dimensions": [width, height], "clearance": clearance}, work_dir)
+
+    hard_priority = [n for n in counts if n.rsplit("/", 1)[-1].upper() in role_priority]
+    hard_priority.sort(key=lambda n: (role_priority[n.rsplit("/", 1)[-1].upper()], n))
+    order = list(dict.fromkeys([*hard_priority, *priority,
+        *(roles[r] for r in ("SW", "LX", "FB", "VOUT", "VIN") if r in roles),
         *sorted(counts, key=lambda n: (-profile["weights"].get(n, 1), counts[n], n))]))
+    if ground_planes and ground in order:
+        order.remove(ground)
+        order.append(ground)
     order = [n for n in order if counts[n] > 1]
     if not order:
         raise ValueError("No multi-pad nets")
@@ -164,14 +181,18 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
             geometry_failures = [c["id"] for c in layout["checks"] if c["status"] == "failed"]
             route = route_board(placed_pads(design, placement), width, height, widths=widths,
                 clearance=clearance, grid=grid, edge_margin=.60,
-                order=order if number % 2 == 0 else sorted(order, key=lambda n: (counts[n], order.index(n))),
-                priority_pairs=priority_pairs, timeout=router_timeout, max_cells=max_grid_cells)
+                order=order if number % 2 == 0 else sorted(order, key=lambda n: (
+                    n == ground and ground_planes, n not in hard_priority, counts[n], order.index(n))),
+                priority_pairs=priority_pairs, timeout=router_timeout, max_cells=max_grid_cells,
+                ground_escape_width=signal_width)
         except ValueError as error:
             evidence.append({"candidate": number + 1, "error": str(error)})
             continue
         shutil.copytree(run_dir / "input_project", candidate)
         board = candidate / (stem + ".kicad_pcb")
         write_board(board, design, placement, width, height, route["segments"], route["vias"])
+        if fill_candidates:
+            add_planes(board, candidate)
         drc = run_drc(board, candidate / "DRC.json", cli, schematic_parity=parity)
         copper = check_routes(board, constraints)
         copper_failures = [c["id"] for c in copper if c["status"] == "failed"]
@@ -181,7 +202,8 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
         evidence.append({"candidate": number + 1, "layout_failures": len(geometry_failures),
                          "failed_geometry": geometry_failures, "failed_critical_routes": copper_failures,
                          "unassessed_critical_routes": copper_unknown, "priority_pairs": route["priority_pairs"],
-                         "router_unrouted": route["unrouted"], "drc": drc})
+                         "router_unrouted": route["unrouted"], "pad_failures": route["failures"],
+                         "fanout": route["fanout"], "drc": drc})
         if best is None or rank < best[0]:
             best = rank, placement, route, candidate
         if not failures and not copper_unknown and drc["status"] == "passed":
@@ -221,12 +243,8 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
                 repair["status"] = "rejected_critical_route_regression" if regressed else "rejected_worse_DRC"
             else:
                 repair["status"] = "accepted_by_DRC_pending_power_review"
-    if ground_planes:
-        ground = roles.get("GND") or next((n for n in design["nets"] if n.strip("/").upper() == "GND"), None)
-        if not ground:
-            raise ValueError("Cannot add ground planes without an unambiguous GND net")
-        native_operation(design, "planes", {"board": str(board), "ground": ground,
-            "dimensions": [width, height], "clearance": clearance}, run_dir)
+    if ground_planes and not fill_candidates:
+        add_planes(board, run_dir)
     progress("Checking native PCB, source pin assignments and power-layout constraints…")
     drc = run_drc(board, run_dir / "DRC.json", cli, schematic_parity=parity, refill_zones=True)
     audit = native_operation(design, "audit", {"board": str(board)}, run_dir)
@@ -262,7 +280,8 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
     _write_json(run_dir / "布局与布线.json", {"source": str(source), "board_dimensions_mm": [width, height],
         "component_count": count, "physical_pad_count": pad_count, "routable_net_count": len(order),
         "strategy": strategy, "repair": repair, "placement": placement, "route": audit["route"],
-        "router_diagnostics": {"unrouted": route["unrouted"], "priority_pairs": route["priority_pairs"]}, "layout": layout, "drc": drc,
+        "router_diagnostics": {"unrouted": route["unrouted"], "priority_pairs": route["priority_pairs"],
+                               "pad_failures": route["failures"], "fanout": route["fanout"]}, "layout": layout, "drc": drc,
         "prototype_ready": gate["prototype_ready"]})
     _write_json(run_dir / "execution_status.json", {"status": state, "routing_complete": routing_complete,
         "prototype_ready": gate["prototype_ready"], "production_ready": False, "components": count,
