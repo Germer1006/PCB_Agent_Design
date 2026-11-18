@@ -6,8 +6,11 @@ verification scopes. Do not turn a downstream DRC pass into an upstream approval
 
 - Read A/AGENTS.md before changing or running A. Preserve its numerical/evidence
   checks and formal handoff refusal; never hand-edit generated A outputs to pass.
-- Use B/prepare_pcb_input.py for the implemented B-to-C preflight. The rest of B's
-  full schematic planning/repair and JLCEDA adapter remain separately unimplemented.
+- Use A/design_circuit.py for RC low-pass and voltage-divider drafts. Use the
+  existing A Boost path for async_boost.
+- Use B/generate_schematic.py for explicit single-sheet schematic intent and
+  B/prepare_pcb_input.py for an existing schematic or netlist. Verify the exported
+  KiCad netlist against declared pins before feeding C.
 - Use C/auto_pcb.py for generation, then C/release_check.py for release status.
   Always retain failed/not_assessed results. A generated draft is not a released board.
 - Bind reviews to the actual PCB, rules, complete netlist and project libraries.

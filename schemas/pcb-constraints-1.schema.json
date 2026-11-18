@@ -10,6 +10,10 @@
     "upstream": {"type": "object", "additionalProperties": false, "required": ["status"], "properties": {
       "status": {"type": "string"}, "open_issues": {"$ref": "#/$defs/strings"}, "source_sha256": {"type": "string"}
     }},
+    "net_roles": {"type": "object", "propertyNames": {"minLength": 1}, "additionalProperties": {
+      "enum": ["power", "ground", "switching", "control", "sense", "signal"]
+    }},
+    "ground_plane_net": {"type": "string", "minLength": 1},
     "footprints": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": false, "required": ["status"], "properties": {
       "status": {"enum": ["candidate", "unknown", "verified"]}, "footprint": {"type": "string"},
       "mpn": {"type": ["string", "null"]}, "reviewer": {"type": ["string", "null"]}, "evidence": {"$ref": "#/$defs/strings"}

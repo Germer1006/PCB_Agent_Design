@@ -1,0 +1,9 @@
+{
+  "revision": "rc-example-r1",
+  "topology": "rc_lowpass",
+  "channels": 4,
+  "cutoff_hz": 34000,
+  "nominal_tolerance_pct": 10,
+  "resistance_ohm": 1000,
+  "capacitor_options_nf": [3.3, 4.7, 6.8]
+}

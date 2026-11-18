@@ -122,7 +122,10 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
         raise ValueError("Estimated board exceeds 100mm; supply explicit dimensions")
     _Grid(width, height, grid, max_grid_cells)
     constraints = read_constraints(constraints_file, design)
+    declared_roles = (constraints or {}).get("net_roles", {})
     profile = attach_profile(boost_profile(design), constraints)
+    weights = {"power": 3.0, "ground": 1.8, "switching": 4.5, "control": 2.0, "sense": 2.5, "signal": 1.0}
+    profile["weights"].update({net: weights[role] for net, role in declared_roles.items()})
     strategy, priority = {"mode": "local", "notes": "Native solver with supplied placement constraints"}, []
     if strategy_file:
         proposed = validate_strategy(json.loads(Path(strategy_file).read_text(encoding="utf-8-sig")), design)
@@ -146,11 +149,25 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
     roles = profile["roles"]
     power = {roles[r] for r in ("VIN", "VBUS", "VOUT", "GND", "PGND", "SW", "LX") if r in roles}
     power.update(n for n in design["nets"] if n.strip("/").rsplit("/", 1)[-1].upper() in {"GND", "PGND", "VBOOST", "VIN_RAW", "VIN_F"})
+    ground_nets = {n for n in design["nets"] if n.rsplit("/", 1)[-1].upper() in {"GND", "PGND", "AGND"}}
+    for net, role in declared_roles.items():
+        power.discard(net)
+        ground_nets.discard(net)
+        if role in {"power", "ground", "switching"}:
+            power.add(net)
+        if role == "ground":
+            ground_nets.add(net)
     widths = {n: power_width if n in power else signal_width for n in design["nets"]}
     counts = Counter(p["net"] for c in design["components"] for p in c["pads"] if p["net"])
     role_priority = {"+3V3": 0, "3V3": 0, "VDD": 0, "VDDA": 0, "VREF+": 0,
                      "PWM_SW": 1, "SWDIO": 1, "SWCLK": 1, "NRST": 1, "BOOT0": 1}
-    ground = roles.get("GND")
+    declared_grounds = {n for n, role in declared_roles.items() if role == "ground"}
+    ground = (constraints or {}).get("ground_plane_net")
+    if ground is None and len(declared_grounds) == 1:
+        ground = next(iter(declared_grounds))
+    legacy_ground = roles.get("GND")
+    if ground is None and not declared_grounds and legacy_ground not in declared_roles:
+        ground = legacy_ground
     if ground_planes and not ground:
         raise ValueError("Cannot add ground planes without an unambiguous GND net")
     fill_candidates = ground_planes and not freerouting_jar
@@ -159,10 +176,12 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
         native_operation(design, "planes", {"board": str(board), "ground": ground,
             "dimensions": [width, height], "clearance": clearance}, work_dir)
 
-    hard_priority = [n for n in counts if n.rsplit("/", 1)[-1].upper() in role_priority]
-    hard_priority.sort(key=lambda n: (role_priority[n.rsplit("/", 1)[-1].upper()], n))
+    role_tiers = {"switching": 0, "power": 0, "control": 1, "sense": 2}
+    tiers = {n: (role_tiers.get(declared_roles[n]) if n in declared_roles
+                 else role_priority.get(n.rsplit("/", 1)[-1].upper())) for n in counts}
+    hard_priority = sorted((n for n, tier in tiers.items() if tier is not None), key=lambda n: (tiers[n], n))
     order = list(dict.fromkeys([*hard_priority, *priority,
-        *(roles[r] for r in ("SW", "LX", "FB", "VOUT", "VIN") if r in roles),
+        *(roles[r] for r in ("SW", "LX", "FB", "VOUT", "VIN") if r in roles and roles[r] not in declared_roles),
         *sorted(counts, key=lambda n: (-profile["weights"].get(n, 1), counts[n], n))]))
     if ground_planes and ground in order:
         order.remove(ground)
@@ -182,9 +201,11 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
             route = route_board(placed_pads(design, placement), width, height, widths=widths,
                 clearance=clearance, grid=grid, edge_margin=.60,
                 order=order if number % 2 == 0 else sorted(order, key=lambda n: (
-                    n == ground and ground_planes, n not in hard_priority, counts[n], order.index(n))),
+                    n == ground and ground_planes, n not in hard_priority,
+                    tiers[n] if n in declared_roles and tiers[n] is not None else 0,
+                    counts[n], order.index(n))),
                 priority_pairs=priority_pairs, timeout=router_timeout, max_cells=max_grid_cells,
-                ground_escape_width=signal_width)
+                ground_escape_width=signal_width, ground_nets=ground_nets)
         except ValueError as error:
             evidence.append({"candidate": number + 1, "error": str(error)})
             continue
@@ -223,7 +244,8 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
             progress("Repairing control/GND routing with explicit Freerouting adapter…")
             initial_copper = check_routes(board, constraints)
             repaired, repair = reroute(board, design, run_dir / "repair", jar=freerouting_jar,
-                signal_width=signal_width, power_width=power_width, clearance=clearance, power_nets=power)
+                signal_width=signal_width, power_width=power_width, clearance=clearance,
+                power_nets=power, ground_nets=ground_nets)
             backup = run_dir / "before_repair.kicad_pcb"
             shutil.copyfile(board, backup)
             shutil.copyfile(repaired, board)
@@ -259,7 +281,7 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
     elif layout["status"] == "passed" and any(c["status"] == "not_assessed" for c in copper):
         layout["status"] = "needs_review"
     width_failures = sorted({s["net"] for s in audit["route"]["segments"]
-        if s["net"] in power and s["net"].strip("/").rsplit("/", 1)[-1].upper() not in {"GND", "PGND"}
+        if s["net"] in power and s["net"] not in ground_nets
         and s["width"] + 1e-6 < power_width})
     for net in width_failures:
         layout["checks"].append({"id": "power_width:" + net, "status": "failed",
@@ -280,6 +302,8 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
     _write_json(run_dir / "布局与布线.json", {"source": str(source), "board_dimensions_mm": [width, height],
         "component_count": count, "physical_pad_count": pad_count, "routable_net_count": len(order),
         "strategy": strategy, "repair": repair, "placement": placement, "route": audit["route"],
+        "routing_policy": {"net_roles": declared_roles, "ground_plane_net": ground if ground_planes else None,
+                           "widths_mm": widths, "priority_nets": hard_priority},
         "router_diagnostics": {"unrouted": route["unrouted"], "priority_pairs": route["priority_pairs"],
                                "pad_failures": route["failures"], "fanout": route["fanout"]}, "layout": layout, "drc": drc,
         "prototype_ready": gate["prototype_ready"]})

@@ -1,0 +1,9 @@
+{
+  "revision": "divider-example-r1",
+  "topology": "voltage_divider",
+  "max_input_v": 12,
+  "target_output_v": 3,
+  "max_output_v": 3.2,
+  "nominal_tolerance_pct": 5,
+  "resistor_options_ohm": [3300, 10000, 12000, 30000]
+}

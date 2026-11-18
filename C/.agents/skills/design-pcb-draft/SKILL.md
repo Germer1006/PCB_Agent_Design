@@ -7,8 +7,9 @@ description: Generate and verify native two-layer KiCad PCB drafts from complete
 
 1. Read C/使用说明.md and the B manifest/pcb_constraints. Preserve upstream issues.
    Reject missing footprints and unsupported versions. Keep all physical parts.
-2. Identify the switch loop, driver turn-on and turn-off paths, shunt inputs,
-   and decouplers from actual schematic pins. Bind them in `groups` and
+2. Read explicitly declared `net_roles` and `ground_plane_net` from the
+   contract. When the circuit has switching, Kelvin or decoupling paths,
+   identify them from actual schematic pins. Bind them in `groups` and
    `pad_pairs`. For Kelvin pairs use `a` for the shunt pad and `b` for the sense pin.
    When reworking a layout, place and orient these clusters first. Use `fixed`
    to retain positions after checking pin access, courtyards and local return.

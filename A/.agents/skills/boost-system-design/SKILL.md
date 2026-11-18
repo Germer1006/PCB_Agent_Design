@@ -1,11 +1,19 @@
 ---
 name: boost-system-design
-description: 模块一·系统总体设计智能体。把“MCU 控制的 Boost 恒流恒压电源”课程需求转化为可实施的工程方案：需求解析、功能划分、拓扑选择、CC/CV 控制方案、关键参数计算、器件选型（立创可购、可手焊）、效率/环路复核、系统设计规则检查，并输出给原理图/PCB/程序模块的交接文件（design_spec.json、BOM、boost_params.h）。当用户提到模块一、系统设计、总体方案、Boost 参数计算、器件选型、CC/CV、design_spec 时使用。
+description: 模块一·系统总体设计智能体。把“MCU 控制的 Boost 恒流恒压电源”课程需求转化为可实施的工程方案：需求解析、功能划分、拓扑选择、CC/CV 控制方案、关键参数计算、器件选型（立创可购、可手焊）、效率/环路复核、系统设计规则检查，并输出给原理图/PCB/程序模块的交接文件（design_spec.json、BOM、boost_params.h）。当用户提到模块一、系统设计、总体方案、Boost 参数计算、器件选型、CC/CV、RC 低通、分压采样或 design_spec 时使用。
 ---
 
 # 模块一 · 系统总体设计智能体
 
-## 定位
+## 按电路类型选择工具
+
+- 非同步 Boost 使用下文的功率、环路与保护流程。
+- RC 低通和分压采样使用 `python A/design_circuit.py <requirements.json> --output <新设计文件>`。
+  从仓库根目录运行，参考 `A/inputs/rc_lowpass.example.json` 和 `A/inputs/voltage_divider.example.json`。
+  读取输出的标称计算和未决事项，交给 `B/generate_schematic.py`。继续核对负载、容差和器件额定值。
+- 其他电路先确认已有的计算模型和验证依据。超出现有模型时记录缺口。
+
+## Boost 流程定位
 
 输入一份设计需求（`inputs/course_requirements.json`），输出一套**有依据、可复算、可交接**的系统方案。
 四个课程智能体的流水线：**模块一（本 skill）→ 模块二 原理图 → 模块三 PCB → 模块四 程序**；

@@ -1,15 +1,15 @@
 # PCB_Agent_Design
 
-MCU 控制 Boost CC/CV 电源的分模块设计工作流。各阶段保留自己的验证范围，生成文件不等于完成工程验证。
+支持 MCU 控制的非同步 Boost CC/CV 设计，以及 RC 低通和电阻分压的 KiCad 草稿流程。各阶段独立记录设计与验证状态。
 
 | 模块 | 本仓库可执行能力 | 交接内容 |
 | --- | --- | --- |
-| A | 需求、计算、选型、环路初值、SDRC 与正式交接检查 | `design_spec.json`、BOM、固件参数、`pcb_constraints.json` |
-| B | 已有 KiCad 原理图/完整网表的交接预检、封装与引脚绑定、可用时执行原生 ERC | `project_input.json`、完整网表、约束与源工程 |
+| A | 非同步 Boost 计算与验证，RC 低通和电阻分压的标称计算与原理图连接意图 | `design_spec.json`；Boost 另有 BOM 和固件参数 |
+| B | 根据明确的符号与引脚连接生成单页 KiCad 原理图，也可接收已有原理图和网表。对照原理图重导网表并运行 ERC。 | `project_input.json`、完整网表、约束与源工程 |
 | C | 小型两层板布局布线、项目库冻结、原生 DRC/读回、解压复查、打样状态检查 | `delivery.zip` 与原始检查记录 |
 | D | 本仓库尚未实现完整固件模块 | A 的参数头文件不等于经过验证的固件 |
 
-B 的完整原理图设计/修复与嘉立创 EDA 自动化仍是待实现范围；当前新增的是可执行交接适配器。C 的默认容量为 30 器件/150 焊盘，更大电路必须显式给出预算，不能保证自动布通。
+B 的生成入口接收已明确器件和引脚连接的设计。需要复杂分层、多单元符号或嘉立创 EDA 时，需另行准备原理图。C 默认容量为 30 器件/150 焊盘，更大的电路需显式给出预算。
 
 ## 使用
 
@@ -24,6 +24,18 @@ python C/release_check.py RUN_DIRECTORY
 ```
 
 `RUN_DIRECTORY` 替换为程序打印的具体运行目录。A 的探索草稿只能通过显式 `--draft-output NEW_DIRECTORY` 导出，保留原状态与阻塞项，不产生正式 BOM/固件头文件。
+
+### 两个非 Boost 端到端示例
+
+从项目根目录执行。将输入文件替换为 `A/inputs/voltage_divider.example.json` 可运行分压示例。每次使用新的输出路径。
+
+```bash
+python A/design_circuit.py A/inputs/rc_lowpass.example.json --output rc_design.json
+python B/generate_schematic.py rc_design.json --output rc_handoff
+python C/auto_pcb.py rc_handoff/project_input.json --ground-planes --size 36 26 --output rc_pcb --target draft
+```
+
+原理图输入见 [schematic-intent-1](schemas/schematic-intent-1.schema.json)。草稿保留上游审核事项，另查 `release_status.json` 确认放行状态。
 
 ## 约束与交付状态
 

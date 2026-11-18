@@ -17,6 +17,7 @@ inputs/course_requirements.json
 ## 约定
 
 - 本模块的工作由 skill `boost-system-design`（`.agents/skills/boost-system-design/SKILL.md`）完成，严格遵守其中的阶段流程与三条铁律。
+- RC 低通或电阻分压草稿使用 `design_circuit.py`。计算依据为理想源和未加载输出，实物容差与额定值留待审核。
 - 默认工作目录 `outputs/module1/`；试验性运行请用新的工作目录（如 `outputs/test1/`），不要覆盖已交付结果。
 - 交接文件和报告首页由工具生成。修改设计决策后重跑工具并升级 `revision`。
 - 用 `input_protection_plan.json` 核对输入保护分工以及 B 需要的实施依据。生成探索草稿时，在 `run_all.py` 加 `--draft-output <独立空目录>`。

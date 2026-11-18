@@ -148,7 +148,7 @@ def _landings(grid, pad, blocked, limits):
 
 
 def _fanout_stubs(geometry, pads, segments, vias, widths, clearance, edge_margin, deadline,
-                  ground_escape_width, eligible_nets, priorities):
+                  ground_escape_width, ground_nets, eligible_nets, priorities):
     """Connect dense SMD rows to the routing grid with short, checked copper stubs."""
     groups = defaultdict(list)
     for pad in pads:
@@ -170,7 +170,7 @@ def _fanout_stubs(geometry, pads, segments, vias, widths, clearance, edge_margin
             axis, cross = ("x", "y") if pad["w"] > pad["h"] else ("y", "x")
             length, breadth = sorted((pad["h"], pad["w"]), reverse=True)
             width = widths.get(net, .25)
-            if ground_escape_width is not None and net.rsplit("/", 1)[-1].upper() in {"GND", "PGND", "AGND"}:
+            if ground_escape_width is not None and net in ground_nets:
                 width = min(width, ground_escape_width)
             track_radius = width / 2 + clearance + guard
             # Look for a neighbour in the same physical pad row, on a different net.
@@ -378,7 +378,7 @@ def _emit_path(grid, path, net, width, via_diameter, via_drill, segments, vias):
 def route_board(
     pads, board_width, board_height, *, widths=None, clearance=0.2, grid=0.15,
     via_diameter=0.65, via_drill=0.3, edge_margin=0.3, order=None, priority_pairs=(), timeout=18,
-    max_cells=650_000, ground_escape_width=None,
+    max_cells=650_000, ground_escape_width=None, ground_nets=None,
 ):
     """Route all multi-pad nets; return segments, vias and any incomplete net names."""
     dimensions = (board_width, board_height, grid, via_diameter, via_drill, timeout)
@@ -398,6 +398,8 @@ def route_board(
     for pad in pads:
         if pad["net"]:
             signals[pad["net"]].append(pad)
+    if ground_nets is None:
+        ground_nets = {n for n in signals if n.rsplit("/", 1)[-1].upper() in {"GND", "PGND", "AGND"}}
     multi = {name: net_pads for name, net_pads in signals.items() if len(net_pads) > 1}
     rank = {name: index for index, name in enumerate(order or ())}
     nets = sorted(multi, key=lambda name: (rank.get(name, len(rank)), -widths.get(name, 0.25), name))
@@ -418,7 +420,8 @@ def route_board(
     def reserve_fanout():
         nonlocal fanouts
         fanouts = _fanout_stubs(geometry, pads, segments, vias, widths, clearance,
-                               edge_margin, deadline, ground_escape_width, multi.keys() - kelvin_paths.keys(), rank)
+                               edge_margin, deadline, ground_escape_width, ground_nets,
+                               multi.keys() - kelvin_paths.keys(), rank)
         unused_stubs.update(id(track) for _, trace in fanouts.values() for track in trace)
 
     def landings(pad, track_blocked, track_limits):

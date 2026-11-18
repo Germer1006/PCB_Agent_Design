@@ -23,6 +23,18 @@ class ConstraintsTests(unittest.TestCase):
                 if change == "typo": c["pad_pairs"][0]["max_distnace_mm"] = 3
                 with self.assertRaises(ValueError): validate_constraints(c, model())
 
+    def test_explicit_net_roles_are_validated_against_source_nets(self):
+        c = contract()
+        c["net_roles"] = {"VIN": "sense", "GND": "ground"}
+        c["ground_plane_net"] = "GND"
+        self.assertEqual(validate_constraints(c, model())["ground_plane_net"], "GND")
+        c["ground_plane_net"] = "VIN"
+        with self.assertRaisesRegex(ValueError, "explicitly marked ground"):
+            validate_constraints(c, model())
+        c["net_roles"]["MISSING"] = "control"
+        with self.assertRaisesRegex(ValueError, "Unknown role net"):
+            validate_constraints(c, model())
+
     def test_remote_decoupler_fails_even_without_any_DRC_collision(self):
         c = contract()
         positions = {"R1": {"x": 5, "y": 5, "angle": 0}, "R2": {"x": 20, "y": 5, "angle": 0}}

@@ -7,6 +7,7 @@ import math
 from pathlib import Path
 
 VERSION = "pcb-constraints-1"
+NET_ROLES = {"power", "ground", "switching", "control", "sense", "signal"}
 REQUIRED_REVIEWS = ("electrical", "power_layout", "sampling_return", "mechanical", "manufacturing_process")
 
 
@@ -32,7 +33,7 @@ def _strings(value, label, nonempty=False):
 def validate_constraints(data, design=None):
     """Reject typos, invented pins, invalid limits and unsupported versions."""
     _keys(data, {"schema_version", "design_revision", "upstream", "footprints", "groups", "pad_pairs",
-                 "fixed", "regions", "keepouts", "required_reviews", "notes"}, "constraints")
+                 "fixed", "regions", "keepouts", "required_reviews", "notes", "net_roles", "ground_plane_net"}, "constraints")
     if data.get("schema_version") != VERSION:
         raise ValueError("Unsupported PCB constraint schema_version")
     if not isinstance(data.get("design_revision"), str) or not data["design_revision"].strip():
@@ -47,6 +48,17 @@ def validate_constraints(data, design=None):
         raise ValueError("footprints must be an object")
     refs = {c["ref"] for c in design["components"]} if design else None
     pins = {(p["ref"], p["number"]): p["net"] for c in design["components"] for p in c["pads"]} if design else None
+    net_roles = data.get("net_roles", {})
+    if not isinstance(net_roles, dict):
+        raise ValueError("net_roles must map actual net names to role strings")
+    for net, role in net_roles.items():
+        if not isinstance(net, str) or not net.strip() or not isinstance(role, str) or role not in NET_ROLES:
+            raise ValueError(f"Invalid net role: {net!r} -> {role!r}")
+        if design is not None and net not in design["nets"]:
+            raise ValueError(f"Unknown role net: {net}")
+    plane = data.get("ground_plane_net")
+    if "ground_plane_net" in data and (not isinstance(plane, str) or net_roles.get(plane) != "ground"):
+        raise ValueError("ground_plane_net must name a net explicitly marked ground")
     for ref, record in footprints.items():
         _keys(record, {"status", "footprint", "mpn", "reviewer", "evidence"}, f"footprints.{ref}")
         if record.get("status") not in {"candidate", "verified", "unknown"}:

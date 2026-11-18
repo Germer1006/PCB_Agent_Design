@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Single-sheet KiCad schematic intent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "components", "nets"],
+  "properties": {
+    "schema_version": {"const": "schematic-intent-1"},
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ref", "lib_id", "value", "footprint"],
+        "properties": {
+          "ref": {"type": "string", "pattern": "^[A-Z]+[1-9][0-9]*$"},
+          "lib_id": {"type": "string", "pattern": "^[A-Za-z0-9_+.-]+:.+$"},
+          "value": {"type": "string", "minLength": 1},
+          "footprint": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "nets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "pins"],
+        "properties": {
+          "name": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_.+-]{0,23}$"},
+          "pins": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/pin"}}
+        }
+      }
+    },
+    "no_connect": {"type": "array", "items": {"$ref": "#/$defs/pin"}}
+  },
+  "$defs": {
+    "pin": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "string", "minLength": 1}}
+  }
+}

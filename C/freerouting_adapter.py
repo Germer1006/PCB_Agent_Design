@@ -42,7 +42,7 @@ def configure_dsn(text, protected, signal_width, power_width, clearance):
 
 
 def reroute(board, design, work_dir, *, jar, signal_width, power_width, clearance, power_nets,
-            timeout=180, java=None):
+            timeout=180, java=None, ground_nets=None):
     board, work_dir, jar = Path(board).resolve(), Path(work_dir).resolve(), Path(jar).resolve(strict=True)
     java = java or shutil.which("java")
     if java is None:
@@ -50,7 +50,9 @@ def reroute(board, design, work_dir, *, jar, signal_width, power_width, clearanc
     work_dir.mkdir(parents=True, exist_ok=True)
     tree = _parse(board.read_text(encoding="utf-8"))
     names = {str(net[1]): str(net[2]) for net in _items(tree, "net") if len(net) >= 3}
-    protected = set(power_nets) - {n for n in power_nets if n.strip("/").rsplit("/", 1)[-1].upper() in {"GND", "PGND", "AGND"}}
+    if ground_nets is None:
+        ground_nets = {n for n in power_nets if n.rsplit("/", 1)[-1].upper() in {"GND", "PGND", "AGND"}}
+    protected = set(power_nets) - set(ground_nets)
     # Use text filtering instead of unsafe SWIG Remove iteration on KiCad 9.
     kept = []
     for item in tree:

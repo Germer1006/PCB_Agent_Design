@@ -1,11 +1,15 @@
 ---
 name: prepare-pcb-handoff
-description: Validate a completed B KiCad schematic/netlist and prepare the versioned input for C PCB generation. Use for B-to-C handoff, footprint preflight, decoupling pin bindings and native schematic/netlist consistency checks.
+description: Generate single-sheet KiCad schematics from explicit component and pin connectivity or validate a completed KiCad schematic/netlist, then prepare the versioned C handoff. Use for B-to-C handoff, footprint preflight, decoupling pin bindings and native schematic/netlist consistency checks.
 ---
 
 # Prepare B input for C
 
-1. Read the A design_spec and B's actual full netlist. Keep A's status and open
+1. Read A's design specification. When it contains `schematic_intent`, run
+   `python B/generate_schematic.py DESIGN_SPEC --output NEW_HANDOFF_DIR` from
+   the repository root. Declare every pin explicitly and compare the native
+   netlist with the intent. For an existing schematic use the preflight below.
+   Read the actual full netlist. Keep A's status and open
    issues. Require unique physical references, unambiguous pin nets and assigned
    footprints. Do not guess an empty footprint or approve an abstract component.
 2. Supply the original modern schematic when available. Run the adapter below;
@@ -16,8 +20,9 @@ description: Validate a completed B KiCad schematic/netlist and prepare the vers
    limits only with evidence. Keep unknown limits null.
 4. Supply actual procurement/footprint review records if available. Candidate
    footprints may enter a draft; they cannot receive prototype approval.
-5. Inspect preflight.json, then pass project_input.json to C. Do not claim this
-   adapter implements the rest of B's schematic-design or JLCEDA automation.
+5. Inspect preflight.json, then pass project_input.json to C. Keep drafts
+   labeled as such. Use supplied KiCad schematics for hierarchy, multi-unit
+   components and complex layouts outside the single-sheet generator.
 
 From repository root:
 
