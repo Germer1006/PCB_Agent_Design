@@ -12,6 +12,7 @@ import sys
 from tempfile import mkdtemp
 
 from constraints import attach_profile, check_layout, read_constraints
+from critical_routes import check_routes, plan_pairs
 from delivery import package_delivery
 from kicad_io import load_design, native_operation, write_board
 from model_strategy import model_order, validate_strategy
@@ -34,9 +35,13 @@ def _route_length(route):
     return sum(math.dist(item["start"], item["end"]) for item in route["segments"])
 
 
-def _result_rank(drc, route):
-    return (1, len(route["unrouted"]), math.inf, math.inf) if drc["status"] == "failed" else (
-        0, drc["unconnected"], drc["errors"], drc["warnings"])
+def _result_rank(drc, route, constraint_failures, copper):
+    if drc["status"] == "failed":
+        return True, constraint_failures, len(route["unrouted"]), _route_length(route)
+    return (False, constraint_failures, drc["unconnected"], drc["errors"], drc["warnings"],
+            sum(c["status"] == "not_assessed" for c in copper),
+            sum(c["layer_changes"] or 0 for c in copper),
+            sum(c["track_length_mm"] or 0 for c in copper), _route_length(route))
 
 
 def _apply_strategy(profile, proposed):
@@ -148,6 +153,7 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
     order = [n for n in order if counts[n] > 1]
     if not order:
         raise ValueError("No multi-pad nets")
+    priority_pairs = plan_pairs((p for c in design["components"] for p in c["pads"]), constraints)
     evidence, best = [], None
     for number in range(attempts):
         progress(f"Placement/routing candidate {number + 1}/{attempts}…")
@@ -155,10 +161,11 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
         try:
             placement = place(design, width, height, profile, seed=number)
             layout = check_layout(design, placement, constraints)
+            geometry_failures = [c["id"] for c in layout["checks"] if c["status"] == "failed"]
             route = route_board(placed_pads(design, placement), width, height, widths=widths,
                 clearance=clearance, grid=grid, edge_margin=.60,
                 order=order if number % 2 == 0 else sorted(order, key=lambda n: (counts[n], order.index(n))),
-                timeout=router_timeout, max_cells=max_grid_cells)
+                priority_pairs=priority_pairs, timeout=router_timeout, max_cells=max_grid_cells)
         except ValueError as error:
             evidence.append({"candidate": number + 1, "error": str(error)})
             continue
@@ -166,12 +173,18 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
         board = candidate / (stem + ".kicad_pcb")
         write_board(board, design, placement, width, height, route["segments"], route["vias"])
         drc = run_drc(board, candidate / "DRC.json", cli, schematic_parity=parity)
-        failures = sum(c["status"] == "failed" for c in layout["checks"])
-        rank = (failures, *_result_rank(drc, route), _route_length(route))
-        evidence.append({"candidate": number + 1, "layout_failures": failures, "router_unrouted": route["unrouted"], "drc": drc})
+        copper = check_routes(board, constraints)
+        copper_failures = [c["id"] for c in copper if c["status"] == "failed"]
+        copper_unknown = sum(c["status"] == "not_assessed" for c in copper)
+        failures = len(geometry_failures) + len(copper_failures)
+        rank = _result_rank(drc, route, failures, copper)
+        evidence.append({"candidate": number + 1, "layout_failures": len(geometry_failures),
+                         "failed_geometry": geometry_failures, "failed_critical_routes": copper_failures,
+                         "unassessed_critical_routes": copper_unknown, "priority_pairs": route["priority_pairs"],
+                         "router_unrouted": route["unrouted"], "drc": drc})
         if best is None or rank < best[0]:
             best = rank, placement, route, candidate
-        if not failures and drc["status"] == "passed":
+        if not failures and not copper_unknown and drc["status"] == "passed":
             break
     _write_json(run_dir / "candidate_results.json", evidence)
     if best is None:
@@ -186,6 +199,7 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
         if initial["status"] != "failed" and initial["unconnected"]:
             from freerouting_adapter import reroute
             progress("Repairing control/GND routing with explicit Freerouting adapter…")
+            initial_copper = check_routes(board, constraints)
             repaired, repair = reroute(board, design, run_dir / "repair", jar=freerouting_jar,
                 signal_width=signal_width, power_width=power_width, clearance=clearance, power_nets=power)
             backup = run_dir / "before_repair.kicad_pcb"
@@ -195,9 +209,16 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
             def repair_rank(result):
                 return (result["status"] == "failed", result.get("unconnected") if result.get("unconnected") is not None else math.inf,
                         result.get("errors") if result.get("errors") is not None else math.inf)
-            if repair_rank(repaired_drc) > repair_rank(initial):
+            repaired_copper = check_routes(board, constraints)
+            severity = {"passed": 0, "not_assessed": 1, "failed": 2}
+            before = {c["id"]: c["status"] for c in initial_copper}
+            after = {c["id"]: c["status"] for c in repaired_copper}
+            regressed = sorted(identity for identity, status in before.items()
+                               if severity[after.get(identity, "failed")] > severity[status])
+            if regressed or repair_rank(repaired_drc) > repair_rank(initial):
                 shutil.copyfile(backup, board)
-                repair["status"] = "rejected_worse_DRC"
+                repair["critical_route_regressions"] = regressed
+                repair["status"] = "rejected_critical_route_regression" if regressed else "rejected_worse_DRC"
             else:
                 repair["status"] = "accepted_by_DRC_pending_power_review"
     if ground_planes:
@@ -211,6 +232,14 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
     audit = native_operation(design, "audit", {"board": str(board)}, run_dir)
     placement = {p["ref"]: {"x": p["x"], "y": p["y"], "angle": int(round(p["angle"])) % 360} for p in audit["components"]}
     layout = check_layout(design, placement, constraints)
+    copper = check_routes(board, constraints)
+    layout["checks"].extend(copper)
+    if copper:
+        layout["scope"] = "Placement geometry and identifiable copper paths. Electrical return and thermal design require review."
+    if any(c["status"] == "failed" for c in copper):
+        layout["status"] = "failed"
+    elif layout["status"] == "passed" and any(c["status"] == "not_assessed" for c in copper):
+        layout["status"] = "needs_review"
     width_failures = sorted({s["net"] for s in audit["route"]["segments"]
         if s["net"] in power and s["net"].strip("/").rsplit("/", 1)[-1].upper() not in {"GND", "PGND"}
         and s["width"] + 1e-6 < power_width})
@@ -233,7 +262,7 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
     _write_json(run_dir / "布局与布线.json", {"source": str(source), "board_dimensions_mm": [width, height],
         "component_count": count, "physical_pad_count": pad_count, "routable_net_count": len(order),
         "strategy": strategy, "repair": repair, "placement": placement, "route": audit["route"],
-        "router_diagnostics": {"unrouted": route["unrouted"]}, "layout": layout, "drc": drc,
+        "router_diagnostics": {"unrouted": route["unrouted"], "priority_pairs": route["priority_pairs"]}, "layout": layout, "drc": drc,
         "prototype_ready": gate["prototype_ready"]})
     _write_json(run_dir / "execution_status.json", {"status": state, "routing_complete": routing_complete,
         "prototype_ready": gate["prototype_ready"], "production_ready": False, "components": count,
@@ -247,14 +276,21 @@ def generate(schematic, output_parent, *, cli_path=None, footprint_libraries=(),
             if render_preview(board, candidate_preview, cli):
                 preview_path = candidate_preview
                 break
+    critical_rows = []
+    for finding in copper:
+        metrics = ""
+        if finding["track_length_mm"] is not None:
+            metrics = f"，可识别铜线长度 {finding['track_length_mm']:g} mm、换层 {finding['layer_changes']} 次"
+        critical_rows.append(f"- `{finding['id']}` {finding['status']}{metrics}。{finding['detail']}")
     report = run_dir / "设计报告.md"
     report.write_text("\n".join(["# PCB 草稿与交付检查", "", f"- 状态：{state}",
         f"- 工程：project/{stem}.kicad_pro", f"- 规模：{count} 器件 / {pad_count} 焊盘；{width:g} × {height:g} mm，两层",
         f"- 原生读回：{readback['status']}", f"- DRC：{drc['status']}；错误 {drc['errors']}，警告 {drc['warnings']}，未连接 {drc['unconnected']}",
         f"- 原理图一致性：{'已执行' if parity else '网表输入，仅执行引脚网络读回，未执行原生原理图一致性'}",
-        f"- 布局几何：{layout['status']}；不能代替实际功率回流/采样审核", f"- 布线来源：{repair['engine']}",
+        f"- 布局与关键走线：{layout['status']}；回流和热设计仍需审核", f"- 布线来源：{repair['engine']}",
         f"- 信号线宽/间距目标：{signal_width:g}/{clearance:g} mm，完整规则见项目 .kicad_pro",
-        "- DRC 通过不自动放行打样；量产审核未实现。", "", "## 当前放行阻塞项", "",
+        "- DRC 通过后仍须工程审核；量产审核未实现。", "", "## 关键走线检查", "",
+        *critical_rows, "", "## 当前放行阻塞项", "",
         *[f"- `{b['id']}`：{b['detail']}" for b in gate["blockers"]], "", "## 交付复查", "",
         "完整解压 delivery.zip，保留 project 中的规则、子页及 PCB_Project.pretty。",
         "运行 `python C/release_check.py <解压目录>` 查看放行状态。未知限值及候选封装不能当作通过。",

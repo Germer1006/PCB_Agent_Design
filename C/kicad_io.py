@@ -302,9 +302,15 @@ def write_board(path, design, placement, board_width, board_height, segments, vi
             working.with_suffix(suffix).unlink(missing_ok=True)
 
 
+def _native_library_plugin(pcb):
+    manager = pcb.PCB_IO_MGR
+    lookup = getattr(manager, "FindPlugin", None) or manager.PluginFind
+    return lookup(manager.KICAD_SEXP)
+
+
 def _load_footprint(pcb, part, reference_board):
     if part["_library"]:
-        footprint = pcb.FootprintLoad(part["_library"], part["_module"])
+        footprint = _native_library_plugin(pcb).FootprintLoad(part["_library"], part["_module"])
     else:
         compatible = [footprint for footprint in reference_board.GetFootprints()
                       if footprint.GetFPIDAsString() == part["footprint"]]
@@ -612,7 +618,7 @@ def _freeze_footprints(pcb, request):
     directory = Path(request["directory"])
     directory.mkdir(parents=True, exist_ok=True)
     reference = pcb.LoadBoard(request["template"]) if request.get("template") else None
-    plugin = pcb.PCB_IO_MGR.PluginFind(pcb.PCB_IO_MGR.KICAD_SEXP)
+    plugin = _native_library_plugin(pcb)
     mapping = {}
     for part in request["components"]:
         old = part["footprint"]
@@ -620,7 +626,7 @@ def _freeze_footprints(pcb, request):
             continue
         library, _, module = old.partition(":")
         name = (library + "__" + module) if module else library
-        if not re.fullmatch(r"[A-Za-z0-9_.+()\-]+", name):
+        if not re.fullmatch(r"[A-Za-z0-9_,.+()\-]+", name):
             raise ValueError(f"Unsupported footprint filename {name}")
         footprint = _load_footprint(pcb, part, reference)
         footprint.SetFPIDAsString("PCB_Project:" + name)

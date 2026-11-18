@@ -256,7 +256,7 @@ def _emit_path(grid, path, net, width, via_diameter, via_drill, segments, vias):
 
 def route_board(
     pads, board_width, board_height, *, widths=None, clearance=0.2, grid=0.15,
-    via_diameter=0.65, via_drill=0.3, edge_margin=0.3, order=None, timeout=18,
+    via_diameter=0.65, via_drill=0.3, edge_margin=0.3, order=None, priority_pairs=(), timeout=18,
     max_cells=650_000,
 ):
     """Route all multi-pad nets; return segments, vias and any incomplete net names."""
@@ -281,27 +281,131 @@ def route_board(
     segments, vias, unrouted = [], [], []
     deadline = monotonic() + timeout
     via_limits = geometry.limits(edge_margin + via_diameter / 2)
-    for index, net in enumerate(nets):
-        if monotonic() >= deadline:
-            unrouted.extend(nets[index:])
-            break
-        width = widths.get(net, 0.25)
-        track_limits = geometry.limits(edge_margin + width / 2)
+    by_pin = defaultdict(list)
+    if priority_pairs:
+        for pad in pads:
+            by_pin[pad["ref"], pad["number"]].append(pad)
+    reserved = defaultdict(list)
+    kelvin_paths = defaultdict(list)
+    priority_results = []
+
+    def obstacles(net, width):
         track_blocked, via_blocked = _obstacles(
             geometry, pads, segments, vias, net, width, clearance, via_diameter,
         )
+        # Reserve Kelvin copper even against tracks on the same net, except within the shunt pad.
+        for shunt, sense, trace, trace_vias in kelvin_paths[net]:
+            blocked = bytearray(2 * geometry.area)
+            blocked_vias = bytearray(geometry.area)
+            margin = grid * DIAGONAL / 2 + 0.006
+            _mark_pad(geometry, blocked, sense["layers"], sense, width / 2 + margin)
+            for segment in trace:
+                start, end = segment["start"], segment["end"]
+                _mark_segment(geometry, blocked, (segment["layer"],), start, end,
+                              (width + segment["width"]) / 2 + margin)
+                _mark_segment(geometry, blocked_vias, (0,), start, end,
+                              (via_diameter + segment["width"]) / 2 + margin)
+            for via in trace_vias:
+                center = (via["x"], via["y"])
+                _mark_segment(geometry, blocked, (0, 1), center, center,
+                              (width + via["size"]) / 2 + margin)
+            sx, sy = shunt["x"], shunt["y"]
+            hw, hh = shunt["w"] / 2, shunt["h"] / 2
+            for index, x, y in geometry.cells(sx - hw, sy - hh, sx + hw, sy + hh):
+                if _pad_distance(shunt, x, y) <= 1e-8:
+                    for layer in shunt["layers"]:
+                        blocked[index + layer * geometry.area] = 0
+            track_blocked = bytearray(a | b for a, b in zip(track_blocked, blocked))
+            via_blocked = bytearray(a | b for a, b in zip(via_blocked, blocked_vias))
+        return track_blocked, via_blocked
+
+    def emit(path, net, width, via_blocked):
+        new_segments, new_vias = [], []
+        _emit_path(geometry, path, net, width, via_diameter, via_drill, new_segments, new_vias)
+        if any(
+            hypot(first["x"] - second["x"], first["y"] - second["y"]) < via_drill + clearance
+            for index, first in enumerate(new_vias)
+            for second in new_vias[:index]
+        ):
+            return False
+        segments.extend(new_segments)
+        vias.extend(new_vias)
+        for via in new_vias:
+            center = (via["x"], via["y"])
+            _mark_segment(geometry, via_blocked, (0,), center, center, via_diameter + 0.10)
+        return True
+
+    # Reserve PCB space for short local links before completing shared rails and ordinary signals.
+    for pair in priority_pairs:
+        net = pair["net"]
+        first, second = (by_pin[tuple(pair[k])] for k in ("a", "b"))
+        result = {"id": pair["id"], "net": net, "status": "not_routed"}
+        priority_results.append(result)
+        if len(first) != 1 or len(second) != 1 or monotonic() >= deadline:
+            continue
+        first, second = first[0], second[0]
+        members = {id(first), id(second)}
+        fragments = reserved[net]
+        if any(members <= linked for linked, _ in fragments):
+            result["status"] = "already_linked"
+            continue
+        width = widths.get(net, 0.25)
+        track_limits = geometry.limits(edge_margin + width / 2)
+        track_blocked, via_blocked = obstacles(net, width)
+        goals = _landings(geometry, first, track_blocked, track_limits)
+        starts = _landings(geometry, second, track_blocked, track_limits)
+        # A stuck critical pair must not consume the entire normal routing budget.
+        pair_deadline = min(deadline, monotonic() + max(0.15, timeout / max(4, len(priority_pairs))))
+        path = _search(geometry, starts, goals, track_blocked, via_blocked,
+                       track_limits, via_limits, pair_deadline)
+        segment_start, via_start = len(segments), len(vias)
+        if path is None or not emit(path, net, width, via_blocked):
+            continue
+        _land(geometry, first, path[-1], segments, net, width)
+        _land(geometry, second, path[0], segments, net, width)
+        # A Kelvin branch terminates at the shunt; its sense trace must not seed a power tree.
+        if pair["kind"] == "kelvin":
+            kelvin_paths[net].append((first, second, segments[segment_start:], vias[via_start:]))
+        nodes = {path[-1]} if pair["kind"] == "kelvin" else set(path)
+        for linked, copper in list(fragments):
+            if members & linked:
+                members.update(linked)
+                nodes.update(copper)
+                fragments.remove((linked, copper))
+        fragments.append((members, nodes))
+        result["status"] = "routed"
+
+    for index, net in enumerate(nets):
+        if monotonic() >= deadline:
+            unrouted.extend(n for n in nets[index:] if not any(
+                len(members) == len(multi[n]) for members, _ in reserved[n]))
+            break
+        width = widths.get(net, 0.25)
+        track_limits = geometry.limits(edge_margin + width / 2)
+        track_blocked, via_blocked = obstacles(net, width)
+        fragments = reserved[net]
+        fragment_by_pad = {key: (members, copper) for members, copper in fragments for key in members}
         candidates = [(pad, _landings(geometry, pad, track_blocked, track_limits)) for pad in multi[net]]
-        missing_landing = any(not landings for _, landings in candidates)
-        candidates = [(pad, landings) for pad, landings in candidates if landings]
+        missing_landing = any(not landings and id(pad) not in fragment_by_pad for pad, landings in candidates)
+        candidates = [(pad, landings) for pad, landings in candidates if landings or id(pad) in fragment_by_pad]
         if len(candidates) < 2:
             unrouted.append(net)
             continue
 
-        # Start at the most constrained pad. Connect subsequent pads to the routed tree.
-        candidates.sort(key=lambda entry: (len(entry[1]), entry[0]["w"] * entry[0]["h"]))
-        seed, seed_nodes = candidates.pop(0)
-        tree = set(seed_nodes)
-        connected_pads = [seed]
+        if any(len(members) == len(multi[net]) for members, _ in fragments):
+            continue
+        if fragments:
+            linked, tree = max(fragments, key=lambda fragment: len(fragment[0]))
+            tree = set(tree)
+            connected_pads = [pad for pad, _ in candidates if id(pad) in linked]
+            candidates = [(pad, landings) for pad, landings in candidates if id(pad) not in linked]
+            seed = None
+        else:
+            # Start at the most constrained pad. Connect subsequent pads to the routed tree.
+            candidates.sort(key=lambda entry: (len(entry[1]), entry[0]["w"] * entry[0]["h"]))
+            seed, seed_nodes = candidates.pop(0)
+            tree = set(seed_nodes)
+            connected_pads = [seed]
         net_failed = missing_landing
         connection_deadline = min(deadline, monotonic() + max(1.0, (deadline - monotonic()) * 0.68))
         while candidates:
@@ -313,33 +417,27 @@ def route_board(
                 for pad in connected_pads
             ))
             pad, starts = candidates.pop(best_index)
-            path = _search(geometry, starts, tree, track_blocked, via_blocked,
+            linked, copper = fragment_by_pad.get(id(pad), (set(), set()))
+            source = [node for node in sorted(copper) if not track_blocked[node]] if linked else starts
+            path = _search(geometry, source, {node for node in tree if not track_blocked[node]}, track_blocked, via_blocked,
                            track_limits, via_limits, connection_deadline)
-            if path is None:
+            if path is None or not emit(path, net, width, via_blocked):
                 net_failed = True
                 continue
-            new_segments, new_vias = [], []
-            _emit_path(geometry, path, net, width, via_diameter, via_drill, new_segments, new_vias)
-            if any(
-                hypot(first["x"] - second["x"], first["y"] - second["y"]) < via_drill + clearance
-                for index, first in enumerate(new_vias)
-                for second in new_vias[:index]
-            ):
-                net_failed = True
-                continue
-            if len(connected_pads) == 1:
+            if seed is not None:
                 for node in seed_nodes:
                     _land(geometry, seed, node, segments, net, width)
-            for node in starts:
-                _land(geometry, pad, node, segments, net, width)
-            segments.extend(new_segments)
-            vias.extend(new_vias)
-            for via in new_vias:
-                center = (via["x"], via["y"])
-                _mark_segment(geometry, via_blocked, (0,), center, center, via_diameter + 0.10)
-            tree.update(starts)
+                seed = None
+            if not linked:
+                for node in starts:
+                    _land(geometry, pad, node, segments, net, width)
+                tree.update(starts)
+            else:
+                tree.update(copper)
+                connected_pads.extend(other for other, _ in candidates if id(other) in linked)
+                candidates = [(other, nodes) for other, nodes in candidates if id(other) not in linked]
             tree.update(path)
             connected_pads.append(pad)
         if net_failed:
             unrouted.append(net)
-    return {"segments": segments, "vias": vias, "unrouted": unrouted}
+    return {"segments": segments, "vias": vias, "unrouted": unrouted, "priority_pairs": priority_results}

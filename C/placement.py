@@ -99,6 +99,14 @@ def place(design, width, height, profile, seed=0):
     parts = {part["ref"]: part for part in design["components"]}
     weights = profile["weights"]
     constraints = profile.get("constraints", {})
+    critical = {ref for group in constraints.get("groups", []) for ref in group["refs"]}
+    for pair in constraints.get("pad_pairs", []):
+        if pair["kind"] in {"kelvin", "gate_drive", "power_loop"}:
+            critical.update((pair["a"][0], pair["b"][0]))
+    local_neighbors = defaultdict(set)
+    for first, second, _ in profile["pairs"]:
+        local_neighbors[first[0]].add(second[0])
+        local_neighbors[second[0]].add(first[0])
     net_refs = defaultdict(set)
     net_pad_counts = defaultdict(int)
     for ref, part in parts.items():
@@ -208,6 +216,8 @@ def place(design, width, height, profile, seed=0):
     while left:
         used_nets = {net for ref in positions for net in by_ref[ref]}
         ref = max(left, key=lambda item: (
+            item in critical,
+            sum(ref in positions for ref in local_neighbors[item]),
             sum(weights.get(n, 1.0) * (2 if n in used_nets else 1) for n in by_ref[item]),
             parts[item]["width"] * parts[item]["height"],
             noise[item],

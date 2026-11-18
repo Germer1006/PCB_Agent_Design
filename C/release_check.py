@@ -10,6 +10,7 @@ import re
 from datetime import datetime
 
 from constraints import REQUIRED_REVIEWS, read_constraints
+from critical_routes import check_routes
 from kicad_io import _xml_netlist, _sexpr_netlist, _enabled_flag
 from project_files import CRITICAL_CHECKS
 
@@ -169,12 +170,17 @@ def evaluate(directory, review_path=None, *, require_roundtrip=True):
         for identity in sorted(required):
             if not approved(identity):
                 block("REVIEW:" + identity, "Needs artifact-bound, dated engineering review with evidence")
-        for item in v["layout"].get("checks", []):
+        checks = {item["id"]: item for item in v["layout"].get("checks", []) if not item["id"].startswith("copper:")}
+        if contract is not None:
+            # Recompute copper checks for both current packages and older C deliveries.
+            checks.update((item["id"], item) for item in check_routes(board, contract))
+        for item in checks.values():
             if item["status"] == "failed":
-                block("LAYOUT:" + item["id"], "Measured layout violates an explicit constraint")
+                detail = item["detail"] if item["id"].startswith("copper:") else "Measured layout violates an explicit constraint"
+                block("LAYOUT:" + item["id"], detail)
             elif item["status"] != "passed" and not approved(item["id"]):
                 block("LAYOUT_REVIEW:" + item["id"], "Missing limit/evaluation; no automatic pass")
-        if not v["layout"].get("checks"):
+        if not checks:
             block("LAYOUT_UNASSESSED", "No power-layout checks performed")
         if require_roundtrip:
             roundtrip_path = directory / "roundtrip_check.json"
@@ -182,7 +188,7 @@ def evaluate(directory, review_path=None, *, require_roundtrip=True):
             if not (roundtrip.get("status") == "passed" and roundtrip.get("artifacts_sha256") == artifacts
                     and roundtrip.get("readback", {}).get("status") == "passed"):
                 block("PACKAGE_NOT_VERIFIED", "ZIP extraction/recheck missing or stale")
-    except (OSError, ValueError, KeyError, TypeError, AttributeError) as error:
+    except (OSError, ValueError, KeyError, IndexError, TypeError, AttributeError) as error:
         block("VERIFICATION_INVALID", str(error))
         readback = {"status": "not_assessed"}
     ready = not blocked
@@ -200,6 +206,9 @@ def review_template(directory):
     contract = read_constraints(contract_file) if contract_file.is_file() else {}
     identities = set(REQUIRED_REVIEWS) | {"cad_reopen"} | set((contract or {}).get("required_reviews", []))
     identities.update(x["id"] for x in proof["layout"].get("checks", []) if x["status"] == "not_assessed")
+    if contract:
+        board = _safe_relative(project, proof["board"])
+        identities.update(x["id"] for x in check_routes(board, contract) if x["status"] == "not_assessed")
     return {"schema_version": "pcb-review-1", "reviewer": "", "reviewed_at": "",
             "reviewed_artifacts_sha256": snapshot(project),
             "decisions": {identity: {"status": "not_assessed", "notes": "", "evidence": []} for identity in sorted(identities)}}
