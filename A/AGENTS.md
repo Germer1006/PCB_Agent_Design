@@ -18,6 +18,7 @@ inputs/course_requirements.json
 
 - 本模块的工作由 skill `boost-system-design`（`.agents/skills/boost-system-design/SKILL.md`）完成，严格遵守其中的阶段流程与三条铁律。
 - 默认工作目录 `outputs/module1/`；试验性运行请用新的工作目录（如 `outputs/test1/`），不要覆盖已交付结果。
-- 交接文件由工具生成，不要手改；修改设计决策后重跑工具并升级 `revision`。
+- 交接文件和报告首页由工具生成。修改设计决策后重跑工具并升级 `revision`。
+- 用 `input_protection_plan.json` 核对输入保护分工以及 B 需要的实施依据。生成探索草稿时，在 `run_all.py` 加 `--draft-output <独立空目录>`。
 - 器件参数与立创编号只能来自 `knowledge/parts_db.json`（带数据手册出处）；新增器件按 SKILL.md“器件库扩充”流程查证。
 - Windows 下运行 Python 前设置 `PYTHONIOENCODING=utf-8`；脚本只依赖 Python 标准库。

@@ -28,12 +28,23 @@ def baseline(qualified_supply=False):
             pid = selection["categories"][category]["selected"]
             part = next(p for p in db["parts"] if p["id"] == pid)
             part["params"][field]["max"] = value
+        p = choices["protection"]
+        p["input_protection"] = {
+            "strategy": "external", "implementation": "合成测试夹具",
+            "current_limit_a": {"min": 1.9, "max": 2.1}, "fault_action": "合成故障动作",
+            "pwm_enable_condition": "合成就绪信号", "connection_conditions": "合成接线",
+            "evidence": ["synthetic fixture"],
+        }
+        p["input_ramp"] = {"max_slew_v_per_ms": 1.0, "source_peak_budget_a": 2.0}
     # Synthetic success evidence exercises aggregation only; it is not a physical
     # simulation result. Real T1 evidence is checked separately with the CLI.
     checks = {key: True for key in ("SR80", "SR81", "SR82", "SR82-target", "SR83", "SR84", "SR85", "SR87")}
+    if qualified_supply:
+        checks["SR88"] = True
     sim = {"schema": "boost-switching-sim/1", "revision": choices["revision"],
            "cases": [{"name": "unit-fixture", "waveform": "unit-fixture.csv",
-                      "verdict": "PASS", "checks": checks}],
+                      "verdict": "PASS", "checks": checks,
+                      "metrics": {"source_peak_bound_a": 0.4}}],
            "cross_validation": {key: {"passed": True, "error_pct": 0, "limit_pct": 2}
                                 for key in ("duty", "il_avg", "ripple_mv", "worst_ripple_mv")}}
     return req, choices, calc, selection, losses, loop, db, sim
@@ -47,6 +58,35 @@ class TestSdrc(unittest.TestCase):
         checks = {c["id"]: c for c in result["checks"]}
         for rule in ("SR70", "SR71"):
             self.assertEqual(checks[rule]["verdict"], "NOT_ASSESSED")
+
+    def test_simulated_ramp_does_not_define_protection_implementation(self):
+        args = list(baseline(qualified_supply=True))
+        args[1]["protection"].pop("input_protection")
+        result = run(*args)
+        checks = {row["id"]: row["verdict"] for row in result["checks"]}
+        self.assertEqual(checks["SR88"], "PASS")
+        self.assertEqual(checks["SR89"], "NOT_ASSESSED")
+        self.assertEqual(_exit_code(result), 3)
+
+    def test_nominal_ptc_values_do_not_close_hot_supply_or_trip_checks(self):
+        args = list(baseline(qualified_supply=True))
+        args[3]["categories"]["fuse"]["selected"] = "F_in_1812L200_12DR"
+        checks = {row["id"]: row for row in run(*args)["checks"]}
+        self.assertEqual(checks["SR54"]["verdict"], "N/A")
+        self.assertEqual(checks["SR54-PTC"]["verdict"], "NOT_ASSESSED")
+        self.assertIn("1.78 A", checks["SR54-PTC"]["detail"])
+        self.assertEqual(checks["SR71"]["verdict"], "NOT_ASSESSED")
+        self.assertIn("PTC 工作温度下 R.max", checks["SR71"]["detail"])
+
+    def test_current_budget_uses_actual_selected_shunt_and_reports_missing_bound(self):
+        args = list(baseline())
+        result = run(*args)["current_error_budget"]
+        self.assertAlmostEqual(result["allowance_ma"], 25)
+        self.assertAlmostEqual(result["partial_ma"], 20)
+        part_id = args[3]["categories"]["shunt"]["selected"]
+        part = next(p for p in args[6]["parts"] if p["id"] == part_id)
+        part["params"]["tolerance_pct"] = {"typ": 1}
+        self.assertIsNone(run(*args)["current_error_budget"]["partial_ma"])
 
     def test_qualified_fixture_metadata_and_conditional_review(self):
         result = run(*baseline(qualified_supply=True))

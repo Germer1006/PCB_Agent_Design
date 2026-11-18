@@ -53,6 +53,8 @@ Windows 下建议设置 `PYTHONIOENCODING=utf-8`。只用 Python 标准库。
 | S8 设计规则检查 | `python check_design.py <wd>` | `sdrc_rules.json` | `check.json` | 所有规则含依据与严重度；FAIL = 0 且关键 NOT_ASSESSED = 0。`conditional_review` 的仿真/实测 WARN 逐条交接，不得宣称“已实测合格” |
 | S9 交接与报告 ⏸ | `python ledger.py <wd>`；`python export_handoff.py <wd>`；按模板写报告。数字可在 `system_design_report.template.md` 中用占位符引用，执行 `python render_report.py <wd>`；最后 `python check_consistency.py <wd>` | 工具 + 模板 | `ledger.json`, `ledger.md`, `design_spec.json`, `bom_module1.csv`, `boost_params.h`, `report_tables.md`, `system_design_report.md` | 来源可解析、记录未过期、交接关键值与版本一致 |
 
+在 S4 填写 `design_choices.protection.input_protection`。用 `board` 或 `external` 指明来源，记录实施方式 `implementation`、含容差的 `current_limit_a.min/max`、`fault_action`、`pwm_enable_condition` 和 `evidence`。板载方案补充 `added_path_drop_max_v`，外部方案补充 `connection_conditions`。`input_ramp` 描述仿真假设与验收指标。方案未定时保留 `undecided`，按 SR89 的缺项完善方案，台架证据由 SR53 跟踪。
+
 ⏸ = 必须停下等用户确认；📋 = 用白话汇报后继续（若本阶段出现 A 类问题或无法消除的 FAIL，则升级为 ⏸）。详见下一节。
 
 SDRC 结果状态为 `PASS / WARN / FAIL / NOT_ASSESSED / N/A`。缺少证据不得判 PASS；未选中器件或缺少参数时必须产生 `NOT_ASSESSED`，并说明缺项。退出码：`0` = 无 FAIL 且无 critical/major NOT_ASSESSED；`2` = 存在 FAIL；`3` = 存在 critical/major NOT_ASSESSED；`1` = 程序错误。`run_all.py` 遇到 2/3 会停止并给出回溯提示。规则定义、严重度、依据和关闭方法见 `knowledge/sdrc_rules.json`。
@@ -60,6 +62,8 @@ SDRC 结果状态为 `PASS / WARN / FAIL / NOT_ASSESSED / N/A`。缺少证据不
 状态策略：FAIL、critical/major NOT_ASSESSED 或 automatic critical/major WARN → needs_rework；其余未关闭项 → conditional_review；无 WARN/NOT_ASSESSED → ready_for_downstream（有理由的 N/A 不阻塞）。现有 SR38/SR44 为 automatic/minor 建议，公开保留在 conditional_review，详见 `knowledge/sdrc_audit.md` 对任务书歧义的说明。退出码 0 也不代表实物验证完成。
 
 工具失败路径：`calc_boost.py` 对不支持的拓扑、非法基础数值、非升压需求或无匹配标准电感返回 2，并保存 `calc_error.json`。`select_parts.py` 无候选、无效 override 或未知 override 类别返回 2 并保留淘汰原因；不得把不合格的显式指定器件偷偷替换成另一型号。`run_all.py` 在 SDRC 2/3 时仍生成来源账本用于诊断，然后保留原退出码停止交接；替换器件库通过 `--db` 同步传给各器件相关阶段（含环路独立复核）。
+
+`run_all.py` 在仿真前生成 `input_protection_plan.json`，检查完成后自动生成带版本、范围和未决项的报告首页。需同时交付探索草稿时加 `--draft-output <独立空目录>`。SR54 与 SR54-PTC 按器件类型分别评估。PTC 的回流/动作后冷态 R1max 可用于估算，SR70/SR71 的最坏供电判定需要工作温度下的电阻上限。
 
 供电检查易错点：typ/nominal 或无上下界标签的数值不能替代 max/min 保证值。SR70 使用保护后 VIN、LDO dropout.max 及路径电阻 max；SR71 使用 UVLO.max、工作电压 min 和路径电阻 max。2026-11-12 审计后的真实 r6 因缺 LDO 压差 max、保险丝电阻 max，两项为 NOT_ASSESSED、状态 needs_rework；不能沿用旧的 87 PASS 作为可交接结论。温度系数、布线及瞬态条件另需验证。
 
@@ -179,7 +183,7 @@ SDRC / 工具报错时按下表回溯，只改相关决策并重跑其下游：
 - 报告结构见 `templates/report_outline.md`，要求覆盖课程评分点：方案合理、系统框图清楚、参数计算与器件选择有依据。
 - 系统框图用 Mermaid（`system_architecture.mmd`），区分能量流（粗线）、采样/信号流、保护/故障流；需要出图时可用 draw.io 重绘。
 - 所有“计算值 / 仿真值 / 实测值”分开标注；未实测的写“计划”。
-- 交接文件的使用方式写在报告 §9，并告知下游模块的同学。
+- 以报告首页的程序生成交接说明和设计规格的 `b_handoff` 字段为准。`B/prepare_pcb_input.py` 读取 A 规格与 B 已有的完整 KiCad 网表，生成 C 的 `project_input.json`。撰写方案正文时直接引用报告首页，避免另写一份文件清单。
 - 同时导出 `pcb_constraints.json`：由 `pcb_contract.py` 从同版本规格生成器件分组、待绑定的去耦/采样审核要求，并由 `check_consistency.py` 核对。保留现有文字 `pcb_guidance`，不破坏旧接口。
 - 仅在需要继续探索时，显式使用 `export_handoff.py <wd> --draft-output <新目录>`；它输出带 `formal_handoff=false` 的 `draft_design_spec.json`，保留源检查状态和 `A_DRAFT_NOT_FORMAL` 阻塞项，不生成正式交接、采购 BOM 或固件头文件。不得用草稿冒充正式 S9 输出。
 - 不把“紧靠”伪造成未经论证的毫米阈值。未知 `max_span_mm` 保持 `null`；B 必须按真实物理引脚绑定去耦与采样，C 必须执行几何检查并保留未评估项。A 的 `ready_for_downstream` 不代表 PCB 可打样。

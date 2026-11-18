@@ -1,6 +1,6 @@
 # 模块一 系统总体设计报告 — 结构模板
 
-> 文件名 `system_design_report.md`。数字只引用工具输出（calc/losses/loop/check.json 与 report_tables.md）。
+> 将方案正文写入 `system_design_report.template.md`。`render_report.py` 生成带检查状态与 B 接口的首页，再附上方案正文，输出 `system_design_report.md`。数字引用工具输出（calc/losses/loop/check.json 与 report_tables.md）。
 > 每节开头一句话说明“本节回答什么问题”。标注 ⭐ 的是课程评分点。
 
 ## 0. 摘要
@@ -49,7 +49,7 @@
 汇总与 WARN 项说明（表 G）；未决问题与关闭办法
 
 ## 9. 交接与验证计划
-9.1 交接文件说明（design_spec.json / bom_module1.csv / boost_params.h 各给谁、怎么用）
+9.1 引用报告首页的 A→B 交接范围，说明各下游负责关闭的验证项。
 9.2 PCB 布局要点
 9.3 测试计划（表 H）
 

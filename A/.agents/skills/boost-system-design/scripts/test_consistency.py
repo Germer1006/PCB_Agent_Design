@@ -13,7 +13,7 @@ from export_handoff import handoff_inputs, prepare_handoff, write_bom, write_tab
 from handoff_header import write_header
 from check_design import run as check_design
 from test_sdrc import baseline
-from render_report import render, TEMPLATE, REPORT
+from render_report import render_document, TEMPLATE, REPORT
 
 WORK = Path(__file__).resolve().parents[4] / "outputs" / "r6"
 
@@ -29,6 +29,7 @@ class TestConsistency(unittest.TestCase):
         # Synthetic qualified-supply fixture, NOT proof that real r6 passes T4.
         args = baseline(qualified_supply=True)
         self.db = args[6]
+        save_json(self.work / "design_choices.json", args[1])
         save_json(self.work / "check.json", check_design(*args))
         save_json(self.work / "sim.json", args[7])
         J = handoff_inputs(self.work)
@@ -69,9 +70,11 @@ class TestConsistency(unittest.TestCase):
     def test_report_placeholders_and_drift(self):
         source = "版本 {{choice:revision}}；电感 {{calc:L2}} uH；最低效率 {{loss:envelope.eta_min}}"
         (self.work / TEMPLATE).write_text(source, encoding="utf-8")
-        body = render(source, workdir_paths(self.work))
+        body = render_document(workdir_paths(self.work), self.db, source)
         (self.work / REPORT).write_text(body, encoding="utf-8")
         self.assertEqual(check(self.work, self.db), [])
+        self.assertIn("B/prepare_pcb_input.py", body)
+        self.assertNotIn("design_result.json", body)
         (self.work / REPORT).write_text(body + "{{calc:missing}}", encoding="utf-8")
         self.assertTrue(any("占位符" in error for error in check(self.work, self.db)))
 
@@ -111,6 +114,12 @@ class TestConsistency(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "混用版本"):
             write_draft(inputs, self.db, self.work / "draft")
         self.assertFalse((self.work / "draft").exists())
+
+    def test_new_protection_choice_cannot_reuse_old_passing_check(self):
+        inputs = handoff_inputs(self.work)
+        inputs["choices"]["protection"]["input_protection"]["strategy"] = "undecided"
+        with self.assertRaisesRegex(ValueError, "重跑 SDRC"):
+            prepare_handoff(inputs, self.db)
 
 
 if __name__ == "__main__":

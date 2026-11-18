@@ -9,6 +9,10 @@ ISSUE_ACTIONS = {
     'SR44': ('B/D', 'CC 精度验收前', '在实际 CC 共模范围进行标定；补齐 ADC、参考源、温漂、CMRR、残余误差并实测稳态精度。'),
     'SR46': ('B/D', '模拟保护原理图冻结及上电前', '完成完整电压/电流误差预算、ADC/COMP 并用验证、独立 DAC 阈值及容差、BKIN 锁存路由；必要时分配独立引脚或外部比较器。'),
     'SR53': ('B/C', '插电及故障试验前', '实现并验证独立输入缓升与输入限流；记录输入斜率、输入电流和电感电流峰值，核对 PWM 禁止、电源释放能量与器件 SOA。'),
+    'SR54-PTC': ('A/B', '输入保护器件定型前', '核对器件工作温度下的保持电流、与实际源限流配合的动作时间及故障热耗。'),
+    'SR70': ('A/B', '辅助供电电路定型前', '查最大 LDO 压差及限流/防反接路径的最坏压降，按低输入工况复核。'),
+    'SR71': ('A/B', '驱动供电电路定型前', '核对驱动器开启上限、工作下限和全路径最坏压降，验证实际 VDD。'),
+    'SR89': ('A/B', '输入保护原理图冻结前', '在 design_choices 中明确板载或外部实现、接法、限流范围、故障动作和恢复条件。'),
     'SR65': ('D', '动态/全负载验收前', '另行仿真和实测 DCM、空载、停脉冲、负载阶跃、CC/CV 切换、积分跟踪及恢复；考虑电子负载动态。'),
     'SR73': ('B/C/D', '布局冻结及系统验收前', '核对偏压/温度参数和热铜面积；测采样窗口、延迟、WCET；实际器件、滤波、平均算法或时序变化后重跑模型。'),
 }
@@ -17,10 +21,24 @@ ISSUE_ACTIONS = {
 DEFAULT_ACTION = ('A', '交接前', '新出现的检查项：由 A 分析原因，指定责任模块与关闭方法后更新 ISSUE_ACTIONS 并重新导出。')
 
 
+def b_handoff(status, formal=None):
+    approved = status != "needs_rework" if formal is None else formal
+    return {
+        "mode": "formal" if approved else "exploration",
+        "a_spec_file": "design_spec.json" if approved else "draft_design_spec.json",
+        "b_entrypoint": "B/prepare_pcb_input.py",
+        "b_required_input": "B 的完整 KiCad 网表（.xml 或 .net）",
+        "b_optional_input": "对应的源 .kicad_sch 与项目库",
+        "c_entrypoint": "project_input.json",
+        "scope": "预检已有原理图的网表、封装和引脚网络，生成 B→C 交接。",
+        "exploration_scope": "可先画升压主级、调试接口和采样/控制框图。输入保护、供电和采样阈值按未决项审查后冻结。",
+    }
+
+
 def issues(check):
     out = []
     for c in check['checks']:
-        if c['verdict'] == 'PASS':
+        if c['verdict'] in ('PASS', 'N/A'):
             continue
         owner, gate, closure = ISSUE_ACTIONS.get(c['id'], DEFAULT_ACTION)
         out.append(dict(id=c['id'], status='open', verdict=c['verdict'], rule=c['rule'],

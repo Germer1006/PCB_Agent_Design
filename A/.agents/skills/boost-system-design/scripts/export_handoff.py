@@ -19,7 +19,8 @@ from tempfile import TemporaryDirectory
 from _common import KNOWLEDGE_DIR, load_json, param, r3, save_json, workdir_paths
 from stage_params import selected
 from handoff_header import write_header
-from handoff_contract import issues, proposed_pin_plan, requirement_rows, traceability, verification_plan
+from handoff_contract import b_handoff, issues, proposed_pin_plan, requirement_rows, traceability, verification_plan
+from input_protection import describe
 from trace_graph import extend_traceability
 from pcb_contract import make_pcb_constraints
 
@@ -183,9 +184,13 @@ def run(req, ch, calc, sel, loss, loop, chk, db):
         ],
         "verification_plan": tests,
         "traceability": trace,
-        "open_issues": [c["id"] + " 检查目标「" + c["rule"] + "」尚未关闭；观测：" + c["detail"] for c in chk["checks"] if c["verdict"] != "PASS"],
+        "open_issues": [c["id"] + " 检查目标「" + c["rule"] + "」尚未关闭；观测：" + c["detail"]
+                        for c in chk["checks"] if c["verdict"] not in ("PASS", "N/A")],
         "implementation_closures": issues(chk),
-        "handoff_scope": f"{ch.get('revision')} 系统设计交接；conditional_review，实施关闭条件保留；不是无条件制造/上电批准",
+        "input_protection": chk.get("input_protection") or describe(ch),
+        "current_error_budget": chk.get("current_error_budget"),
+        "b_handoff": b_handoff(chk["status"]),
+        "handoff_scope": f"{ch.get('revision')} 系统设计交接。状态 {chk['status']}。实施关闭条件见 implementation_closures。",
         "net_naming": "网络名遵循模块 B 规范 §12.3（VIN/VOUT/GND/PWM_SW/VOUT_SENSE/IOUT_SENSE…）；只有一个地网络 GND",
         "bom_scope": "主要器件清单；generic_passives 为未选型提案，不列入可采购 BOM；完整装配 BOM 由 B 按有证据器件库补齐",
         "data_classification": {"calculation": ["calc.json", "losses.json", "loop.json", "loop_validation.json"],
@@ -259,6 +264,10 @@ def prepare_handoff(J, db):
     from check_design import _exit_code
     if len(revisions) != 1 or _exit_code(J['check']) or J['check']['status'] == 'needs_rework':
         raise ValueError('交接禁止：版本不一致、SDRC 有 FAIL、关键证据缺失或状态需返工')
+    plan = describe(J["choices"])
+    if any(J["check"].get("input_protection", {}).get(k) != v for k, v in plan.items()) or not any(
+            row["id"] == "SR89" and row["verdict"] == "PASS" for row in J["check"]["checks"]):
+        raise ValueError("交接禁止：须按当前输入保护方案重跑 SDRC")
     if not all(J['loop'][mode]['ok'] for mode in ('CV', 'CC')):
         raise ValueError('交接禁止：环路初值复核未通过')
     spec, _, _ = run(J["requirements"], J["choices"], J["calc"], J["selection"], J["losses"], J["loop"], J["check"], db)
@@ -296,6 +305,7 @@ def write_draft(J, db, destination):
         raise ValueError('草稿也禁止混用版本')
     spec, _, _ = run(J["requirements"], J["choices"], J["calc"], J["selection"], J["losses"], J["loop"], J["check"], db)
     spec["formal_handoff"] = False
+    spec["b_handoff"] = b_handoff(spec["status"], formal=False)
     spec["handoff_scope"] = "draft_only: exploration; no formal downstream or prototype approval"
     spec["pcb_constraints"] = make_pcb_constraints(spec)
     spec["pcb_constraints"]["upstream"]["open_issues"].append("A_DRAFT_NOT_FORMAL")

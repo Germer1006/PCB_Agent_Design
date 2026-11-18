@@ -268,7 +268,9 @@ def run_suite(workdir, req, calc, selection, choices, loop, loss, db):
     divider = calc["sensing"]["vout"]
     bleed = divider["r_top_ohm"] + divider["r_bot_ohm"]
     parallel = lambda r: 1/(1/r + 1/bleed) if r else bleed
-    ramp = choices["protection"].get("input_ramp")
+    from input_protection import describe
+    input_protection = describe(choices)
+    ramp = input_protection["model_input_ramp"]
     if ramp:
         slew, source_budget = ramp["max_slew_v_per_ms"], ramp["source_peak_budget_a"]
         if not all(math.isfinite(x) and x > 0 for x in (slew, source_budget)):
@@ -431,6 +433,7 @@ def run_suite(workdir, req, calc, selection, choices, loop, loss, db):
         "schema": "boost-switching-sim/1", "revision": choices["revision"],
         "cross_validation": cross, "cases": results, "reference_cases": references,
         "input_ramp": ramp,
+        "input_protection": input_protection,
         "elapsed_s": round(time.perf_counter() - start_time, 2),
         "model_limits": ["理想开关沿，忽略布线寄生电感及温升动态",
                          "CC 电子负载假定已进入其工作电压范围",
