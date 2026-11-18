@@ -7,7 +7,7 @@ import unittest
 
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'B'));sys.path.insert(0,str(ROOT/'C/tests'));sys.path.insert(0,str(ROOT/'C'))
-from prepare_pcb_input import prepare
+from prepare_pcb_input import erc_violation_count, prepare
 from helpers import netlist,contract,write_json
 from auto_pcb import _input_paths
 
@@ -67,5 +67,15 @@ class HandoffTests(unittest.TestCase):
         p=out/'project_input.json';entry=json.loads(p.read_text());entry['netlist']='../source.xml';write_json(p,entry)
         with self.assertRaises(ValueError):_input_paths(p,None,None)
 
+    def test_native_erc_reads_every_sheet_and_rejects_incomplete_reports(self):
+        clean = {"path": "/", "violations": []}
+        child = {"path": "/child", "violations": [{"type": "pin_not_connected"}]}
+        self.assertEqual(erc_violation_count({"sheets": [clean]}), 0)
+        self.assertEqual(erc_violation_count({"violations": []}), 0)
+        self.assertEqual(erc_violation_count({"violations": [], "sheets": [clean, child]}), 1)
+        for bad in ({}, {"sheets": []}, {"sheets": [clean, {"path": "/child"}]},
+                    {"violations": [], "sheets": [{"violations": "unknown"}]}):
+            with self.subTest(bad=bad):
+                self.assertIsNone(erc_violation_count(bad))
 
 if __name__=='__main__':unittest.main()

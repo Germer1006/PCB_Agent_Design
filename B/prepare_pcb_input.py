@@ -30,6 +30,28 @@ def _identity(parts, nets):
             {(n["ref"], n["pin"]): net["name"] for net in nets for n in net["nodes"]})
 
 
+def erc_violation_count(report):
+    """Read both flat and sheet-scoped KiCad JSON. Unknown shapes cannot pass."""
+    if not isinstance(report, dict):
+        return None
+    sections = []
+    if "violations" in report:
+        sections.append(report["violations"])
+    if "sheets" in report:
+        sheets = report["sheets"]
+        if not isinstance(sheets, list) or not sheets or any(
+            not isinstance(sheet, dict) or "violations" not in sheet for sheet in sheets
+        ):
+            return None
+        sections.extend(sheet["violations"] for sheet in sheets)
+    if not sections or any(
+        not isinstance(section, list) or any(not isinstance(v, dict) for v in section)
+        for section in sections
+    ):
+        return None
+    return sum(map(len, sections))
+
+
 def prepare(spec_path, netlist, output, *, schematic=None, footprint_evidence=None, bindings=None, cli_path=None):
     output = Path(output).resolve()
     if output.exists() and any(output.iterdir()):
@@ -104,6 +126,7 @@ def prepare(spec_path, netlist, output, *, schematic=None, footprint_evidence=No
     with tempfile.TemporaryDirectory(prefix=".B-to-C-", dir=output.parent) as temp:
         stage = Path(temp)
         erc_status = "not_assessed"
+        erc_details = None
         if schematic:
             schematic = Path(schematic).resolve(strict=True)
             _copy_schematic(schematic, stage, {})
@@ -135,7 +158,13 @@ def prepare(spec_path, netlist, output, *, schematic=None, footprint_evidence=No
             erc = subprocess.run([str(cli), "sch", "erc", "--format", "json", "--severity-all", "--exit-code-violations",
                                   "--output", str(stage / "ERC.json"), str(stage / schematic.name)], capture_output=True, timeout=60)
             raw = json.loads((stage / "ERC.json").read_text(encoding="utf-8-sig")) if (stage / "ERC.json").is_file() else {}
-            erc_status = "passed" if erc.returncode == 0 and isinstance(raw.get("violations"), list) and not raw["violations"] else "failed"
+            count = erc_violation_count(raw)
+            erc_status = "passed" if erc.returncode == 0 and count == 0 else "failed"
+            erc_details = {
+                "returncode": erc.returncode, "violations": count,
+                "kicad_version": raw.get("kicad_version") if isinstance(raw, dict) else None,
+                "ignored_checks": raw.get("ignored_checks", []) if isinstance(raw, dict) else [],
+            }
         else:
             shutil.copyfile(netlist, stage / ("input.xml" if netlist.suffix == ".xml" else "input.net"))
         if erc_status != "passed":
@@ -147,6 +176,7 @@ def prepare(spec_path, netlist, output, *, schematic=None, footprint_evidence=No
         (stage / "project_input.json").write_text(json.dumps(entry, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         (stage / "pcb_constraints.json").write_text(json.dumps(contract, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         report = {"status": "draft_input_prepared", "errors": [], "component_count": len(parts), "ERC": erc_status,
+                  "erc_details": erc_details,
                   "ready_for_prototype": False, "note": "C must measure footprints, route, verify and apply the prototype release gate"}
         (stage / "preflight.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         for file in stage.iterdir():
