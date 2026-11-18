@@ -4782,7 +4782,7 @@
       "package": "SMD can 8x6.2 mm (size code E)",
       "lcsc": "C178539",
       "lcsc_evidence": "https://www.lcsc.com/product-detail/Others_PANASONIC_EEEFK1E101P_PANASONIC-EEEFK1E101P_C178539.html (snippet 'SMD,D8xL6.2mm ... From $0.1497, 630 in stock')",
-      "datasheet_url": "https://industrial.panasonic.com/ww/products/pt/aluminum-cap-smd/models/EEEFK1C101P",
+      "datasheet_url": "https://industrial.panasonic.com/ww/products/pt/aluminum-cap-smd/models/EEEFK1E101P",
       "datasheet_source_type": "official",
       "params": {
         "capacitance_uf": {
@@ -4942,8 +4942,8 @@
       "package": "SMD can 6.3x5.8 mm (size code D)",
       "lcsc": "C128532",
       "lcsc_evidence": "https://www.lcsc.com/product-detail/Aluminum-Electrolytic-Capacitors-SMD_PANASONIC_EEEFK1C101P_100uF-20-16V_C128532.html ; https://jlcpcb.com/partdetail/PANASONIC-EEEFK1C101P/C128532",
-      "datasheet_url": "https://datasheet.octopart.com/EEE-FK1H221P-Panasonic-datasheet-8188412.pdf",
-      "datasheet_source_type": "mirror",
+      "datasheet_url": "https://industrial.panasonic.com/ww/products/pt/aluminum-cap-smd/models/EEEFK1C101P",
+      "datasheet_source_type": "official",
       "params": {
         "capacitance_uf": {
           "typ": 100,
