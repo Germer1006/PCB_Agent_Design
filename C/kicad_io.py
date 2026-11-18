@@ -17,6 +17,16 @@ _SEXPR = re.compile(r'\(|\)|"(?:[^"\\]|\\.)*"|[^\s()"]+')
 _VARIABLE = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}")
 
 
+class Quoted(str):
+    """Preserve quoted strings when copying native hierarchical schematics."""
+
+
+def emit(tree):
+    if isinstance(tree, list):
+        return "(" + " ".join(emit(item) for item in tree) + ")"
+    return json.dumps(str(tree), ensure_ascii=False) if isinstance(tree, Quoted) else str(tree)
+
+
 def _parse(text):
     root = []
     stack = [root]
@@ -32,7 +42,7 @@ def _parse(text):
             stack.pop()
         else:
             if token.startswith('"'):
-                token = re.sub(r'\\(["\\])', r"\1", token[1:-1])
+                token = Quoted(json.loads(token))
             stack[-1].append(token)
     if len(stack) != 1 or len(root) != 1 or not isinstance(root[0], list):
         raise ValueError("KiCad 文件中的括号不匹配。")
@@ -255,7 +265,19 @@ def load_design(schematic: Path, *, kicad_cli: Path, footprint_roots=(),
         "hierarchical": any(part["sheet"].strip("/") for part in parts),
         "schematic_paths_linked": suffix == ".kicad_sch" and all(part["_path"] for part in parts),
         "_template_path": str(geometry_board) if geometry_board else None, "_python": str(python),
+        "_netlist_path": str(netlist), "_source_path": str(schematic),
     }
+
+
+def native_operation(design, operation, request, work_dir, timeout=60):
+    """Run pcbnew in KiCad's own Python; do not require it in the caller's Python."""
+    from tempfile import TemporaryDirectory
+    with TemporaryDirectory(prefix=".native-", dir=work_dir) as directory:
+        directory = Path(directory)
+        source, result = directory / "request.json", directory / "response.json"
+        source.write_text(json.dumps(request, ensure_ascii=False), encoding="utf-8")
+        _invoke([design["_python"], "-B", "-X", "utf8", __file__, operation, source, result], timeout)
+        return json.loads(result.read_text(encoding="utf-8"))
 
 
 def write_board(path, design, placement, board_width, board_height, segments, vias):
@@ -274,6 +296,10 @@ def write_board(path, design, placement, board_width, board_height, segments, vi
     finally:
         working.unlink(missing_ok=True)
         form.unlink(missing_ok=True)
+        # Native SaveBoard may create a project next to the temporary board.
+        # Remove only sidecars belonging to this call's fresh UUID filename.
+        for suffix in (".kicad_pro", ".kicad_prl", ".lck"):
+            working.with_suffix(suffix).unlink(missing_ok=True)
 
 
 def _load_footprint(pcb, part, reference_board):
@@ -366,6 +392,10 @@ def _place_reference_fields(pcb, footprints, width, height):
 
     reserved = []
     for footprint in footprints:
+        courtyard = [bounds(item) for item in footprint.GraphicalItems() if item.IsOnLayer(pcb.F_CrtYd)]
+        if courtyard:
+            reserved.append((min(r[0] for r in courtyard), min(r[1] for r in courtyard),
+                             max(r[2] for r in courtyard), max(r[3] for r in courtyard)))
         reserved.extend(bounds(pad, pcb.F_Cu) for pad in footprint.Pads() if pad.IsOnLayer(pcb.F_Mask))
         reserved.extend(bounds(item) for item in footprint.GraphicalItems() if item.IsOnLayer(pcb.F_SilkS))
         reserved.extend(bounds(field) for field in footprint.GetFields()
@@ -387,7 +417,7 @@ def _place_reference_fields(pcb, footprints, width, height):
                           (body.GetLeft(), body.GetTop(), body.GetRight(), body.GetBottom()))
         center_x, center_y = ((x0 + x1) / 2, (y0 + y1) / 2)
         alternatives = []
-        for distance in (0.75, 1.25, 1.75, 2.25, 3.0, 4.0):
+        for distance in (0.75, 1.25, 1.75, 2.25, 3.0, 4.0, 5.0, 6.0, 8.0, 10.0, 14.0):
             for offset in (0, 0.65, -0.65, 1.3, -1.3, 2.0, -2.0):
                 alternatives.extend((
                     (center_x + offset, y0 - distance),
@@ -427,7 +457,11 @@ def _save_board(pcb, request, output):
     footprints = []
     for part in design["components"]:
         footprint = _load_footprint(pcb, part, reference)
-        footprint.SetUuid(pcb.KIID())
+        if hasattr(footprint, "SetUuid"):
+            footprint.SetUuid(pcb.KIID())
+        else:
+            # KiCad 9 FootprintLoad allocates fresh UUIDs; m_Uuid is read-only.
+            footprint.FixUuids()
         footprint.SetFPIDAsString(part["footprint"])
         footprint.SetReference(part["ref"])
         footprint.SetValue(part["value"])
@@ -486,6 +520,121 @@ def _save_board(pcb, request, output):
         raise RuntimeError("KiCad 未能保存板文件。")
 
 
+def _audit_board(pcb, request):
+    board = pcb.LoadBoard(request["board"])
+    if board is None:
+        raise ValueError("Cannot read PCB")
+    if request.get("refill") and list(board.Zones()):
+        if not pcb.ZONE_FILLER(board).Fill(board.Zones()):
+            raise RuntimeError("Zone fill failed")
+        if not pcb.SaveBoard(request["board"], board):
+            raise RuntimeError("Cannot save refilled board")
+    components, pads, seen, duplicates = [], [], set(), []
+    for footprint in board.GetFootprints():
+        components.append({"ref": footprint.GetReference(), "value": footprint.GetValue(),
+                           "footprint": footprint.GetFPIDAsString(),
+                           "x": pcb.ToMM(footprint.GetPosition().x),
+                           "y": pcb.ToMM(footprint.GetPosition().y),
+                           "angle": footprint.GetOrientationDegrees()})
+        for item in [footprint, *footprint.Pads(), *footprint.GraphicalItems(), *footprint.GetFields()]:
+            if hasattr(item, "m_Uuid"):
+                uid = item.m_Uuid.AsString()
+                if uid in seen:
+                    duplicates.append(uid)
+                seen.add(uid)
+        for pad in footprint.Pads():
+            if pad.GetAttribute() == pcb.PAD_ATTRIB_NPTH:
+                continue
+            pads.append({"ref": footprint.GetReference(), "number": pad.GetNumber(), "net": pad.GetNetname()})
+    segments, vias = [], []
+    def point(v):
+        return [round(pcb.ToMM(v.x), 6), round(pcb.ToMM(v.y), 6)]
+    for track in board.GetTracks():
+        if isinstance(track, pcb.PCB_VIA):
+            position = point(track.GetPosition())
+            vias.append({"net": track.GetNetname(), "x": position[0], "y": position[1],
+                         "size": pcb.ToMM(track.GetWidth(pcb.F_Cu)), "drill": pcb.ToMM(track.GetDrillValue())})
+        else:
+            segments.append({"net": track.GetNetname(), "layer": 0 if track.GetLayer() == pcb.F_Cu else 1,
+                             "start": point(track.GetStart()), "end": point(track.GetEnd()),
+                             "width": pcb.ToMM(track.GetWidth())})
+    return {"components": components, "pads": pads, "copper_layers": board.GetCopperLayerCount(),
+            "route": {"segments": segments, "vias": vias},
+            "zones": len(list(board.Zones())), "duplicate_uuids": sorted(set(duplicates)),
+            "refill_requested": bool(request.get("refill"))}
+
+
+def _route_exchange(pcb, operation, request):
+    board = pcb.LoadBoard(request["board"])
+    if operation == "dsn":
+        default = board.GetDesignSettings().m_NetSettings.GetDefaultNetclass()
+        default.SetTrackWidth(pcb.FromMM(request["width"]))
+        default.SetClearance(pcb.FromMM(request["clearance"]))
+        default.SetViaDiameter(pcb.FromMM(.65))
+        default.SetViaDrill(pcb.FromMM(.3))
+        board.SynchronizeNetsAndNetClasses(False)
+        if not pcb.ExportSpecctraDSN(board, request["output"]):
+            raise RuntimeError("DSN export failed")
+    elif operation == "ses":
+        if not pcb.ImportSpecctraSES(board, request["session"]):
+            raise RuntimeError("SES import failed")
+        if not pcb.SaveBoard(request["output"], board):
+            raise RuntimeError("Cannot save imported routing")
+    elif operation == "planes":
+        ground = board.FindNet(request["ground"])
+        if ground is None:
+            raise ValueError("Ground net not found")
+        if list(board.Zones()):
+            raise ValueError("Existing zones require an explicit review instead of adding overlapping planes")
+        width, height = request["dimensions"]
+        for layer in (pcb.F_Cu, pcb.B_Cu):
+            zone = pcb.ZONE(board)
+            zone.SetLayer(layer)
+            zone.SetNetCode(ground.GetNetCode())
+            zone.SetZoneName("Draft GND return plane; review current paths")
+            zone.SetLocalClearance(pcb.FromMM(request["clearance"]))
+            zone.SetMinThickness(pcb.FromMM(.2))
+            zone.SetPadConnection(pcb.ZONE_CONNECTION_THT_THERMAL)
+            zone.SetThermalReliefGap(pcb.FromMM(.2))
+            zone.SetThermalReliefSpokeWidth(pcb.FromMM(.3))
+            zone.SetIslandRemovalMode(pcb.ISLAND_REMOVAL_MODE_ALWAYS)
+            zone.Outline().NewOutline()
+            for x, y in ((.6, .6), (width-.6, .6), (width-.6, height-.6), (.6, height-.6)):
+                zone.Outline().Append(pcb.FromMM(x), pcb.FromMM(y))
+            board.Add(zone)
+        if not pcb.ZONE_FILLER(board).Fill(board.Zones()) or not pcb.SaveBoard(request["board"], board):
+            raise RuntimeError("Ground plane fill/save failed")
+    return {"status": "completed", "operation": operation}
+
+
+def _freeze_footprints(pcb, request):
+    """Export exact measured libraries (including legacy embedded footprints)."""
+    directory = Path(request["directory"])
+    directory.mkdir(parents=True, exist_ok=True)
+    reference = pcb.LoadBoard(request["template"]) if request.get("template") else None
+    plugin = pcb.PCB_IO_MGR.PluginFind(pcb.PCB_IO_MGR.KICAD_SEXP)
+    mapping = {}
+    for part in request["components"]:
+        old = part["footprint"]
+        if old in mapping:
+            continue
+        library, _, module = old.partition(":")
+        name = (library + "__" + module) if module else library
+        if not re.fullmatch(r"[A-Za-z0-9_.+()\-]+", name):
+            raise ValueError(f"Unsupported footprint filename {name}")
+        footprint = _load_footprint(pcb, part, reference)
+        footprint.SetFPIDAsString("PCB_Project:" + name)
+        for pad in footprint.Pads():
+            pad.SetNetCode(0)
+        # KiCad 9's convenience FootprintSave cannot infer an empty .pretty
+        # directory, and the native save method returns void rather than bool.
+        plugin.FootprintSave(str(directory), footprint)
+        if not (directory / (name + ".kicad_mod")).is_file():
+            raise RuntimeError("Cannot freeze footprint " + old)
+        mapping[old] = "PCB_Project:" + name
+    return mapping
+
+
 if __name__ == "__main__":
     import pcbnew
 
@@ -495,5 +644,11 @@ if __name__ == "__main__":
         Path(output_path).write_text(json.dumps(_measure(pcbnew, request), ensure_ascii=False), encoding="utf-8")
     elif operation == "write":
         _save_board(pcbnew, request, Path(output_path))
+    elif operation in ("audit", "freeze"):
+        result = _audit_board(pcbnew, request) if operation == "audit" else _freeze_footprints(pcbnew, request)
+        Path(output_path).write_text(json.dumps(result, ensure_ascii=False), encoding="utf-8")
+    elif operation in ("dsn", "ses", "planes"):
+        result = _route_exchange(pcbnew, operation, request)
+        Path(output_path).write_text(json.dumps(result), encoding="utf-8")
     else:
         raise ValueError(f"Unsupported task {operation!r}")

@@ -180,6 +180,9 @@ SDRC / 工具报错时按下表回溯，只改相关决策并重跑其下游：
 - 系统框图用 Mermaid（`system_architecture.mmd`），区分能量流（粗线）、采样/信号流、保护/故障流；需要出图时可用 draw.io 重绘。
 - 所有“计算值 / 仿真值 / 实测值”分开标注；未实测的写“计划”。
 - 交接文件的使用方式写在报告 §9，并告知下游模块的同学。
+- 同时导出 `pcb_constraints.json`：由 `pcb_contract.py` 从同版本规格生成器件分组、待绑定的去耦/采样审核要求，并由 `check_consistency.py` 核对。保留现有文字 `pcb_guidance`，不破坏旧接口。
+- 仅在需要继续探索时，显式使用 `export_handoff.py <wd> --draft-output <新目录>`；它输出带 `formal_handoff=false` 的 `draft_design_spec.json`，保留源检查状态和 `A_DRAFT_NOT_FORMAL` 阻塞项，不生成正式交接、采购 BOM 或固件头文件。不得用草稿冒充正式 S9 输出。
+- 不把“紧靠”伪造成未经论证的毫米阈值。未知 `max_span_mm` 保持 `null`；B 必须按真实物理引脚绑定去耦与采样，C 必须执行几何检查并保留未评估项。A 的 `ready_for_downstream` 不代表 PCB 可打样。
 - **网络命名与模块 B 统一**（B 规范 §12.3）：`VIN`、`VOUT`、`GND`、`SW`、`GATE`、`PWM_SW`、`VOUT_SENSE`、`IOUT_SENSE`、`IOUT_SENSE_RAW`、`VIN_SENSE`；全板只有一个地网络 `GND`，“功率回流区”只是布局说明，不写成 `PGND` 网络。网络名只在 `export_handoff.py` 的 `NETS` 及连接说明、`parts_db.json` 的 `pin_plan` 键中定义，改名须同步这几处并升级 `revision`。
 
 ## 禁止

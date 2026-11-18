@@ -73,6 +73,11 @@ def check(workdir, db):
         except ValueError:
             pass
     errors = list(compare_json(actual, expected, "design_spec.json"))
+    constraint_file = workdir / "pcb_constraints.json"
+    if not constraint_file.is_file():
+        errors.append("pcb_constraints.json 缺失；重跑交接导出，不手写补齐")
+    else:
+        errors.extend(compare_json(load_json(constraint_file), expected["pcb_constraints"], "pcb_constraints.json"))
 
     for name in ("loop_validation.json", "ledger.json"):
         path = workdir / name

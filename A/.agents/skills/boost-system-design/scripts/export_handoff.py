@@ -13,12 +13,15 @@ import argparse
 import csv
 from datetime import date
 from pathlib import Path
+import shutil
+from tempfile import TemporaryDirectory
 
 from _common import KNOWLEDGE_DIR, load_json, param, r3, save_json, workdir_paths
 from stage_params import selected
 from handoff_header import write_header
 from handoff_contract import issues, proposed_pin_plan, requirement_rows, traceability, verification_plan
 from trace_graph import extend_traceability
+from pcb_contract import make_pcb_constraints
 
 ROLE_META = {  # role → (位号前缀/位号, 功能块, 网络连接说明)
     "terminal": ("J1", "MOD-IN/MOD-OUT", "J1=输入 VIN_RAW/GND，J2=输出 VOUT/GND"),
@@ -273,6 +276,7 @@ def prepare_handoff(J, db):
         }
     if not all(x['blocks'] and x['tests'] for x in spec['traceability']):
         raise ValueError('需求缺少功能块或验证计划')
+    spec["pcb_constraints"] = make_pcb_constraints(spec)
     return spec
 
 
@@ -285,15 +289,50 @@ def write_bom(path, spec):
                          x["block"], x["connection"], spec['revision'], '主要器件，配套物料待补齐', spec['status']])
 
 
+def write_draft(J, db, destination):
+    """Explicit exploration output; never emit a formal handoff or firmware constants."""
+    revisions = {J[k]['revision'] for k in ('choices', 'calc', 'selection', 'losses', 'loop', 'check')}
+    if len(revisions) != 1:
+        raise ValueError('草稿也禁止混用版本')
+    spec, _, _ = run(J["requirements"], J["choices"], J["calc"], J["selection"], J["losses"], J["loop"], J["check"], db)
+    spec["formal_handoff"] = False
+    spec["handoff_scope"] = "draft_only: exploration; no formal downstream or prototype approval"
+    spec["pcb_constraints"] = make_pcb_constraints(spec)
+    spec["pcb_constraints"]["upstream"]["open_issues"].append("A_DRAFT_NOT_FORMAL")
+    destination = Path(destination).resolve()
+    if destination.exists() and any(destination.iterdir()):
+        raise ValueError('草稿输出必须是新的独立目录')
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with TemporaryDirectory(prefix='.A-draft-', dir=destination.parent) as temporary:
+        stage = Path(temporary)
+        save_json(stage / 'draft_design_spec.json', spec)
+        save_json(stage / 'pcb_constraints.json', spec['pcb_constraints'])
+        save_json(stage / 'draft_manifest.json', {'scope': 'draft_only', 'revision': spec['revision'],
+                  'upstream_status': spec['status'], 'formal_handoff': False,
+                  'note': 'No firmware header or formal design_spec/BOM was emitted'})
+        destination.mkdir(exist_ok=True)
+        for path in stage.iterdir():
+            shutil.copyfile(path, destination / path.name)
+    return spec
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("workdir", type=Path)
     ap.add_argument("--db", default=str(KNOWLEDGE_DIR / "parts_db.json"))
+    ap.add_argument("--draft-output", type=Path, help="显式生成独立探索草稿；不覆盖正式交接、不生成固件头文件")
     a = ap.parse_args()
     w = a.workdir
     J = handoff_inputs(w)
+    if a.draft_output:
+        if a.draft_output.resolve() == w.resolve():
+            raise ValueError('草稿不得覆盖正式工作目录')
+        spec = write_draft(J, load_json(a.db), a.draft_output)
+        print(f"draft_only: {a.draft_output}; source status={spec['status']}; formal_handoff=false")
+        return
     spec = prepare_handoff(J, load_json(a.db))
     save_json(w / "design_spec.json", spec)
+    save_json(w / "pcb_constraints.json", spec["pcb_constraints"])
     write_bom(w / "bom_module1.csv", spec)
     write_header(w / "boost_params.h", J["calc"], J["loop"], J["choices"])
     write_tables(w / "report_tables.md", spec, J["calc"], J["selection"], J["losses"], J["loop"], J["check"])

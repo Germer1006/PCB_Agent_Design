@@ -67,20 +67,25 @@ def model_order(design, profile, run_dir, timeout=45):
 
 def validate_strategy(proposed, design):
     nets = design["nets"]
-    if not isinstance(proposed, dict) or not isinstance(proposed.get("ordered_nets"), list):
+    if not isinstance(proposed, dict) or set(proposed) - {"ordered_nets", "layout_pairs"} or not isinstance(proposed.get("ordered_nets"), list):
         raise ValueError("模型的布线策略格式无效。")
     proposed_pairs = proposed.get("layout_pairs", [])
     if not isinstance(proposed_pairs, list):
         raise ValueError("模型的布局策略格式无效。")
-    order = list(dict.fromkeys(n for n in proposed["ordered_nets"] if isinstance(n, str) and n in nets))
+    if any(not isinstance(n, str) or n not in nets for n in proposed["ordered_nets"]):
+        raise ValueError("模型策略包含不存在的网络。")
+    order = list(dict.fromkeys(proposed["ordered_nets"]))
     if not order:
         raise ValueError("模型策略没有包含有效网络。")
     pins = {(p["ref"], p["number"]): p["net"] for part in design["components"] for p in part["pads"]}
     pairs = []
-    for entry in proposed_pairs[:6]:
+    if len(proposed_pairs) > 6:
+        raise ValueError("模型最多提出 6 组焊盘，不静默截断。")
+    for entry in proposed_pairs:
         if not isinstance(entry, list) or len(entry) != 4 or any(not isinstance(s, str) for s in entry):
-            continue
+            raise ValueError("模型策略焊盘格式无效。")
         first, second = tuple(entry[:2]), tuple(entry[2:])
-        if first[0] != second[0] and first in pins and pins[first] and pins[first] == pins.get(second):
-            pairs.append((first, second, 1.3))
+        if first[0] == second[0] or first not in pins or not pins[first] or pins[first] != pins.get(second):
+            raise ValueError("模型策略引用未知焊盘或跨网络焊盘。")
+        pairs.append((first, second, 1.3))
     return {"ordered_nets": order, "layout_pairs": pairs}

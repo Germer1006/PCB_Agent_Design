@@ -43,12 +43,14 @@ def _segment_distance(x, y, start, end):
 
 
 class _Grid:
-    def __init__(self, width, height, pitch):
+    def __init__(self, width, height, pitch, max_cells=650_000):
         self.width, self.height, self.pitch = width, height, pitch
         self.nx, self.ny = floor(width / pitch) + 1, floor(height / pitch) + 1
         self.area = self.nx * self.ny
-        if self.area > 650_000:
-            raise ValueError("布线网格超过 650000 个位置，请增大网格间距。")
+        if not isinstance(max_cells, int) or isinstance(max_cells, bool) or not 1 <= max_cells <= 4_000_000:
+            raise ValueError("max_cells 应为 1–4000000 的整数。")
+        if self.area > max_cells:
+            raise ValueError(f"布线网格超过 {max_cells} 个位置，请增大网格间距或显式提高网格预算。")
 
     def node(self, ix, iy, layer):
         return layer * self.area + iy * self.nx + ix
@@ -255,6 +257,7 @@ def _emit_path(grid, path, net, width, via_diameter, via_drill, segments, vias):
 def route_board(
     pads, board_width, board_height, *, widths=None, clearance=0.2, grid=0.15,
     via_diameter=0.65, via_drill=0.3, edge_margin=0.3, order=None, timeout=18,
+    max_cells=650_000,
 ):
     """Route all multi-pad nets; return segments, vias and any incomplete net names."""
     dimensions = (board_width, board_height, grid, via_diameter, via_drill, timeout)
@@ -267,7 +270,7 @@ def route_board(
     widths = widths or {}
     if not all(isfinite(value) and value > 0 for value in widths.values()):
         raise ValueError("走线宽度需要为正数。")
-    geometry = _Grid(board_width, board_height, grid)
+    geometry = _Grid(board_width, board_height, grid, max_cells)
     signals = defaultdict(list)
     for pad in pads:
         if pad["net"]:

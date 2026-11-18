@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import shutil
 import subprocess
@@ -50,6 +51,7 @@ def run_drc(
     *,
     schematic_parity: bool = False,
     refill_zones: bool = False,
+    all_track_errors: bool = True,
     timeout: float = 60,
 ) -> dict:
     """Return scoped DRC counts and keep KiCad's complete JSON report."""
@@ -64,6 +66,7 @@ def run_drc(
         "schematic_parity": None,
         "schematic_parity_requested": schematic_parity,
         "refill_zones": refill_zones,
+        "all_track_errors": all_track_errors,
         "report": None,
         "returncode": None,
     }
@@ -71,6 +74,14 @@ def run_drc(
         return {**result, "error": "DRC 输出必须是与输入不同的 JSON 文件。"}
     try:
         output.parent.mkdir(parents=True, exist_ok=True)
+        if refill_zones:
+            # --refill-zones is unavailable in KiCad 9; use its native pcbnew API.
+            from kicad_io import _find_python, native_operation
+            native_operation({"_python": str(_find_python(cli))}, "audit",
+                             {"board": str(board), "refill": True}, output.parent, timeout=timeout)
+        result["board_sha256"] = hashlib.sha256(board.read_bytes()).hexdigest()
+        project = board.with_suffix(".kicad_pro")
+        result["project_sha256"] = hashlib.sha256(project.read_bytes()).hexdigest() if project.is_file() else None
         with TemporaryDirectory(prefix=".kicad-drc-", dir=output.parent) as temporary:
             report = Path(temporary) / "report.json"
             args = [
@@ -79,8 +90,8 @@ def run_drc(
             ]
             if schematic_parity:
                 args.append("--schematic-parity")
-            if refill_zones:
-                args.append("--refill-zones")
+            if all_track_errors:
+                args.append("--all-track-errors")
             process = _execute([*args, str(board)], timeout)
             result["returncode"] = process.returncode
             if report.is_file():
@@ -92,7 +103,7 @@ def run_drc(
         payload = json.loads(output.read_text(encoding="utf-8-sig"))
     except subprocess.TimeoutExpired:
         return {**result, "error": f"KiCad DRC 超过 {timeout:g} 秒。"}
-    except (OSError, ValueError) as error:
+    except (OSError, ValueError, RuntimeError) as error:
         return {**result, "error": str(error)}
 
     if not isinstance(payload, dict):

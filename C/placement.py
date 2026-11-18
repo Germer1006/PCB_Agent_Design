@@ -36,11 +36,11 @@ def boost_profile(design):
     roles = {}
     pairs = []
     for name in nets:
-        label = name.strip("/").upper()
+        label = name.strip("/").rsplit("/", 1)[-1].upper()
         if label in {"GND", "PGND", "AGND"}:
             roles[label] = name
             weights[name] = 1.8
-        elif label in {"VIN", "VBUS", "VOUT", "SW", "LX", "FB", "ISENSE", "VSENSE"}:
+        elif label in {"VIN", "VIN_RAW", "VIN_F", "VBUS", "VBOOST", "VOUT", "SW", "LX", "FB", "ISENSE", "VSENSE"}:
             roles[label] = name
             weights[name] = 3.0
     converters = [part for part in design["components"] if part["value"].strip().upper() == "MT3608"]
@@ -98,6 +98,7 @@ def place(design, width, height, profile, seed=0):
     rng = random.Random(seed)
     parts = {part["ref"]: part for part in design["components"]}
     weights = profile["weights"]
+    constraints = profile.get("constraints", {})
     net_refs = defaultdict(set)
     net_pad_counts = defaultdict(int)
     for ref, part in parts.items():
@@ -136,6 +137,16 @@ def place(design, width, height, profile, seed=0):
         x0, y0, x1, y1 = envelope(ref, position)
         if min(x0, y0) < 1.0 or x1 > width - 1.0 or y1 > height - 1.0:
             return False
+        for rule in constraints.get("regions", []):
+            if ref in rule["refs"]:
+                left, top, right, bottom = rule["bounds_mm"]
+                if x0 < left or y0 < top or x1 > right or y1 > bottom:
+                    return False
+        for rule in constraints.get("keepouts", []):
+            if not rule["refs"] or ref in rule["refs"]:
+                left, top, right, bottom = rule["bounds_mm"]
+                if not (x1 <= left or right <= x0 or y1 <= top or bottom <= y0):
+                    return False
         gap = 0.85
         for other, location in placements.items():
             if other == ref:
@@ -167,10 +178,30 @@ def place(design, width, height, profile, seed=0):
                 x1, y1 = endpoints[first]
                 x2, y2 = endpoints[second]
                 cost += factor * math.hypot(x2 - x1, y2 - y1)
+        for pair in constraints.get("pad_pairs", []):
+            first, second = tuple(pair["a"]), tuple(pair["b"])
+            limit = pair.get("max_distance_mm")
+            if limit is not None and first in endpoints and second in endpoints:
+                excess = max(0.0, math.dist(endpoints[first], endpoints[second]) - limit)
+                cost += 20 * pair.get("weight", 5.0) * excess ** 2
+        for group in constraints.get("groups", []):
+            points = [placements[ref] for ref in group["refs"] if ref in placements]
+            if len(points) > 1:
+                span = math.hypot(max(p[0] for p in points) - min(p[0] for p in points),
+                                  max(p[1] for p in points) - min(p[1] for p in points))
+                cost += group.get("weight", 5.0) * span
+                if group.get("max_span_mm") is not None:
+                    cost += 20 * group.get("weight", 5.0) * max(0, span - group["max_span_mm"]) ** 2
         return cost
 
     positions = {}
     left = set(parts)
+    for ref, location in sorted(constraints.get("fixed", {}).items()):
+        proposal = (location["x"], location["y"], location["angle"])
+        if not fits(ref, proposal, positions):
+            raise ValueError(f"固定器件 {ref} 越界、重叠或违反区域约束。")
+        positions[ref] = proposal
+        left.remove(ref)
     grid_x = list(range(2, int(width) - 1))
     grid_y = list(range(2, int(height) - 1))
     noise = {ref: rng.random() for ref in parts}
@@ -203,7 +234,9 @@ def place(design, width, height, profile, seed=0):
 
     current = score(positions)
     best_cost, best_positions = current, positions.copy()
-    refs = sorted(positions)
+    refs = sorted(set(positions) - set(constraints.get("fixed", {})))
+    if not refs:
+        return {ref: {"x": x, "y": y, "angle": angle} for ref, (x, y, angle) in positions.items()}
     iterations = min(2300, 140 * len(refs))
     for step in range(iterations):
         ref = rng.choice(refs)

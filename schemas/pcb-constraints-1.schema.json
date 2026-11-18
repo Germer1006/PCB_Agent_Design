@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "A/B to C PCB constraints",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "design_revision", "upstream"],
+  "properties": {
+    "schema_version": {"const": "pcb-constraints-1"},
+    "design_revision": {"type": "string", "minLength": 1},
+    "upstream": {"type": "object", "additionalProperties": false, "required": ["status"], "properties": {
+      "status": {"type": "string"}, "open_issues": {"$ref": "#/$defs/strings"}, "source_sha256": {"type": "string"}
+    }},
+    "footprints": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": false, "required": ["status"], "properties": {
+      "status": {"enum": ["candidate", "unknown", "verified"]}, "footprint": {"type": "string"},
+      "mpn": {"type": ["string", "null"]}, "reviewer": {"type": ["string", "null"]}, "evidence": {"$ref": "#/$defs/strings"}
+    }}},
+    "groups": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "refs", "evidence"], "properties": {
+      "id": {"type": "string", "minLength": 1}, "refs": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+      "max_span_mm": {"$ref": "#/$defs/limit"}, "weight": {"type": "number", "exclusiveMinimum": 0}, "evidence": {"$ref": "#/$defs/evidence"}
+    }}},
+    "pad_pairs": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "a", "b", "kind", "evidence"], "properties": {
+      "id": {"type": "string", "minLength": 1}, "a": {"$ref": "#/$defs/pad"}, "b": {"$ref": "#/$defs/pad"},
+      "kind": {"enum": ["decoupling", "gate_drive", "kelvin", "power_loop", "proximity"]}, "max_distance_mm": {"$ref": "#/$defs/limit"},
+      "weight": {"type": "number", "exclusiveMinimum": 0}, "evidence": {"$ref": "#/$defs/evidence"}
+    }}},
+    "fixed": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": false, "required": ["x", "y", "angle"], "properties": {
+      "x": {"type": "number"}, "y": {"type": "number"}, "angle": {"enum": [0, 90, 180, 270]}
+    }}},
+    "regions": {"type": "array", "items": {"$ref": "#/$defs/rectangle"}},
+    "keepouts": {"type": "array", "items": {"$ref": "#/$defs/rectangle"}},
+    "required_reviews": {"$ref": "#/$defs/strings"}, "notes": {"$ref": "#/$defs/strings"}
+  },
+  "$defs": {
+    "strings": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "evidence": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "pad": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "string", "minLength": 1}},
+    "limit": {"type": ["number", "null"], "exclusiveMinimum": 0},
+    "rectangle": {"type": "object", "additionalProperties": false, "required": ["id", "refs", "bounds_mm", "evidence"], "properties": {
+      "id": {"type": "string", "minLength": 1}, "refs": {"$ref": "#/$defs/strings"},
+      "bounds_mm": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}},
+      "weight": {"type": "number", "exclusiveMinimum": 0}, "evidence": {"$ref": "#/$defs/evidence"}
+    }}
+  }
+}

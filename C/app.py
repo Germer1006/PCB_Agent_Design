@@ -37,7 +37,7 @@ class DesignWindow(tk.Tk):
         ttk.Button(panel, text="载入 Boost 练习原理图", command=lambda: self.schematic.set(str(DEMO))).pack(side="right")
 
         for label, value, browse in (
-            ("KiCad 原理图", self.schematic, self.pick_input),
+            ("原理图或 B 交接入口", self.schematic, self.pick_input),
             ("结果保存位置", self.output, self.pick_output),
             ("KiCad 命令行工具", self.kicad, self.pick_kicad),
         ):
@@ -73,7 +73,7 @@ class DesignWindow(tk.Tk):
 
     def pick_input(self):
         chosen = filedialog.askopenfilename(parent=self, title="选择 KiCad 原理图或网表",
-                                            filetypes=[("KiCad 设计", "*.kicad_sch *.sch *.net *.xml")])
+                                            filetypes=[("KiCad 设计或 B 交接", "*.kicad_sch *.sch *.net *.xml *.json")])
         if chosen:
             self.schematic.set(chosen)
 
@@ -146,6 +146,7 @@ class DesignWindow(tk.Tk):
                 self.open_board.state(["!disabled"])
                 self.open_folder.state(["!disabled"])
                 self.status.set("PCB 已生成，可在 KiCad 中打开。")
+                self.append("首版打样放行：" + ("已满足已记录审核条件" if value.get("prototype_ready") else "未放行；查看 release_status.json"))
                 if drc["status"] == "failed":
                     self.append("KiCad DRC 未完成，详情见设计报告。")
                 else:

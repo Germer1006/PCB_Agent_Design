@@ -9,6 +9,23 @@ B 模块负责把系统需求或上游方案整理为可检查、可交接的原
 
 ## 当前状态
 
+新增可执行的 **B→C 交接预检**：`prepare_pcb_input.py`。它检查完整网表的位号、引脚网络和空封装；可复制完整分层 KiCad 工程、重导网表并执行 ERC；把 A 的布局意图与 B 的真实引脚绑定，生成 C 可直接读取的 `project_input.json`。这不表示下述完整原理图设计与嘉立创 EDA 适配器已经实现。
+
+```bash
+python B/prepare_pcb_input.py A_output/design_spec.json B_output/full.xml --schematic B_output/main.kicad_sch --output handoffs/B_to_C_r2
+python C/auto_pcb.py handoffs/B_to_C_r2/project_input.json --target draft
+```
+
+可选 `--footprint-evidence footprints.json` 按位号记录 `status`、精确 `footprint`、`mpn`、`reviewer`、`evidence`。没有证据时仍为 candidate，不能自动升级。
+
+可选 `--bindings bindings.json`：
+
+```json
+{"decoupling":[{"id":"driver_vdd","ic":"U2","capacitor":"C40","supply_pin":"1","ground_pin":"4","capacitor_supply_pin":"1","capacitor_ground_pin":"2","max_distance_mm":null,"evidence":["已核对的器件手册页码/设计评审记录"]}]}
+```
+
+这是格式例子；位号和引脚须以实际原理图核实。未知距离限值保持 null。适配器校验实际同网关系，拒绝未分配封装和版本混用；输出采用新目录。A 未解决事项、ERC 未运行或失败会继续留在下游阻塞项中。
+
 目前已完成 B 模块的规范整理和独立实施规划，重点包括：
 
 - Boost 原理图设计的模块划分和接口约定；
