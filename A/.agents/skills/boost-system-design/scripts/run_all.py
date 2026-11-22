@@ -45,6 +45,7 @@ def main():
     ap.add_argument("--requirements")
     ap.add_argument("--db", default=str(KNOWLEDGE_DIR / "parts_db.json"))
     ap.add_argument("--max-iter", type=int, default=3)
+    ap.add_argument("--draft-output", type=Path, help="校验阻塞时向独立空目录生成 B 探索草稿")
     a = ap.parse_args()
     w = Path(a.workdir)
     w.mkdir(parents=True, exist_ok=True)
@@ -57,6 +58,7 @@ def main():
         shutil.copy(TEMPLATE_DIR / "design_choices.default.json", p["choices"])
         print("design_choices.json 不存在，已从模板复制（请在阶段 3/4 按论证修改）")
 
+    step("input_protection.py", w)
     for it in range(a.max_iter + 1):
         step("calc_boost.py", w)
         step("select_parts.py", w, a.db)
@@ -77,11 +79,16 @@ def main():
     step("sim_switching.py", w, a.db)
     gate_code = step("check_design.py", w, a.db, defer_gate=True)
     step("ledger.py", w, a.db)
+    step("render_report.py", w, a.db)
     if gate_code:
+        if a.draft_output is not None:
+            from export_handoff import handoff_inputs, write_draft
+            if a.draft_output.resolve() == w.resolve():
+                ap.error("草稿目录须独立于工作目录")
+            write_draft(handoff_inputs(w), load_json(a.db), a.draft_output)
+            print(f"已生成 B 探索草稿：{a.draft_output}")
         sys.exit(gate_code)
     step("export_handoff.py", w, a.db)
-    if (w / "system_design_report.template.md").exists():
-        step("render_report.py", w)
     step("check_consistency.py", w, a.db)
 
 

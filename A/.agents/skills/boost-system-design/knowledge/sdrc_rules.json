@@ -348,8 +348,30 @@
     "rationale": "This comparison is a screening check, not a full fuse coordination proof.",
     "source": "fuse datasheet and losses.json inrush estimate",
     "verify": "automatic",
-    "applies_when": "fuse selected",
+    "applies_when": "conventional melting fuse selected",
     "closure_if_fail": "Review fuse coordination and document its limits."
+  },
+  {
+    "id": "SR54-PTC",
+    "layer": "protection",
+    "severity": "minor",
+    "title": "PTC hold current, trip response and fault heating are assessed",
+    "rationale": "PTC coordination depends on temperature, actual fault current and the source response.",
+    "source": "Selected PTC datasheet, input source and thermal test evidence",
+    "verify": "measurement",
+    "applies_when": "resettable PTC selected",
+    "closure_if_fail": "Verify thermal derating at the device, current-time response at the actual fault current and stable fault heating."
+  },
+  {
+    "id": "SR89",
+    "layer": "protection",
+    "severity": "major",
+    "title": "Input protection implementation and B interface are defined",
+    "rationale": "A source ramp in simulation does not define the circuit or wiring that B must implement.",
+    "source": "design_choices.json protection.input_protection and input_ramp",
+    "verify": "automatic",
+    "applies_when": "always",
+    "closure_if_fail": "Define the implementation, connection, current-limit window and fault response before freezing the B input stage."
   },
   {
     "id": "SR60-*",

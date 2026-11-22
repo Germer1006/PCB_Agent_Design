@@ -9,6 +9,23 @@ B 模块负责把系统需求或上游方案整理为可检查、可交接的原
 
 ## 当前状态
 
+新增可执行的 **B→C 交接预检**：`prepare_pcb_input.py`。它检查完整网表的位号、引脚网络和空封装；可复制完整分层 KiCad 工程、重导网表并执行 ERC；把 A 的布局意图与 B 的真实引脚绑定，生成 C 可直接读取的 `project_input.json`。
+
+```bash
+python B/prepare_pcb_input.py A_output/design_spec.json B_output/full.xml --schematic B_output/main.kicad_sch --output handoffs/B_to_C_r2
+python C/auto_pcb.py handoffs/B_to_C_r2/project_input.json --target draft
+```
+
+可选 `--footprint-evidence footprints.json` 按位号记录 `status`、精确 `footprint`、`mpn`、`reviewer`、`evidence`。没有证据时仍为 candidate，不能自动升级。
+
+可选 `--bindings bindings.json`：
+
+```json
+{"decoupling":[{"id":"driver_vdd","ic":"U2","capacitor":"C40","supply_pin":"1","ground_pin":"4","capacitor_supply_pin":"1","capacitor_ground_pin":"2","max_distance_mm":null,"evidence":["已核对的器件手册页码/设计评审记录"]}]}
+```
+
+这是格式例子；位号和引脚须以实际原理图核实。未知距离限值保持 null。适配器校验实际同网关系，拒绝未分配封装和版本混用；输出采用新目录。A 未解决事项、ERC 未运行或失败会继续留在下游阻塞项中。
+
 目前已完成 B 模块的规范整理和独立实施规划，重点包括：
 
 - Boost 原理图设计的模块划分和接口约定；
@@ -24,6 +41,18 @@ B 模块负责把系统需求或上游方案整理为可检查、可交接的原
 - 真实器件、封装和元件资料的核验；
 - 嘉立创 EDA 的读写、保存、导出、检查和恢复能力；
 - 与其他智能体的实际联调。
+
+## 从明确的引脚连接生成 KiCad 原理图
+
+`schematic_intent` 字段使用 [schematic-intent-1](../schemas/schematic-intent-1.schema.json)。
+声明真实 KiCad 符号、数值、封装和网络，逐一列出接入网络或显式标为空接的引脚。
+生成器处理一页最多 30 个单单元符号。它冻结项目符号库，重导原生网表核对器件与引脚连接，再运行原有交接预检和 ERC。
+
+```bash
+python B/generate_schematic.py design_spec.json --output handoffs/circuit_r1
+```
+
+找不到符号库时可用 `--symbol-root` 指定 `.kicad_sym` 所在目录。已完成的复杂分层原理图继续使用 `prepare_pcb_input.py`。
 
 ## 设计范围
 
@@ -56,4 +85,4 @@ B 原理图设计的目标模块包括：
 
 ## 相关仓库
 
-本模块属于 [PCB_Agent_Design](https://github.com/Germer1006/PCB_Agent_Design) 项目。当前 B 文件夹主要保存规范和实施清单；程序、样例、测试和交接包将在后续实现阶段按约定目录补充。
+本模块属于 [PCB_Agent_Design](https://github.com/Germer1006/PCB_Agent_Design) 项目。B 文件夹保存设计规范、生成与交接程序，以及对应回归测试。

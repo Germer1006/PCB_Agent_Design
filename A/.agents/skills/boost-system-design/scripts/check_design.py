@@ -12,15 +12,10 @@ import json
 import sys
 
 from _common import KNOWLEDGE_DIR, Checks, load_json, param, save_json, workdir_paths
+from design_evidence import add_input_protection_checks, bound, current_error_budget, is_ptc, selected
+from input_protection import positive
 
 RULES_PATH = KNOWLEDGE_DIR / "sdrc_rules.json"
-
-
-def selected(selection, db, cat):
-    """A missing database entry is evidence missing, not a crashed audit."""
-    category = selection["categories"].get(cat, {})
-    part = next((p for p in db["parts"] if p["id"] == category.get("selected")), None)
-    return part, category.get("selected_qty") or 1
 
 
 def _validate_rules(rules):
@@ -172,18 +167,14 @@ def run(req, ch, calc, sel, loss, loop, db, sim=None):
           f"code {prot['ocp_hw']['adc_code']} / {full}", ref="IF-ADC")
     K.add("SR42", "Vout 分辨率 ≤ 0.1% Vo", s["vout"]["lsb_mv"] / 1000 <= 0.001 * vo, f"{s['vout']['lsb_mv']} mV", ref="IF-ADC")
     K.add("SR43", "Iout 分辨率 ≤ 0.2% Icc", s["iout"]["lsb_ma"] / 1000 <= 0.002 * io, f"{s['iout']['lsb_ma']} mA", ref="IF-ADC")
-    csa, _ = selected(sel, db, "csa")
-    vos = param(csa, "vos_uv", ("max", "typ")) if csa else None
-    ge = param(csa, "gain_error_pct", ("max", "typ")) if csa else None
-    if vos is not None and ge is not None:
-        err = vos * 1e-6 / (s["iout"]["shunt_ohm"] * io) * 100 + ge + 1.0  # + 分流电阻 1%
-        K.add("SR44", "电流测量部分误差预算 ≤ 稳态精度要求的一半", err <= req["iout"]["steady_err_pct"] / 2,
-              f"失调 + 增益误差 + 分流 1% ≈ {err:.2f}% vs ≤{req['iout']['steady_err_pct']/2}%；"
-              "失调条件为12V共模，未含ADC/基准/温漂/CMRR，非完整最坏保证；须在实际共模下标定。",
-              warn_only=True, ref="REQ-ACC")
-    else:
-        K.add("SR44", "电流测量部分误差预算 ≤ 稳态精度要求的一半", None,
-              "未选电流放大器，或 vos_uv/gain_error_pct 缺失；不得用零替代", ref="REQ-ACC")
+    current_budget = current_error_budget(req, calc, sel, db)
+    subtotal = current_budget["partial_ma"]
+    K.add("SR44", "电流测量部分误差预算 ≤ 稳态精度要求的一半",
+          None if subtotal is None else subtotal <= current_budget["allowance_ma"] / 2,
+          (f"已列项合计 {subtotal:.2f} mA，课程总预算 ±{current_budget['allowance_ma']:.2f} mA，"
+           f"余量 {current_budget['remaining_ma']:.2f} mA；" if subtotal is not None else "器件误差上限缺失；")
+          + "手册条件见预算明细。待补 ADC、基准、温漂、共模和校准残差。",
+          warn_only=True, ref="REQ-ACC")
     verr = 2 * 1.0 + 0.5  # 两只 1% 电阻 + ADC/基准
     K.add("SR45", "电压测量规划预算 ≤ 稳态精度要求的一半", verr <= req["vout"]["steady_err_pct"] / 2,
           f"≈{verr}%（1%电阻×2 + ADC/基准0.5%占位预算，非已验证上界）；另见SR46", warn_only=True, ref="REQ-ACC")
@@ -218,9 +209,7 @@ def run(req, ch, calc, sel, loss, loop, db, sim=None):
           f"{ramp_evidence}无保护线性峰值{loss['inrush']['i_peak_a']}A，超过Isat时不是可靠上界。"
           "待验证独立缓升硬件斜率、电源释放能量、PWM禁止及SOA。", warn_only=True, ref="PROT")
 
-    fi = loss["inrush"].get("fuse_melting_i2t_a2s")
-    K.add("SR54", "保险丝nominal I²t与线性浪涌模型对照 ≥ 10倍", None if fi is None else fi >= 10 * loss["inrush"]["i2t_a2s"],
-          f"熔断nominal {fi} A²s vs 线性浪涌{loss['inrush']['i2t_a2s']} A²s；非不熔断/重复寿命/短路保护配合证明", warn_only=True, ref="PROT")
+    input_plan = add_input_protection_checks(K, ch, sel, db, loss)
 
     # --- 控制 ---
     for m in ("CV", "CC"):
@@ -282,20 +271,24 @@ def run(req, ch, calc, sel, loss, loop, db, sim=None):
     # but cannot close a check that requires maximum parameter values.
     pm, _ = selected(sel, db, "pmos")
     fu, _ = selected(sel, db, "fuse")
-    def bound(part, name, field):
-        # An unqualified scalar is not evidence of a guaranteed limit.
-        value = (part or {}).get("params", {}).get(name)
-        return value.get(field) if isinstance(value, dict) else None
 
     rpm = bound(pm, "rds_on_mohm_vgs4v5", "max")
-    rfuse = bound(fu, "r_mohm", "max")
-    path_complete = rpm is not None and rfuse is not None
+    rfuse = bound(fu, "r_hot_mohm" if is_ptc(fu) else "r_mohm", "max")
+    board_drop = input_plan["implementation"].get("added_path_drop_max_v")
+    added_drop = 0
+    if input_plan["strategy"] == "board":
+        added_drop = board_drop if positive(board_drop) else None
+    supply_missing = [name for name, value in (
+        ("防反接 PMOS Rds.max", rpm),
+        ("PTC 工作温度下 R.max" if is_ptc(fu) else "保险丝 R.max", rfuse),
+        ("新增输入保护压降上限", added_drop),
+    ) if value is None]
     vbus = None
-    if path_complete:
+    if not supply_missing:
         r_path = (rpm * loss["model"]["rds_hot_factor"] + rfuse) / 1000
         # Use the input-current envelope, not only the nominal min-Vin case.
         iin = max(c["iin_avg_A"] for c in loss["corner_cases"])
-        vbus = min(env['driver_vdd_min_v'], vin["min"] - iin * r_path)
+        vbus = min(env['driver_vdd_min_v'], vin["min"] - iin * r_path) - added_drop
     vdo = bound(ldo, "dropout_mv", "max")
     vdo_typ = param(ldo, "dropout_mv", ("typ",)) if ldo else None
     K.add("SR70", "LDO 压差余量 ≥ 200 mV @Vin,min",
@@ -303,8 +296,8 @@ def run(req, ch, calc, sel, loss, loop, db, sim=None):
           f"保护后 VIN={vbus:.3f} V，压差余量 {(vbus-3.3)*1000-vdo:.0f} mV；"
           "限已建模电流场景，温度系数和布线压降仍为模型假设"
           if vdo is not None and vbus is not None else
-          f"缺少 LDO dropout.max 或输入路径电阻 max；dropout.typ={vdo_typ} mV，"
-          "典型值不构成保证；LDO 接保护后 VIN，不能直接用端子 Vin,min 判 PASS", ref="PWR-AUX")
+          "缺少 " + "、".join(supply_missing + (["LDO dropout.max"] if vdo is None else []))
+          + (f"。dropout.typ={vdo_typ} mV（估计）" if vdo_typ is not None else ""), ref="PWR-AUX")
     if drv:
         uv = bound(drv, "uvlo_on_v", "max")
         vmin = bound(drv, "vdd_min_v", "min")
@@ -314,8 +307,9 @@ def run(req, ch, calc, sel, loss, loop, db, sim=None):
               f"保护后 VDD={vbus:.3f} V vs 工作下限 {need} V + 0.1 V；"
               "限已建模电流场景，温度系数和布线压降仍为模型假设"
               if need is not None and vbus is not None else
-              "缺少 UVLO.max、工作下限 min 或 PMOS/保险丝电阻 max；"
-              f"现有模型估算 {env['driver_vdd_min_v']} V 不构成最坏供电保证", ref="PWR-AUX")
+              "缺少 " + "、".join(supply_missing + (["驱动器 UVLO.max"] if uv is None else [])
+                                   + (["驱动器 VDD.min"] if vmin is None else []))
+              + f"。模型供电估计 {env['driver_vdd_min_v']} V", ref="PWR-AUX")
     else:
         K.add("SR71", "驱动器最低供电 > max(UVLO 开启最大值, 保证工作下限) + 0.1 V",
               None, "未选栅极驱动器", ref="PWR-AUX")
@@ -341,7 +335,8 @@ def run(req, ch, calc, sel, loss, loop, db, sim=None):
         status = "ready_for_downstream"
     return {"schema": "boost-sdrc/2", "revision": ch.get("revision"), "summary": summ,
             "status_policy": "FAIL/critical-major missing/automatic critical-major WARN block readiness; minor/info automatic WARN remain explicit advisories",
-            "status": status, "checks": K.items}
+            "status": status, "checks": K.items,
+            "input_protection": input_plan, "current_error_budget": current_budget}
 
 
 def main():

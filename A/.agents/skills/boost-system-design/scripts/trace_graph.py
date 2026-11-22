@@ -71,7 +71,7 @@ RULE_ROLES = {
     "SR32": ("tvs", "cout_bulk", "cout_ceramic"), "SR35": ("tvs",),
     "SR34": ("inductor",), "SR36": ("inductor",), "SR37": ("inductor",),
     "SR39": ("cout_bulk",), "SR44": ("csa", "shunt"), "SR46": ("mcu", "csa", "shunt"),
-    "SR53": ("inductor", "pmos", "fuse"), "SR54": ("fuse",),
+    "SR53": ("inductor", "pmos", "fuse"), "SR54": ("fuse",), "SR54-PTC": ("fuse",),
     "SR70": ("ldo",), "SR71": ("gate_driver",), "SR85": ("tvs",), "SR88": ("inductor",),
 }
 
@@ -211,9 +211,11 @@ def build_graph(steps, selection, check):
             graph[node].add("choice:protection.input_ramp")
         if rid == "SR38":
             graph[node].add("choice:power_stage.inductor_ripple_ratio")
+        if rid == "SR89":
+            graph[node].update(("choice:protection.input_protection", "choice:protection.input_ramp"))
         for file, field in (("report_tables.md", "表 G"), ("design_spec.json", "sdrc_summary")):
             graph[f"handoff:{file}.{field}"].add(node)
-        if rule["verdict"] != "PASS":
+        if rule["verdict"] not in ("PASS", "N/A"):
             graph[f"handoff:design_spec.json.implementation_closures[{rid}]"].add(node)
     for field, ids in HANDOFF_FIELDS.items():
         link("handoff:" + field, ids)

@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+C/results/
+C/test-results/
+.venv/
+*.lck
+*.kicad_prl

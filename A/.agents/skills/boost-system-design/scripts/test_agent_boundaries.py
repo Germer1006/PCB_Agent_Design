@@ -110,7 +110,7 @@ class TestAgentBoundaries(unittest.TestCase):
                     with self.assertRaises(SystemExit) as error:
                         run_all.main()
                 self.assertEqual(error.exception.code, code)
-                self.assertEqual(calls[-2:], ["check_design.py", "ledger.py"])
+                self.assertEqual(calls[-3:], ["check_design.py", "ledger.py", "render_report.py"])
                 self.assertNotIn("export_handoff.py", calls)
 
 

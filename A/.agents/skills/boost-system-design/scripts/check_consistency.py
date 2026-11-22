@@ -10,7 +10,7 @@ from tempfile import TemporaryDirectory
 from _common import KNOWLEDGE_DIR, load_json, workdir_paths
 from export_handoff import handoff_inputs, prepare_handoff, write_bom, write_tables
 from handoff_header import write_header
-from render_report import REPORT, TEMPLATE, render
+from render_report import REPORT, TEMPLATE, render_document
 
 
 def compare_json(actual, expected, path):
@@ -73,6 +73,11 @@ def check(workdir, db):
         except ValueError:
             pass
     errors = list(compare_json(actual, expected, "design_spec.json"))
+    constraint_file = workdir / "pcb_constraints.json"
+    if not constraint_file.is_file():
+        errors.append("pcb_constraints.json 缺失；重跑交接导出，不手写补齐")
+    else:
+        errors.extend(compare_json(load_json(constraint_file), expected["pcb_constraints"], "pcb_constraints.json"))
 
     for name in ("loop_validation.json", "ledger.json"):
         path = workdir / name
@@ -100,9 +105,8 @@ def check(workdir, db):
         body = report.read_text(encoding="utf-8-sig")
         if "{{" in body or "}}" in body:
             errors.append(f"{REPORT} 含未替换的占位符")
-        if template.exists():
-            rendered = render(template.read_text(encoding="utf-8-sig"), paths)
-            errors.extend(compare_text(REPORT, body, rendered))
+        source = template.read_text(encoding="utf-8-sig") if template.exists() else None
+        errors.extend(compare_text(REPORT, body, render_document(paths, db, source)))
     return errors
 
 

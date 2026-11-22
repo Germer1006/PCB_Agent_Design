@@ -80,6 +80,9 @@
     "uvlo_on_v": 4.5,
     "cc_vout_min_margin_v": 0.5,
     "input_reverse_protection": "pmos",
+    "input_protection": {
+      "strategy": "undecided"
+    },
     "input_ramp": {
       "max_slew_v_per_ms": 1.0,
       "source_peak_budget_a": 2.0,

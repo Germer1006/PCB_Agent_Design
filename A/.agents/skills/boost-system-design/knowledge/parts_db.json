@@ -4782,8 +4782,8 @@
       "package": "SMD can 8x6.2 mm (size code E)",
       "lcsc": "C178539",
       "lcsc_evidence": "https://www.lcsc.com/product-detail/Others_PANASONIC_EEEFK1E101P_PANASONIC-EEEFK1E101P_C178539.html (snippet 'SMD,D8xL6.2mm ... From $0.1497, 630 in stock')",
-      "datasheet_url": "https://datasheet.octopart.com/EEE-FK1H221P-Panasonic-datasheet-8188412.pdf",
-      "datasheet_source_type": "mirror",
+      "datasheet_url": "https://industrial.panasonic.com/ww/products/pt/aluminum-cap-smd/models/EEEFK1E101P",
+      "datasheet_source_type": "official",
       "params": {
         "capacitance_uf": {
           "typ": 100,
@@ -4942,8 +4942,8 @@
       "package": "SMD can 6.3x5.8 mm (size code D)",
       "lcsc": "C128532",
       "lcsc_evidence": "https://www.lcsc.com/product-detail/Aluminum-Electrolytic-Capacitors-SMD_PANASONIC_EEEFK1C101P_100uF-20-16V_C128532.html ; https://jlcpcb.com/partdetail/PANASONIC-EEEFK1C101P/C128532",
-      "datasheet_url": "https://datasheet.octopart.com/EEE-FK1H221P-Panasonic-datasheet-8188412.pdf",
-      "datasheet_source_type": "mirror",
+      "datasheet_url": "https://industrial.panasonic.com/ww/products/pt/aluminum-cap-smd/models/EEEFK1C101P",
+      "datasheet_source_type": "official",
       "params": {
         "capacitance_uf": {
           "typ": 100,
@@ -5304,8 +5304,16 @@
       "package": "1812",
       "lcsc": "C315901",
       "lcsc_evidence": "https://www.lcsc.com/product-detail/C315901.html (search title '1812L200/12DR'; snippet 'From $0.0836, 3,145 in stock')",
-      "datasheet_url": "https://sy-dep-epc-lpc.web.cern.ch/components/datasheets/epc-lpc%20(converters)/1812LSeries_Polyswitch_(Littelfuse).pdf",
-      "datasheet_source_type": "mirror",
+      "datasheet_url": "https://www.littelfuse.com/assetdocs/resettable-ptcs-1812l-datasheet?assetguid=ca5c80cb-504e-4a8a-8e74-0107520a1717",
+      "datasheet_source_type": "official",
+      "temperature_rerating_reference": {
+        "20.0": 2.00,
+        "40.0": 1.78,
+        "50.0": 1.67,
+        "60.0": 1.50,
+        "70.0": 1.45,
+        "85.0": 1.29
+      },
       "params": {
         "hold_current_a": {
           "typ": 2.0,
@@ -5367,7 +5375,7 @@
           "typ": null,
           "max": null,
           "min": null,
-          "condition": "derating table ≈1.78 A @40 °C, 1.29 A @85 °C (table extraction partly misaligned; verify)",
+          "condition": "温度降额表为参考数据；见 temperature_rerating_reference，实际器件温度需验证",
           "page": "1-2"
         },
         "i_hold_a": {
@@ -5397,7 +5405,7 @@
       },
       "price_cny_approx": 0.59,
       "price_evidence": "LCSC snippet from USD 0.0836",
-      "notes": "Copy hosted by CERN (Littelfuse PolySwitch 1812L 2023). Hold margin at 1.5 A is thin above ~50 °C; 1812L260/12 would give more margin (C-number not searched). Bourns MF-MSMF200-2 (C210837) exists on LCSC but is EOL (Feb-2026) and not in current datasheet.",
+      "notes": "Littelfuse 1812L 原厂手册。R1max 为回流/动作后的规定条件，不能作为热态路径电阻。温度降额表为筛选参考，不能替代实际动作及热态验证。",
       "confidence": "medium",
       "role": "fuse",
       "price_note": "由 price_evidence 中 USD 快照 ×7.1 折算"
